@@ -6,8 +6,9 @@ reset:
 	rm -rf $(CURDIR)/extension
 	mkdir $(CURDIR)/data
 	mkdir $(CURDIR)/data/pg
+	mkdir $(CURDIR)/extension
 
-build-extension:
+build:
 	mkdir -p $(CURDIR)/extension
 	cp $(CURDIR)/src/fetchq.control $(CURDIR)/extension/fetchq.control
 	cat $(CURDIR)/src/info.sql \
@@ -24,7 +25,7 @@ build-test:
 		$(CURDIR)/tests/drop-queue.test.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
-test-start-pg: reset build-extension build-test
+start-pg:
 	docker run --rm -d \
 		--name fetchq \
 		-p 5432:5432 \
@@ -37,16 +38,16 @@ test-start-pg: reset build-extension build-test
 		-v $(CURDIR)/data/fetchq--${version}.test.sql:/tests/fetchq--${version}.test.sql \
 		postgres:$(pg_version)
 
-test-start-delay:
+start-delay:
 	sleep 20
 
-test-start: test-start-pg
+start: reset build build-test start-pg
 	docker logs -f fetchq
 
-test-stop:
+stop:
 	docker stop fetchq
 
-test-run: build-extension build-test
+test-run: build build-test
 	docker exec \
 		fetchq \
 		psql \
@@ -56,9 +57,9 @@ test-run: build-extension build-test
 			--dbname fetchq \
 			-a -f /tests/fetchq--${version}.test.sql
 
-test: test-start-pg test-start-delay test-run test-stop
+test: reset build build-test start-pg start-delay test-run stop
 
-reset-db: build-extension
+init: build
 	docker exec \
 		fetchq \
 		psql \
