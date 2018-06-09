@@ -56,6 +56,18 @@ class Fetchq {
             throw new Error(`[fetchq] createQueue() - ${err.message}`)
         }
     }
+    
+    // @TODO: validate queue name
+    async dropQueue (name) {
+        try {
+            const q = `SELECT * FROM fetchq_drop_queue('${name}')`
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] dropQueue() - ${err.message}`)
+        }
+    }
 }
 
 module.exports = {

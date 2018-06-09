@@ -48,7 +48,13 @@ post://v1/q
     "name": "foo"
 }
 <<< {
-    
+    "was_created": true,
+    "queue_id": "1"
 }
 
+# drop an existing queue
+delete://v1/q/:name
+<<< {
+    "was_dropped": true
+}
 ```
