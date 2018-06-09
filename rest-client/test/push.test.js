@@ -3,7 +3,7 @@ const request = require('superagent')
 const url = require('./lib/url')
 const pg = require('./lib/pg')
 
-describe.only('FetchQ push', function () {
+describe('FetchQ push', function () {
     let queueId = null
 
     beforeEach(async function () {
@@ -12,9 +12,53 @@ describe.only('FetchQ push', function () {
         queueId = res.body.queue_id
     })
 
-    it('should push a new document', async function () {
-        const res = await request.post(url('/v1/q/foo')).send({ subject: 'foo' })
-        console.log(res.body)
-        expect(res.statusCode).to.equal(200)
+    describe('single document', function () {
+        it('should schedule a future document', async function () {
+            const res = await request.post(url('/v1/q/foo')).send({
+                subject: 'a1',
+                version: 0,
+                priority: 0,
+                nextIteration: '2018-10-10 12:22',
+                payload: { a: 1 },
+            })
+            expect(res.statusCode).to.equal(200)
+            expect(res.body.queued_docs).to.equal(1)
+        })
+
+        it('should schedule a pending document', async function () {
+            const res = await request.post(url('/v1/q/foo')).send({
+                subject: 'a1',
+                version: 0,
+                priority: 0,
+                nextIteration: '2016-10-10 12:22',
+                payload: { a: 2 },
+            })
+            expect(res.statusCode).to.equal(200)
+            expect(res.body.queued_docs).to.equal(1)
+        })
+
+        it('should schedule a document with a complex payload', async function () {
+            const res = await request.post(url('/v1/q/foo')).send({
+                subject: 'a1',
+                version: 0,
+                priority: 0,
+                nextIteration: '2016-10-10 12:22',
+                payload: {
+                    num: 123,
+                    bool: true,
+                    nil: null,
+                    nan: NaN,
+                    und: undefined,
+                    ar1: [ 1, 2, 3 ],
+                    s1: 'marco',
+                    s2: 'mar"co',
+                    s3: 'ma\'rco',
+                    ob: { foo: 123 },
+                },
+            })
+            expect(res.statusCode).to.equal(200)
+            expect(res.body.queued_docs).to.equal(1)
+        })
     })
+
 })

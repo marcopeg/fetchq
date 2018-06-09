@@ -69,16 +69,30 @@ class Fetchq {
         }
     }
 
-    async push(name, data) {
+    // @TODO: validate queue name
+    // @TODO: validate queue subject
+    // @TODO: validate queue version
+    // @TODO: validate queue priority
+    // @TODO: validate queue nextIteration
+    // @TODO: validate queue payload
+    async push(queue, doc = {}) {
         try {
-            // const q = `SELECT * FROM fetchq_drop_queue('${name}')`
-            // const res = await this.pool.query(q)
-            return {
-                doc_id: '123'
-            }
+            const q = [
+                'SELECT * FROM fetchq_push(',
+                `'${queue}',`,
+                `'${doc.subject}',`,
+                `${doc.version || 0},`,
+                `${doc.priority || 0},`,
+                doc.nextIteration ? `'${doc.nextIteration}',` : 'NOW(),',
+                `'${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')'
+            ].join(' ')
+            console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
-            throw new Error(`[fetchq] dropQueue() - ${err.message}`)
+            throw new Error(`[fetchq] push() - ${err.message}`)
         }
     }
 }
