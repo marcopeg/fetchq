@@ -16,6 +16,13 @@ build:
 		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
+		$(CURDIR)/src/metric-set.sql \
+		$(CURDIR)/src/metric-increment.sql \
+		$(CURDIR)/src/metric-log-set.sql \
+		$(CURDIR)/src/metric-log-increment.sql \
+		$(CURDIR)/src/metric-log-decrement.sql \
+		$(CURDIR)/src/metric-log-pack.sql \
+		$(CURDIR)/src/metric-get.sql \
 		$(CURDIR)/src/push.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
@@ -25,6 +32,7 @@ build-test:
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
 		$(CURDIR)/tests/push.test.sql \
+		$(CURDIR)/tests/metrics.test.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
 start-pg:
