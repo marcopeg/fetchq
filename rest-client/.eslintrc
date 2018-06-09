@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "react-app"
+    ],
+    "rules": {
+        "semi": [
+            "error",
+            "never"
+        ],
+        "indent": [ 2, 4, { "SwitchCase": 1 } ],
+        "operator-linebreak": ["error", "before"],
+        "comma-dangle": [ "error", "always-multiline" ],
+        "quote-props": [ "error", "as-needed" ],
+        "array-bracket-spacing": ["error", "always", { "singleValue": false }],
+        "new-cap": [ 2, { "capIsNewExceptions": [ "express.Router" ] }],
+        "react/require-default-props": [ 2 ],
+        "react/prefer-stateless-function": [ 2, { "ignorePureComponents": true } ],
+        "prefer-reflect": [ 0 ],
+        "jsx-a11y/href-no-hash": [ 0 ]
+    }
+}
