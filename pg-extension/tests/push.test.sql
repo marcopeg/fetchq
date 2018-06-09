@@ -10,7 +10,7 @@ DECLARE
 BEGIN
 
     --
-    -- PUSH DOCUMENT WITH PAST DATE
+    -- PUSH A SINGLE DOCUMENT WITH PAST DATE
     --
     
     -- initialize test
@@ -31,10 +31,17 @@ BEGIN
         RAISE EXCEPTION 'Wrong status was computed for the document';
     END IF;
 
+    -- checkout logs
+    PERFORM fetchq_metric_log_pack();
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pln');
+    IF VAR_r.current_value <> 1 THEN
+        RAISE EXCEPTION 'Wrong planned documents count';
+    END IF;
+
 
 
     --
-    -- PUSH DOCUMENT WITH PAST DATE
+    -- PUSH A SINGLE DOCUMENT WITH PAST DATE
     --
 
     -- initialize test
@@ -53,6 +60,14 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq__foo__documents WHERE subject = 'a1';
     IF VAR_r.status <> 1 THEN
         RAISE EXCEPTION 'Wrong status was computed for the document';
+    END IF;
+
+    -- checkout logs
+    -- checkout logs
+    PERFORM fetchq_metric_log_pack();
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
+    IF VAR_r.current_value <> 1 THEN
+        RAISE EXCEPTION 'Wrong pending documents count';
     END IF;
 
     -- cleanup test

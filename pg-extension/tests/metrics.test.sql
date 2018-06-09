@@ -31,6 +31,17 @@ BEGIN
         RAISE EXCEPTION 'Wrong metric computation';
     END IF;
 
+    -- test reset on logs
+    PERFORM fetchq_metric_log_increment('b', 'c', 10);
+    PERFORM fetchq_metric_log_decrement('b', 'c', 5);
+    PERFORM fetchq_metric_log_set('b', 'c', 99);
+    PERFORM fetchq_metric_log_pack();
+
+    SELECT * INTO VAR_r from fetchq_metric_get('b', 'c');
+    IF VAR_r.current_value <> 99 THEN
+        RAISE EXCEPTION 'Wrong metric computation';
+    END IF;
+
     -- cleanup test
     -- DROP SCHEMA public CASCADE;
     -- CREATE SCHEMA public;

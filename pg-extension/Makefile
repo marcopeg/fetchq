@@ -31,8 +31,8 @@ build-test:
 	cat $(CURDIR)/tests/init.test.sql \
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
-		$(CURDIR)/tests/push.test.sql \
 		$(CURDIR)/tests/metrics.test.sql \
+		$(CURDIR)/tests/push.test.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
 start-pg:
