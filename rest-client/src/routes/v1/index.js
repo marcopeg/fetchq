@@ -4,6 +4,7 @@ const { fetchqInit } = require('./middlewares/fetchq-init')
 const { fetchqInfo } = require('./middlewares/fetchq-info')
 const { fetchqCreateQueue } = require('./middlewares/fetchq-create-queue')
 const { fetchqDropQueue } = require('./middlewares/fetchq-drop-queue')
+const { fetchqPush } = require('./middlewares/fetchq-push')
 
 const createV1Router = (settings) => {
     const router = express.Router()
@@ -13,6 +14,7 @@ const createV1Router = (settings) => {
     router.get('/init', fetchqInit())
     router.get('/info', fetchqInfo())
     router.post('/q', fetchqCreateQueue())
+    router.post('/q/:name', fetchqPush())
     router.delete('/q/:name', fetchqDropQueue())
 
     return router

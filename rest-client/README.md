@@ -57,4 +57,10 @@ delete://v1/q/:name
 <<< {
     "was_dropped": true
 }
+
+# push a document into a queue
+post://v1/q/:name
+>>> {
+    "subject": "foo"
+}
 ```

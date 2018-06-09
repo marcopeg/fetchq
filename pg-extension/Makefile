@@ -16,6 +16,7 @@ build:
 		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
+		$(CURDIR)/src/push.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -23,6 +24,7 @@ build-test:
 	cat $(CURDIR)/tests/init.test.sql \
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
+		$(CURDIR)/tests/push.test.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
 start-pg:
