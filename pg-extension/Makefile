@@ -3,10 +3,12 @@ pg_version ?= 9.6
 
 reset:
 	rm -rf $(CURDIR)/data
+	rm -rf $(CURDIR)/extension
 	mkdir $(CURDIR)/data
 	mkdir $(CURDIR)/data/pg
 
 build-extension:
+mkdir -p $(CURDIR)/extension
 	cp $(CURDIR)/src/fetchq.control $(CURDIR)/extension/fetchq.control
 	cat $(CURDIR)/src/sys-tables.sql \
 		$(CURDIR)/src/get-queue-id.sql \
