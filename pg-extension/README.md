@@ -1,5 +1,14 @@
-# fetchq-pg-extension
+# FetchQ Postgres Extension
+
 Postgres extension that enables FetchQ capabilities
+
+## How to Work this out
+
+1. `make test-start` will run postgres
+2. `make test-run` will build the extension and run the tests
+3. `make test-stop` will kill postgres
+
+---
 
 ## Management Tables
 
@@ -38,9 +47,3 @@ prd - documents that have been processed (either of the possible actions)
 res - documents that have been rescheduled
 rej - documents that have been rejected
 err - documents that have been triggered an unexpected error
-
-## How to Work this out
-
-1. `make test-start` will run postgres
-2. `make test-run` will build the extension and run the tests
-3. `make test-stop` will kill postgres
