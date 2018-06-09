@@ -36,11 +36,24 @@ class Fetchq {
 
     async info () {
         try {
-            const res = await this.pool.query('SELECT * FROM fetchq_info()')
+            const q = 'SELECT * FROM fetchq_info()'
+            const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] info() - ${err.message}`)
+        }
+    }
+
+    // @TODO: validate queue name
+    async createQueue (name) {
+        try {
+            const q = `SELECT * FROM fetchq_create_queue('${name}')`
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] createQueue() - ${err.message}`)
         }
     }
 }

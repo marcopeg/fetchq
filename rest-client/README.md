@@ -28,3 +28,27 @@ If you want to test against a custom installation run:
 ```
 ROOT_URL=https://2895e30a.ngrok.io yarn test
 ```
+
+## API
+
+```
+get://v1/init
+<<< {
+    "was_initialized": false
+}
+
+get://v1/info
+<<< {
+    "version": "0.0.1"
+}
+
+# create a new queue
+post://v1/q 
+>>> {
+    "name": "foo"
+}
+<<< {
+    
+}
+
+```
