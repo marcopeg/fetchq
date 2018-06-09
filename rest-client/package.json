@@ -29,6 +29,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.9.1",
     "nodemon": "^1.17.5",
+    "pg": "^7.4.3",
     "superagent": "^3.8.3"
   },
   "dependencies": {

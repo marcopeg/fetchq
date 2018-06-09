@@ -23,9 +23,20 @@ class Fetchq {
         }
     }
 
+    async init () {
+        try {
+            await this.pool.query('CREATE EXTENSION IF NOT EXISTS fetchq;')
+            const res = await this.pool.query('SELECT * FROM fetchq_init()')
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] info() - ${err.message}`)
+        }
+    }
+
     async info () {
         try {
-            const res = await this.pool.query('select * from fetchq_info()')
+            const res = await this.pool.query('SELECT * FROM fetchq_info()')
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
