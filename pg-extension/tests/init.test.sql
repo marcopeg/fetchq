@@ -14,6 +14,10 @@ BEGIN
     DROP EXTENSION IF EXISTS fetchq;
     CREATE EXTENSION fetchq;
 
+    -- should be able to gracefully fail
+    PERFORM fetchq_init();
+    PERFORM fetchq_init();
+
     -- create the queue
     PERFORM * from fetchq_sys_queues;
     PERFORM * from fetchq_sys_metrics;

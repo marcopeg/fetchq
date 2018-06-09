@@ -12,6 +12,7 @@ BEGIN
     DROP SCHEMA public CASCADE;
     CREATE SCHEMA public;
     CREATE EXTENSION fetchq;
+    PERFORM * from fetchq_init();
 
     -- create the queue
     SELECT * INTO VAR_r FROM fetchq_create_queue('foo');

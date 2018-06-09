@@ -12,7 +12,7 @@ build:
 	mkdir -p $(CURDIR)/extension
 	cp $(CURDIR)/src/fetchq.control $(CURDIR)/extension/fetchq.control
 	cat $(CURDIR)/src/info.sql \
-		$(CURDIR)/src/sys-tables.sql \
+		$(CURDIR)/src/init.sql \
 		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
@@ -20,7 +20,7 @@ build:
 
 build-test:
 	mkdir -p $(CURDIR)/data
-	cat $(CURDIR)/tests/sys-tables.test.sql \
+	cat $(CURDIR)/tests/init.test.sql \
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
@@ -47,6 +47,8 @@ start: reset build build-test start-pg
 stop:
 	docker stop fetchq
 
+test: reset build build-test start-pg start-delay test-run stop
+
 test-run: build build-test
 	docker exec \
 		fetchq \
@@ -57,8 +59,6 @@ test-run: build build-test
 			--dbname fetchq \
 			-a -f /tests/fetchq--${version}.test.sql
 
-test: reset build build-test start-pg start-delay test-run stop
-
 init: build
 	docker exec \
 		fetchq \
@@ -67,4 +67,4 @@ init: build
 			-h localhost \
 			--username fetchq \
 			--dbname fetchq \
-			-c 'DROP SCHEMA public CASCADE;CREATE SCHEMA public;CREATE EXTENSION fetchq;'
+			-c 'DROP SCHEMA public CASCADE;CREATE SCHEMA public;CREATE EXTENSION fetchq;SELECT * FROM fetchq_init();'

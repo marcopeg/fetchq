@@ -7,6 +7,9 @@ Postgres extension that enables FetchQ capabilities
 - `make start` will run postgres
 - `make stop` will kill postgres
 - `make test-run` will build the extension and run the tests
+  against a running Postgres instance
+- `make test` runs a full test agains a newly created database instance
+- `make init` re-initialize a running Postgres instance
 
 ---
 
