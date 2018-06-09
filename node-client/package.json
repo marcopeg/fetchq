@@ -1,0 +1,28 @@
+{
+  "name": "fetchq",
+  "version": "1.0.0",
+  "description": "FetchqDB Client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcopeg/fetchq.git"
+  },
+  "keywords": [
+    "fetch",
+    "node",
+    "client"
+  ],
+  "author": "Marco Pegoraro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcopeg/fetchq/issues"
+  },
+  "homepage": "https://github.com/marcopeg/fetchq#readme",
+  "dependencies": {
+    "pg": "^7.4.3",
+    "winston": "^2.4.2"
+  }
+}

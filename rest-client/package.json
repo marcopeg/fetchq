@@ -4,7 +4,7 @@
   "description": "Provides a REST interface for managing a single database instance",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon --watch index.js --watch src -e js index",
+    "start": "NODE_ENV=development nodemon --watch index.js --watch src --watch ../node-client -e js index",
     "test": "./node_modules/mocha/bin/mocha --watch",
     "lint": "./node_modules/.bin/eslint index.js"
   },

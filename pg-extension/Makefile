@@ -10,7 +10,8 @@ reset:
 build-extension:
 	mkdir -p $(CURDIR)/extension
 	cp $(CURDIR)/src/fetchq.control $(CURDIR)/extension/fetchq.control
-	cat $(CURDIR)/src/sys-tables.sql \
+	cat $(CURDIR)/src/info.sql \
+		$(CURDIR)/src/sys-tables.sql \
 		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
@@ -56,3 +57,13 @@ test-run: build-extension build-test
 			-a -f /tests/fetchq--${version}.test.sql
 
 test: test-start-pg test-start-delay test-run test-stop
+
+reset-db: build-extension
+	docker exec \
+		fetchq \
+		psql \
+			-v ON_ERROR_STOP=1 \
+			-h localhost \
+			--username fetchq \
+			--dbname fetchq \
+			-c 'DROP SCHEMA public CASCADE;CREATE SCHEMA public;CREATE EXTENSION fetchq;'

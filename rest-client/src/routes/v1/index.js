@@ -1,9 +1,13 @@
 const express = require('express')
+const { fetchqGetClient } = require('./middlewares/fetchq-get-client')
+const { fetchqInfo } = require('./middlewares/fetchq-info')
 
 const createV1Router = (settings) => {
     const router = express.Router()
 
-    router.get('/', (req, res) => res.send('v1'))
+    router.use(fetchqGetClient())
+
+    router.get('/info', fetchqInfo())
 
     return router
 }
