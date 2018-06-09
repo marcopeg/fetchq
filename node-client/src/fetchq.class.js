@@ -75,7 +75,7 @@ class Fetchq {
     // @TODO: validate queue priority
     // @TODO: validate queue nextIteration
     // @TODO: validate queue payload
-    async push(queue, doc = {}) {
+    async push (queue, doc = {}) {
         try {
             const q = [
                 'SELECT * FROM fetchq_push(',
@@ -87,12 +87,39 @@ class Fetchq {
                 `'${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}'`,
                 ')'
             ].join(' ')
-            console.log(q)
+            // console.log(q)
             const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] push() - ${err.message}`)
+        }
+    }
+
+    async pushMany (queue, data = {}) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_push(',
+                `'${queue}',`,
+                `${data.priority || 0},`,
+                data.nextIteration ? `'${data.nextIteration}',` : 'NOW(),',
+                '\'(',
+                data.docs
+                    .map(doc => [
+                        `''${doc.subject}''`,
+                        `${doc.priority || 0}`,
+                        `''${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}''`,
+                        '{DATA}'
+                    ].join(', '))
+                    .join('), ('),
+                ')\')'
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] pushMany() - ${err.message}`)
         }
     }
 }

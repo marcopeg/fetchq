@@ -63,12 +63,38 @@ BEGIN
     END IF;
 
     -- checkout logs
-    -- checkout logs
     PERFORM fetchq_metric_log_pack();
     SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
     IF VAR_r.current_value <> 1 THEN
         RAISE EXCEPTION 'Wrong pending documents count';
     END IF;
+
+
+
+    -- 
+    -- PUSH MULTIPLE DOCS
+    --
+
+    -- initialize test
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+    CREATE EXTENSION fetchq;
+    PERFORM fetchq_init();
+    PERFORM fetchq_create_queue('foo');
+
+    SELECT * INTO VAR_queuedDocs FROM fetchq_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
+    IF VAR_queuedDocs <> 2 THEN
+        RAISE EXCEPTION 'It was not possible to queue multiple docs';
+    END IF;
+
+    -- checkout logs
+    PERFORM fetchq_metric_log_pack();
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
+    IF VAR_r.current_value <> 2 THEN
+        RAISE EXCEPTION 'Wrong pending documents count when adding multiple documents';
+    END IF;
+
+
 
     -- cleanup test
     -- DROP SCHEMA public CASCADE;

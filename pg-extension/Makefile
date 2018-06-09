@@ -24,6 +24,7 @@ build:
 		$(CURDIR)/src/metric-log-pack.sql \
 		$(CURDIR)/src/metric-get.sql \
 		$(CURDIR)/src/push.sql \
+		$(CURDIR)/src/push-many.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:

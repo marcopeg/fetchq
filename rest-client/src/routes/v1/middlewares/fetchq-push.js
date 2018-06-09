@@ -3,7 +3,12 @@ const winston = require('winston')
 
 const fetchqPush = () => async (req, res, next) => {
     try {
-        const info = await req.fetchq.push(req.params.name, req.body)
+        let info = null
+        if (req.body.docs) {
+            info = await req.fetchq.pushMany(req.params.name, req.body)
+        } else {
+            info = await req.fetchq.push(req.params.name, req.body)
+        }
         console.log(info)
         res.send(info)
     } catch (err) {

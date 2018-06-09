@@ -35,7 +35,6 @@ BEGIN
     EXECUTE VAR_q;
     GET DIAGNOSTICS queued_docs := ROW_COUNT;
 
-
     -- update generic counters
 	PERFORM fetchq_metric_log_increment(PAR_queue, 'ent', queued_docs);
 	PERFORM fetchq_metric_log_increment(PAR_queue, 'cnt', queued_docs);
