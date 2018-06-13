@@ -73,8 +73,8 @@ BEGIN
 	VAR_q = VAR_q || 'FROM %s WHERE id IN ( SELECT id ';
 	VAR_q = VAR_q || 'FROM %s); ';
 	VAR_q = FORMAT(VAR_q, VAR_tableName, VAR_tempTable);
-
 	RETURN QUERY EXECUTE VAR_q;
+
 	EXCEPTION WHEN OTHERS THEN BEGIN END;
 END; $$
 LANGUAGE plpgsql;

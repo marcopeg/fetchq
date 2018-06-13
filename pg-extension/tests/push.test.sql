@@ -1,17 +1,13 @@
 
--- declare test case
--- DROP FUNCTION IF EXISTS fetchq_test__push();
-CREATE OR REPLACE FUNCTION fetchq_test__push (
+
+CREATE OR REPLACE FUNCTION fetchq_test__push_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
+    VAR_testName VARCHAR = 'SHOULD BE ABLE TO QUEUE A SINGLE DOCUMENT WITH FUTURE SCHEDULE';
 	VAR_queuedDocs INTEGER;
     VAR_r RECORD;
 BEGIN
-
-    --
-    -- PUSH A SINGLE DOCUMENT WITH PAST DATE
-    --
     
     -- initialize test
     PERFORM fetchq_test_init();
@@ -20,72 +16,20 @@ BEGIN
     -- should be able to queue a document with future schedule
     SELECT * INTO VAR_queuedDocs FROM fetchq_push('foo', 'a1', 0, 0, NOW() + INTERVAL '1m', '{}');
     IF VAR_queuedDocs <> 1 THEN
-        RAISE EXCEPTION 'It was not possible to queue the doc';
+        RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
 
     SELECT * INTO VAR_r FROM fetchq__foo__documents WHERE subject = 'a1';
     IF VAR_r.status <> 0 THEN
-        RAISE EXCEPTION 'Wrong status was computed for the document';
+        RAISE EXCEPTION 'failed - % (Wrong status was computed for the document)', VAR_testName;
     END IF;
 
     -- checkout logs
     PERFORM fetchq_metric_log_pack();
     SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pln');
     IF VAR_r.current_value <> 1 THEN
-        RAISE EXCEPTION 'Wrong planned documents count';
+        RAISE EXCEPTION 'failed - % (Wrong planned documents count)', VAR_testName;
     END IF;
-
-
-
-    --
-    -- PUSH A SINGLE DOCUMENT WITH PAST DATE
-    --
-
-    -- initialize test
-    PERFORM fetchq_test_init();
-    PERFORM fetchq_create_queue('foo');
-
-    -- should be able to queue a document with past schedule
-    SELECT * INTO VAR_queuedDocs FROM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1m', '{}');
-    IF VAR_queuedDocs <> 1 THEN
-        RAISE EXCEPTION 'It was not possible to queue the doc';
-    END IF;
-
-    SELECT * INTO VAR_r FROM fetchq__foo__documents WHERE subject = 'a1';
-    IF VAR_r.status <> 1 THEN
-        RAISE EXCEPTION 'Wrong status was computed for the document';
-    END IF;
-
-    -- checkout logs
-    PERFORM fetchq_metric_log_pack();
-    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
-    IF VAR_r.current_value <> 1 THEN
-        RAISE EXCEPTION 'Wrong pending documents count';
-    END IF;
-
-
-
-    -- 
-    -- PUSH MULTIPLE DOCS
-    --
-
-    -- initialize test
-    PERFORM fetchq_test_init();
-    PERFORM fetchq_create_queue('foo');
-
-    SELECT * INTO VAR_queuedDocs FROM fetchq_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
-    IF VAR_queuedDocs <> 2 THEN
-        RAISE EXCEPTION 'It was not possible to queue multiple docs';
-    END IF;
-
-    -- checkout logs
-    PERFORM fetchq_metric_log_pack();
-    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
-    IF VAR_r.current_value <> 2 THEN
-        RAISE EXCEPTION 'Wrong pending documents count when adding multiple documents';
-    END IF;
-
-
 
     -- cleanup test
     PERFORM fetchq_test_clean();
@@ -94,6 +38,75 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
--- run test & cleanup
--- SELECT * FROM fetchq_test__push();
--- DROP FUNCTION IF EXISTS fetchq_test__push();
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__push_02 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'SHOULD BE ABLE TO QUEUE A SINGLE DOCUMENT WITH PAST SCHEDULE';
+	VAR_queuedDocs INTEGER;
+    VAR_r RECORD;
+BEGIN
+
+    -- initialize test
+    PERFORM fetchq_test_init();
+    PERFORM fetchq_create_queue('foo');
+
+    -- should be able to queue a document with past schedule
+    SELECT * INTO VAR_queuedDocs FROM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1m', '{}');
+    IF VAR_queuedDocs <> 1 THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
+
+    SELECT * INTO VAR_r FROM fetchq__foo__documents WHERE subject = 'a1';
+    IF VAR_r.status <> 1 THEN
+        RAISE EXCEPTION 'failed - % (Wrong status was computed for the document)', VAR_testName;
+    END IF;
+
+    -- checkout logs
+    PERFORM fetchq_metric_log_pack();
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
+    IF VAR_r.current_value <> 1 THEN
+        RAISE EXCEPTION 'failed - % (Wrong planned documents count)', VAR_testName;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__push_03 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'SHOULD BE ABLE TO QUEUE MULTIPLE DOCUMENTS';
+	VAR_queuedDocs INTEGER;
+    VAR_r RECORD;
+BEGIN
+
+    -- initialize test
+    PERFORM fetchq_test_init();
+    PERFORM fetchq_create_queue('foo');
+
+    SELECT * INTO VAR_queuedDocs FROM fetchq_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
+    IF VAR_queuedDocs <> 2 THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
+
+    -- checkout logs
+    PERFORM fetchq_metric_log_pack();
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
+    IF VAR_r.current_value <> 2 THEN
+        RAISE EXCEPTION 'failed - % (Wrong pending documents count when adding multiple documents)', VAR_testName;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
