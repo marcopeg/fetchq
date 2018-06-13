@@ -61,3 +61,93 @@ BEGIN
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
+
+
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__pick_03 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'LIMIT SHOULD BE RELIABLE';
+    VAR_affectedRows INTEGER;
+BEGIN
+    
+    -- initialize test
+    PERFORM fetchq_test_init();
+    PERFORM fetchq_create_queue('foo');
+
+    -- insert dummy data
+    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+
+    -- get first document
+    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    IF VAR_affectedRows <> 2 THEN
+        RAISE EXCEPTION 'failed - % (returned % rows instead of 2)', VAR_testName, VAR_affectedRows;
+    END IF;
+
+    -- cleanup
+    PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__pick_04 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'COUNTERS SHOULD BE UPDATED';
+    VAR_affectedRows INTEGER;
+    VAR_r RECORD;
+BEGIN
+    
+    -- initialize test
+    PERFORM fetchq_test_init();
+    PERFORM fetchq_create_queue('foo');
+
+    -- insert dummy data
+    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a4', 0, 0, NOW() + INTERVAL '1s', '{}');
+
+    -- get first document
+    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_metric_log_pack();
+    
+    -- test CNT
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'cnt');
+    IF VAR_r.current_value <> 4 THEN
+        RAISE EXCEPTION 'failed - % (count, expected 4, received %)', VAR_testName, VAR_r.current_value;
+    END IF;
+
+    -- test ACT
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'act');
+    IF VAR_r.current_value <> 2 THEN
+        RAISE EXCEPTION 'failed - % (active, expected 2, received %)', VAR_testName, VAR_r.current_value;
+    END IF;
+
+    -- test PND
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pnd');
+    IF VAR_r.current_value <> 1 THEN
+        RAISE EXCEPTION 'failed - % (pending, expected 1, received %)', VAR_testName, VAR_r.current_value;
+    END IF;
+
+    -- test PLN
+    SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'pln');
+    IF VAR_r.current_value <> 1 THEN
+        RAISE EXCEPTION 'failed - % (pending, expected 1, received %)', VAR_testName, VAR_r.current_value;
+    END IF;
+
+    -- cleanup
+    -- PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
