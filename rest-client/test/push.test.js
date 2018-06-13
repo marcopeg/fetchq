@@ -17,12 +17,10 @@ const weirdPayload = {
 }
 
 describe('FetchQ push', function () {
-    let queueId = null
 
     beforeEach(async function () {
         await pg.reset()
-        const res = await request.post(url('/v1/q')).send({ name: 'foo' })
-        queueId = res.body.queue_id
+        await request.post(url('/v1/q')).send({ name: 'foo' })
     })
 
     describe('single document', function () {
@@ -63,7 +61,7 @@ describe('FetchQ push', function () {
         })
     })
 
-    describe.only('multiple documents', function () {
+    describe('multiple documents', function () {
         it('should queue multiple documents', async function () {
             const res = await request.post(url('/v1/q/foo')).send({
                 version: 0,

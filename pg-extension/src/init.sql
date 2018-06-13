@@ -5,7 +5,6 @@ CREATE OR REPLACE FUNCTION fetchq_init (
 ) AS $$
 BEGIN
 
-
     -- Queues Index
     CREATE TABLE fetchq_sys_queues (
         id BIGINT NOT NULL,
@@ -105,5 +104,3 @@ BEGIN
 
 END; $$
 LANGUAGE plpgsql;
-
-

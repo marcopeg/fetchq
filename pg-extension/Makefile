@@ -13,6 +13,7 @@ build:
 	cp $(CURDIR)/src/fetchq.control $(CURDIR)/extension/fetchq.control
 	cat $(CURDIR)/src/info.sql \
 		$(CURDIR)/src/init.sql \
+		$(CURDIR)/src/destroy.sql \
 		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
@@ -25,15 +26,19 @@ build:
 		$(CURDIR)/src/metric-get.sql \
 		$(CURDIR)/src/push.sql \
 		$(CURDIR)/src/push-many.sql \
+		$(CURDIR)/src/pick.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
 	mkdir -p $(CURDIR)/data
-	cat $(CURDIR)/tests/init.test.sql \
+	cat $(CURDIR)/tests/_before.sql \
+		$(CURDIR)/tests/init.test.sql \
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
 		$(CURDIR)/tests/metrics.test.sql \
 		$(CURDIR)/tests/push.test.sql \
+		$(CURDIR)/tests/pick.test.sql \
+		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
 start-pg:

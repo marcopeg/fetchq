@@ -1,6 +1,6 @@
 
 -- declare test case
-DROP FUNCTION IF EXISTS fetchq_test__create_queue();
+-- DROP FUNCTION IF EXISTS fetchq_test__create_queue();
 CREATE OR REPLACE FUNCTION fetchq_test__create_queue (
     OUT passed BOOLEAN
 ) AS $$
@@ -9,8 +9,6 @@ DECLARE
     VAR_r RECORD;
 BEGIN
     -- initialize test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
     CREATE EXTENSION fetchq;
     PERFORM * from fetchq_init();
 
@@ -32,13 +30,13 @@ BEGIN
 	END IF;
 
     -- cleanup test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
+    PERFORM fetchq_destroy();
+    DROP EXTENSION fetchq;
 
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
 
 -- run test & cleanup
-SELECT * FROM fetchq_test__create_queue();
-DROP FUNCTION IF EXISTS fetchq_test__create_queue();
+-- SELECT * FROM fetchq_test__create_queue();
+-- DROP FUNCTION IF EXISTS fetchq_test__create_queue();

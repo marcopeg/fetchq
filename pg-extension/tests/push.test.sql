@@ -1,6 +1,6 @@
 
 -- declare test case
-DROP FUNCTION IF EXISTS fetchq_test__push();
+-- DROP FUNCTION IF EXISTS fetchq_test__push();
 CREATE OR REPLACE FUNCTION fetchq_test__push (
     OUT passed BOOLEAN
 ) AS $$
@@ -14,8 +14,6 @@ BEGIN
     --
     
     -- initialize test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
     CREATE EXTENSION fetchq;
     PERFORM fetchq_init();
     PERFORM fetchq_create_queue('foo');
@@ -45,8 +43,8 @@ BEGIN
     --
 
     -- initialize test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
+    PERFORM fetchq_destroy();
+    DROP EXTENSION fetchq;
     CREATE EXTENSION fetchq;
     PERFORM fetchq_init();
     PERFORM fetchq_create_queue('foo');
@@ -76,8 +74,8 @@ BEGIN
     --
 
     -- initialize test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
+    PERFORM fetchq_destroy();
+    DROP EXTENSION fetchq;
     CREATE EXTENSION fetchq;
     PERFORM fetchq_init();
     PERFORM fetchq_create_queue('foo');
@@ -96,14 +94,14 @@ BEGIN
 
 
 
-    -- cleanup test
-    -- DROP SCHEMA public CASCADE;
-    -- CREATE SCHEMA public;
+    -- cleanup
+    PERFORM fetchq_destroy();
+    DROP EXTENSION fetchq;
 
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
 
 -- run test & cleanup
-SELECT * FROM fetchq_test__push();
-DROP FUNCTION IF EXISTS fetchq_test__push();
+-- SELECT * FROM fetchq_test__push();
+-- DROP FUNCTION IF EXISTS fetchq_test__push();

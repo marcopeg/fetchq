@@ -1,7 +1,7 @@
 
 -- declare test case
-DROP FUNCTION IF EXISTS fetchq_test__metric_log_increment();
-CREATE OR REPLACE FUNCTION fetchq_test__metric_log_increment (
+-- DROP FUNCTION IF EXISTS fetchq_test__metrics();
+CREATE OR REPLACE FUNCTION fetchq_test__metrics (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -9,8 +9,6 @@ DECLARE
 BEGIN
 
     -- initialize test
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
     CREATE EXTENSION fetchq;
     PERFORM fetchq_init();
     PERFORM fetchq_create_queue('foo');
@@ -42,14 +40,14 @@ BEGIN
         RAISE EXCEPTION 'Wrong metric computation';
     END IF;
 
-    -- cleanup test
-    -- DROP SCHEMA public CASCADE;
-    -- CREATE SCHEMA public;
+    -- cleanup
+    PERFORM fetchq_destroy();
+    DROP EXTENSION fetchq;
 
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
 
 -- run test & cleanup
-SELECT * FROM fetchq_test__metric_log_increment();
-DROP FUNCTION IF EXISTS fetchq_test__metric_log_increment();
+-- SELECT * FROM fetchq_test__metrics();
+-- DROP FUNCTION IF EXISTS fetchq_test__metrics();
