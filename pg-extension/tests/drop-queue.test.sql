@@ -9,8 +9,7 @@ DECLARE
     VAR_r RECORD;
 BEGIN
     -- initialize test
-    CREATE EXTENSION fetchq;
-    PERFORM * from fetchq_init();
+    PERFORM fetchq_test_init();
 
     -- create & drop the queue
     PERFORM * FROM fetchq_create_queue('foo');
@@ -32,9 +31,8 @@ BEGIN
 		RAISE EXCEPTION 'queue jobs were not dropped';
 	END IF;
 
-    -- cleanup
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    -- cleanup test
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$

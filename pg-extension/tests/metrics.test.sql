@@ -9,8 +9,7 @@ DECLARE
 BEGIN
 
     -- initialize test
-    CREATE EXTENSION fetchq;
-    PERFORM fetchq_init();
+    PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
     -- test set counters
@@ -40,9 +39,8 @@ BEGIN
         RAISE EXCEPTION 'Wrong metric computation';
     END IF;
 
-    -- cleanup
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    -- cleanup test
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$

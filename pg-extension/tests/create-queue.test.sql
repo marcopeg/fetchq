@@ -9,8 +9,7 @@ DECLARE
     VAR_r RECORD;
 BEGIN
     -- initialize test
-    CREATE EXTENSION fetchq;
-    PERFORM * from fetchq_init();
+    PERFORM fetchq_test_init();
 
     -- create the queue
     SELECT * INTO VAR_r FROM fetchq_create_queue('foo');
@@ -30,8 +29,7 @@ BEGIN
 	END IF;
 
     -- cleanup test
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$

@@ -22,6 +22,11 @@ CREATE OR REPLACE FUNCTION fetchq_pick (
 ) AS $$
 DECLARE
 	LOCK_DURATION CONSTANT VARCHAR := '5m';
+	VAR_tableName VARCHAR;
+	VAR_tempTable VARCHAR;
+	VAR_updateCtx VARCHAR;
+	VAR_q VARCHAR;
+	VAR_affectedRows INTEGER;
 	-- table_name VARCHAR = 'lq_';
 	-- update_query VARCHAR;
 	-- output_query VARCHAR;
@@ -35,38 +40,41 @@ BEGIN
 		PAR_duration = LOCK_DURATION;
 	END IF;
 
-    RAISE NOTICE '%', PAR_duration;
+	-- get temporary table name
+	VAR_tableName = FORMAT('fetchq__%s__documents', PAR_queue);
+	VAR_tempTable = FORMAT('fetchq__%s__pick_table', PAR_queue);
+	VAR_updateCtx = FORMAT('fetchq__%s__pick_ctx', PAR_queue);
 
-	-- CREATE TEMP TABLE lock_queue_work_on_schedule_affected_ids (id BIGINT) ON COMMIT DROP;
+	-- create temporary table
+	VAR_q = FORMAT('CREATE TEMP TABLE %s (id BIGINT) ON COMMIT DROP;', VAR_tempTable);
+	EXECUTE VAR_q;
 
-	-- update_query = 'WITH lock_queue_work_on_schedule_affected_ids_updated_row AS ( ';
-	-- update_query = update_query || 'UPDATE %s ';
-	-- update_query = update_query || 'SET status = 2, next_iteration = NOW() + ''%s'', attempts = attempts + 1 ';
-	-- update_query = update_query || 'WHERE id IN ( SELECT id FROM %s ';
-    -- update_query = update_query || 'WHERE lock_upgrade IS NULL AND status = 1 AND version = %s AND next_iteration < NOW() ';
-	-- update_query = update_query || 'ORDER BY priority DESC, next_iteration ASC, attempts ASC ';
-	-- update_query = update_query || 'LIMIT %s FOR UPDATE SKIP LOCKED) RETURNING id) ';
-	-- update_query = update_query || 'INSERT INTO lock_queue_work_on_schedule_affected_ids (id) ';
-	-- update_query = update_query || 'SELECT id FROM lock_queue_work_on_schedule_affected_ids_updated_row; ';
-	-- update_query = FORMAT(update_query, table_name, PAR_duration, table_name, PAR_version, PAR_limit);
+	-- perform lock on the rows
+	VAR_q = 'WITH %s AS ( ';
+	VAR_q = VAR_q || 'UPDATE %s ';
+	VAR_q = VAR_q || 'SET status = 2, next_iteration = NOW() + ''%s'', attempts = attempts + 1 ';
+	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM %s ';
+    VAR_q = VAR_q || 'WHERE lock_upgrade IS NULL AND status = 1 AND version = %s AND next_iteration < NOW() ';
+	VAR_q = VAR_q || 'ORDER BY priority DESC, next_iteration ASC, attempts ASC ';
+	VAR_q = VAR_q || 'LIMIT %s FOR UPDATE SKIP LOCKED) RETURNING id) ';
+	VAR_q = VAR_q || 'INSERT INTO %s (id) ';
+	VAR_q = VAR_q || 'SELECT id FROM %s; ';
+	VAR_q = FORMAT(VAR_q, VAR_updateCtx, VAR_tableName, PAR_duration, VAR_tableName, PAR_version, PAR_limit, VAR_tempTable, VAR_updateCtx);
+	EXECUTE VAR_q;
+	GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+	
+	-- update counters
+	PERFORM fetchq_metric_log_increment(PAR_queue, 'pkd', VAR_affectedRows);
+	PERFORM fetchq_metric_log_increment(PAR_queue, 'act', VAR_affectedRows);
+	PERFORM fetchq_metric_log_decrement(PAR_queue, 'pnd', VAR_affectedRows);
 
---	raise log '%', update_query;
-	-- EXECUTE update_query;
-    -- GET DIAGNOSTICS affected_rows := ROW_COUNT;
+	-- return documents
+	VAR_q = 'SELECT id, subject, payload, version, priority, attempts, iterations, created_at, last_iteration, next_iteration, lock_upgrade ';
+	VAR_q = VAR_q || 'FROM %s WHERE id IN ( SELECT id ';
+	VAR_q = VAR_q || 'FROM %s); ';
+	VAR_q = FORMAT(VAR_q, VAR_tableName, VAR_tempTable);
 
---	raise log 'UPDATED %', affected_rows;
-	-- PERFORM lq_metric_log_increment(PAR_queue, 'pkd', affected_rows);
-	-- PERFORM lq_metric_log_increment(PAR_queue, 'act', affected_rows);
-	-- PERFORM lq_metric_log_decrement(PAR_queue, 'pnd', affected_rows);
-
-	-- output_query = 'SELECT id, subject, payload, version, priority, attempts, iterations, created_at, last_iteration, next_iteration, lock_upgrade ';
-	-- output_query = output_query || 'FROM %s WHERE id IN ( SELECT id ';
-	-- output_query = output_query || 'FROM lock_queue_work_on_schedule_affected_ids); ';
-	-- output_query = FORMAT(output_query, table_name);
-
-	-- RETURN QUERY EXECUTE output_query;
---	EXCEPTION WHEN OTHERS THEN BEGIN END;
-
-    RETURN QUERY EXECUTE 'select id, subject, payload, version, priority, attempts, iterations, created_at, last_iteration, next_iteration, lock_upgrade from fetchq__foo__documents;';
+	RETURN QUERY EXECUTE VAR_q;
+	EXCEPTION WHEN OTHERS THEN BEGIN END;
 END; $$
 LANGUAGE plpgsql;

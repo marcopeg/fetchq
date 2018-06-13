@@ -9,8 +9,7 @@ DECLARE
     VAR_r RECORD;
 BEGIN
     -- initialize test
-    DROP EXTENSION IF EXISTS fetchq;
-    CREATE EXTENSION fetchq;
+    PERFORM fetchq_test_init();
 
     -- should be able to gracefully fail
     PERFORM fetchq_init();
@@ -22,9 +21,8 @@ BEGIN
     PERFORM * from fetchq_sys_metrics_writes;
     PERFORM * from fetchq_sys_jobs;
 
-    -- cleanup
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    -- cleanup test
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$

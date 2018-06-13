@@ -14,8 +14,7 @@ BEGIN
     --
     
     -- initialize test
-    CREATE EXTENSION fetchq;
-    PERFORM fetchq_init();
+    PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
     -- should be able to queue a document with future schedule
@@ -43,10 +42,7 @@ BEGIN
     --
 
     -- initialize test
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
-    CREATE EXTENSION fetchq;
-    PERFORM fetchq_init();
+    PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
     -- should be able to queue a document with past schedule
@@ -74,10 +70,7 @@ BEGIN
     --
 
     -- initialize test
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
-    CREATE EXTENSION fetchq;
-    PERFORM fetchq_init();
+    PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
     SELECT * INTO VAR_queuedDocs FROM fetchq_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
@@ -94,9 +87,8 @@ BEGIN
 
 
 
-    -- cleanup
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    -- cleanup test
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$

@@ -5,31 +5,31 @@ CREATE OR REPLACE FUNCTION fetchq_test__pick (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-	VAR_queuedDocs INTEGER;
+    VAR_testName VARCHAR;
     VAR_r RECORD;
 BEGIN
 
-    --
-    -- PUSH A SINGLE DOCUMENT WITH PAST DATE
-    --
+    -- TEST NAME --
+    VAR_testName = 'OLDER DOCUMENT SHOULD GO FIRST';
+    -- TEST NAME --
     
     -- initialize test
-    CREATE EXTENSION fetchq;
-    PERFORM fetchq_init();
+    PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW(), '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW(), '{}');
+    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '2s', '{}');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq_pick('foo', 0, 1, '5m');
-    RAISE NOTICE '%', VAR_r;
+    IF VAR_r.subject != 'a2' THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
 
 
     -- cleanup
-    PERFORM fetchq_destroy();
-    DROP EXTENSION fetchq;
+    PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$
