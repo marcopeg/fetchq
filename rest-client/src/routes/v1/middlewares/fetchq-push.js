@@ -9,7 +9,7 @@ const fetchqPush = () => async (req, res, next) => {
         } else {
             info = await req.fetchq.push(req.params.name, req.body)
         }
-        console.log(info)
+        // console.log(info)
         res.send(info)
     } catch (err) {
         winston.verbose(`post://api/v1/q/${req.params.name} - ${err.message}`)

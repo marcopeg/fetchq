@@ -122,6 +122,55 @@ class Fetchq {
             throw new Error(`[fetchq] pushMany() - ${err.message}`)
         }
     }
+
+    async metricLogPack () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_log_pack()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricLogPack() - ${err.message}`)
+        }
+    }
+
+    async mntRunAll (limit = 100) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_mnt_run_all(',
+                limit,
+                ')',
+            ].join(' ')
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] mntRunAll() - ${err.message}`)
+        }
+    }
+    
+
+    async pick (queue = null, version = 0, limit = 1, duration = '5m') {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_pick(',
+                `'${queue}',`,
+                `${version},`,
+                `${limit},`,
+                `'${duration}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] pick() - ${err.message}`)
+        }
+    }
 }
 
 module.exports = {

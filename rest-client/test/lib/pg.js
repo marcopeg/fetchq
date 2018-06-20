@@ -27,8 +27,11 @@ const reset = async () => {
     await pool.query('SELECT * FROM fetchq_init();')
 }
 
+const query = q => pool.query(q)
+
 module.exports = {
     dropSchema,
     reset,
+    query,
 }
 
