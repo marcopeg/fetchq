@@ -27,6 +27,7 @@ build:
 		$(CURDIR)/src/push.sql \
 		$(CURDIR)/src/push-many.sql \
 		$(CURDIR)/src/pick.sql \
+		$(CURDIR)/src/mnt-make-pending.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -38,6 +39,7 @@ build-test:
 		$(CURDIR)/tests/metrics.test.sql \
 		$(CURDIR)/tests/push.test.sql \
 		$(CURDIR)/tests/pick.test.sql \
+		$(CURDIR)/tests/mnt-make-pending.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 

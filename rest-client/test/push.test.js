@@ -1,3 +1,4 @@
+const moment = require('moment')
 const expect = require('chai').expect
 const request = require('superagent')
 const url = require('./lib/url')
@@ -114,6 +115,42 @@ describe('FetchQ push', function () {
             })
             expect(res.statusCode).to.equal(200)
             expect(res.body.queued_docs).to.equal(2)
+        })
+
+        it('should queue a single document with a specific date', async function () {
+            const r1 = await request.post(url('/v1/q/foo')).send({
+                subject: 'a1',
+                version: 0,
+                priority: 0,
+                nextIteration: '2016-10-10 12:22',
+                payload: { a: 1 },
+            })
+            const r2 = await pg.query('select * from fetchq__foo__documents;')
+            const inputDate = moment('2016-10-10 12:22')
+            const docDate = moment(r2.rows[0]['next_iteration'])
+            expect(r1.body.queued_docs).to.equal(1)
+            expect(inputDate.format('MMMMDoYYYYmmss')).to.equal(docDate.format('MMMMDoYYYYmmss'))
+        })
+
+        it('should queue multiple documents with a specific date', async function () {
+            const r1 = await request.post(url('/v1/q/foo')).send({
+                version: 0,
+                nextIteration: '2016-10-10 12:22',
+                docs: [ {
+                    subject: 'a1',
+                    priority: 0,
+                    payload: weirdPayload,
+                }, {
+                    subject: 'a2',
+                    priority: 1,
+                    payload: weirdPayload,
+                } ],
+            })
+            const r2 = await pg.query('select * from fetchq__foo__documents;')
+            const inputDate = moment('2016-10-10 12:22')
+            const docDate = moment(r2.rows[0]['next_iteration'])
+            expect(r1.body.queued_docs).to.equal(2)
+            expect(inputDate.format('MMMMDoYYYYmmss')).to.equal(docDate.format('MMMMDoYYYYmmss'))
         })
     })
 
