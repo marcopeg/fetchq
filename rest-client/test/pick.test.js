@@ -54,14 +54,21 @@ describe.only('FetchQ pick', function () {
     it('should establish a custom lock duration', async function () {
         await request.post(url('/v1/pick')).send({
             queue: 'foo',
-            duration: '1s',
-            limit: 2,
+            duration: '1 minute',
+            limit: 1,
         })
-        await pause(1500)
+        await request.post(url('/v1/pick')).send({
+            queue: 'foo',
+            duration: '1 millisecond',
+            limit: 1,
+        })
+        await pause(1)
+        await request.post(url('/v1/mnt/run/all'))
         const docs = (await request.post(url('/v1/pick')).send({
             queue: 'foo',
         })).body
-        console.log(docs)
+        expect(docs.length).to.equal(1)
+        expect(docs[0].subject).to.equal('a2')
     })
 
 })

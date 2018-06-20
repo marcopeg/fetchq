@@ -21,25 +21,12 @@ CREATE OR REPLACE FUNCTION fetchq_pick (
 	lock_upgrade TIMESTAMP WITH TIME ZONE
 ) AS $$
 DECLARE
-	LOCK_DURATION CONSTANT VARCHAR := '5m';
 	VAR_tableName VARCHAR;
 	VAR_tempTable VARCHAR;
 	VAR_updateCtx VARCHAR;
 	VAR_q VARCHAR;
 	VAR_affectedRows INTEGER;
-	-- table_name VARCHAR = 'lq_';
-	-- update_query VARCHAR;
-	-- output_query VARCHAR;
---	q4 lock_queue;
-	-- affected_rows INTEGER;
 BEGIN
-	-- table_name = table_name || PAR_queue;
-
-	-- Apply default lock duration
-	IF PAR_duration = '' THEN
-		PAR_duration = LOCK_DURATION;
-	END IF;
-
 	-- get temporary table name
 	VAR_tableName = FORMAT('fetchq__%s__documents', PAR_queue);
 	VAR_tempTable = FORMAT('fetchq__%s__pick_table', PAR_queue);
