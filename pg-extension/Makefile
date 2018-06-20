@@ -30,6 +30,7 @@ build:
 		$(CURDIR)/src/mnt-make-pending.sql \
 		$(CURDIR)/src/mnt-reschedule-orphans.sql \
 		$(CURDIR)/src/mnt-mark-dead.sql \
+		$(CURDIR)/src/mnt-run.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -44,6 +45,7 @@ build-test:
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
 		$(CURDIR)/tests/mnt-reschedule-orphans.test.sql \
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \
+		$(CURDIR)/tests/mnt-run.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
