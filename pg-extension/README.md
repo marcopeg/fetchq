@@ -43,7 +43,7 @@ kll - current completed kill
 ent - documents that have entered the queue
 drp - documents that have been dropped
 pkd - documents that have been piked
-prd - documents that have been processed (either of the possible actions)
+prc - documents that have been processed (either of the possible actions)
 
 #### status metrics
 
