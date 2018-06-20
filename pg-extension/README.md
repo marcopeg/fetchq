@@ -49,4 +49,5 @@ prd - documents that have been processed (either of the possible actions)
 
 res - documents that have been rescheduled
 rej - documents that have been rejected
-err - documents that have been triggered an unexpected error
+orp - documents that have been rescheduled because they were orphans
+err - (= rej + orp)
