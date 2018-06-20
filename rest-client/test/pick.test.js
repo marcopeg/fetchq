@@ -6,7 +6,7 @@ const url = require('./lib/url')
 const pg = require('./lib/pg')
 
 
-describe.only('FetchQ pick', function () {
+describe('FetchQ pick', function () {
     beforeEach(async function () {
         await pg.reset()
         await request.post(url('/v1/q')).send({ name: 'foo' })
