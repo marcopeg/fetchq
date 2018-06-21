@@ -6,7 +6,9 @@ const { fetchqCreateQueue } = require('./middlewares/fetchq-create-queue')
 const { fetchqDropQueue } = require('./middlewares/fetchq-drop-queue')
 const { fetchqPush } = require('./middlewares/fetchq-push')
 const { fetchqPick } = require('./middlewares/fetchq-pick')
+const { fetchqReschedule } = require('./middlewares/fetchq-reschedule')
 const { fetchqMetricLogPack } = require('./middlewares/fetchq-metric-log-pack')
+const { fetchqMetricGet } = require('./middlewares/fetchq-metric-get')
 const { fetchqMntRunAll } = require('./middlewares/fetchq-mnt-run-all')
 
 const createV1Router = (settings) => {
@@ -24,9 +26,11 @@ const createV1Router = (settings) => {
 
     // document api
     router.post('/pick', fetchqPick())
+    router.post('/reschedule', fetchqReschedule())
 
     // metrics
     router.post('/metric/log/pack', fetchqMetricLogPack())
+    router.post('/metric/get', fetchqMetricGet())
 
     // maintenance
     router.post('/mnt/run/all', fetchqMntRunAll())

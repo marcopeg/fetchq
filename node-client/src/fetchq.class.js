@@ -137,6 +137,23 @@ class Fetchq {
         }
     }
 
+    async metricGet (queue = null, metric = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get(',
+                `'${queue}',`,
+                `'${metric}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+        }
+    }
+
     async mntRunAll (limit = 100) {
         try {
             const q = [
@@ -152,7 +169,6 @@ class Fetchq {
         }
     }
     
-
     async pick (queue = null, version = 0, limit = 1, duration = '5m') {
         try {
             const q = [
@@ -166,6 +182,25 @@ class Fetchq {
             // console.log(q)
             const res = await this.pool.query(q)
             return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] pick() - ${err.message}`)
+        }
+    }
+
+    async reschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_reschedule(',
+                `'${queue}',`,
+                `${documentId},`,
+                nextIteration === null ? 'NOW()' : `'${nextIteration}'`,
+                payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] pick() - ${err.message}`)
