@@ -39,11 +39,11 @@ BEGIN
 	-- errors table
 	VAR_q = 'CREATE TABLE fetchq__%s__errors (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
-	VAR_q = VAR_q || 'process_id BIGINT,';
-	VAR_q = VAR_q || 'subject CHARACTER VARYING(50) NOT NULL,';
 	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE,';
+	VAR_q = VAR_q || 'subject CHARACTER VARYING(50) NOT NULL,';
 	VAR_q = VAR_q || 'message CHARACTER VARYING(255) NOT NULL,';
-	VAR_q = VAR_q || 'details JSONB';
+	VAR_q = VAR_q || 'details JSONB,';
+	VAR_q = VAR_q || 'ref_id VARCHAR';
 	VAR_q = VAR_q || ');';
 	VAR_q = FORMAT(VAR_q, PAR_domainStr);
 	EXECUTE VAR_q;
