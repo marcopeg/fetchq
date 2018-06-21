@@ -218,12 +218,30 @@ class Fetchq {
                 refId === null ? '' : `, '${refId}'`,
                 ')',
             ].join(' ')
-            console.log(q)
+            // console.log(q)
             const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] reject() - ${err.message}`)
+        }
+    }
+
+    async complete (queue = null, documentId = 0, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_complete(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] complete() - ${err.message}`)
         }
     }
 }

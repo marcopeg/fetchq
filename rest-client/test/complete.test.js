@@ -3,8 +3,7 @@ const request = require('superagent')
 const url = require('./lib/url')
 const pg = require('./lib/pg')
 
-
-describe('FetchQ reject', function () {
+describe('FetchQ complete', function () {
     let doc = null
     beforeEach(async function () {
         await pg.reset()
@@ -22,12 +21,10 @@ describe('FetchQ reject', function () {
         })).body.shift()
     })
 
-    it('should set a document as rejected', async function () {
-        const r1 = await request.post(url('/v1/reject')).send({
+    it('should set a document as completed', async function () {
+        const r1 = await request.post(url('/v1/complete')).send({
             queue: 'foo',
             documentId: doc.id,
-            message: 'aaa',
-            details: { e: true },
         })
 
         // test on collected metrics
@@ -35,26 +32,27 @@ describe('FetchQ reject', function () {
         await request.post(url('/v1/metric/log/pack'))
         const r2 = await request.post(url('/v1/metric/get')).send({
             queue: 'foo',
-            metric: 'rej',
+            metric: 'cpl',
         })
 
         expect(r1.body.affected_rows).to.equal(1)
         expect(r2.body.current_value).to.equal(1)
     })
 
-    it('should set a document as rejected with refId', async function () {
-        const r1 = await request.post(url('/v1/reject')).send({
+    it('should set a document as completed - with payload', async function () {
+        const r1 = await request.post(url('/v1/complete')).send({
             queue: 'foo',
             documentId: doc.id,
-            message: 'aaa',
-            details: { e: true },
-            refId: 'xxx',
+            payload: {
+                ...doc.payload,
+                completed: true,
+            },
         })
 
-        // test on produced error in the database
-        const r2 = await pg.query(`select * from fetchq__foo__errors`)
+        // test on the outcome in the db
+        const r2 = await pg.query(`select * from fetchq__foo__documents where id = ${doc.id} and status = 3`)
 
         expect(r1.body.affected_rows).to.equal(1)
-        expect(r2.rows[0]['ref_id']).to.equal('xxx')
+        expect(r2.rows[0].payload.completed).to.equal(true)
     })
 })
