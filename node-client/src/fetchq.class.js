@@ -244,6 +244,24 @@ class Fetchq {
             throw new Error(`[fetchq] complete() - ${err.message}`)
         }
     }
+
+    async kill (queue = null, documentId = 0, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_kill(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] kill() - ${err.message}`)
+        }
+    }
 }
 
 module.exports = {
