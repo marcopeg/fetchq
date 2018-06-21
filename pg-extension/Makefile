@@ -32,6 +32,8 @@ build:
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
 		$(CURDIR)/src/reschedule.sql \
+		$(CURDIR)/src/log-error.sql \
+		$(CURDIR)/src/reject.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -48,6 +50,8 @@ build-test:
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \
 		$(CURDIR)/tests/mnt-run.test.sql \
 		$(CURDIR)/tests/reschedule.test.sql \
+		$(CURDIR)/tests/log-error.test.sql \
+		$(CURDIR)/tests/reject.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 

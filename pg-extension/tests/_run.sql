@@ -17,4 +17,7 @@ SELECT * FROM fetchq_test__mnt_run_01();
 SELECT * FROM fetchq_test__mnt_run_all_01();
 SELECT * FROM fetchq_test__reschedule_01();
 SELECT * FROM fetchq_test__reschedule_02();
-
+SELECT * FROM fetchq_test__log_error_01();
+SELECT * FROM fetchq_test__log_error_02();
+SELECT * FROM fetchq_test__reject_01();
+SELECT * FROM fetchq_test__reject_02();
