@@ -35,6 +35,7 @@ build:
 		$(CURDIR)/src/log-error.sql \
 		$(CURDIR)/src/reject.sql \
 		$(CURDIR)/src/complete.sql \
+		$(CURDIR)/src/kill.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -54,6 +55,7 @@ build-test:
 		$(CURDIR)/tests/log-error.test.sql \
 		$(CURDIR)/tests/reject.test.sql \
 		$(CURDIR)/tests/complete.test.sql \
+		$(CURDIR)/tests/kill.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
