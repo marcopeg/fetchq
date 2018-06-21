@@ -21,3 +21,5 @@ SELECT * FROM fetchq_test__log_error_01();
 SELECT * FROM fetchq_test__log_error_02();
 SELECT * FROM fetchq_test__reject_01();
 SELECT * FROM fetchq_test__reject_02();
+SELECT * FROM fetchq_test__complete_01();
+SELECT * FROM fetchq_test__complete_02();
