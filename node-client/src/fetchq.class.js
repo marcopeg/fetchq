@@ -262,6 +262,23 @@ class Fetchq {
             throw new Error(`[fetchq] kill() - ${err.message}`)
         }
     }
+
+    async drop (queue = null, documentId = 0) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_drop(',
+                `'${queue}',`,
+                `${documentId}`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] drop() - ${err.message}`)
+        }
+    }
 }
 
 module.exports = {
