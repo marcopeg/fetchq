@@ -34,6 +34,7 @@ build:
 		$(CURDIR)/src/reschedule.sql \
 		$(CURDIR)/src/log-error.sql \
 		$(CURDIR)/src/reject.sql \
+		$(CURDIR)/src/complete.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -52,6 +53,7 @@ build-test:
 		$(CURDIR)/tests/reschedule.test.sql \
 		$(CURDIR)/tests/log-error.test.sql \
 		$(CURDIR)/tests/reject.test.sql \
+		$(CURDIR)/tests/complete.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 
