@@ -198,12 +198,32 @@ class Fetchq {
                 payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
                 ')',
             ].join(' ')
-            console.log(q)
+            // console.log(q)
             const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] pick() - ${err.message}`)
+        }
+    }
+    
+    async reject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_reject(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${errorMsg || ''}',`,
+                `'${JSON.stringify(errorDetails || {}).replace(/'/g, '\'\'\'\'')}'`,
+                refId === null ? '' : `, '${refId}'`,
+                ')',
+            ].join(' ')
+            console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] reject() - ${err.message}`)
         }
     }
 }
