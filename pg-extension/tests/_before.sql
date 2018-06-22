@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION fetchq_test_clean (
     OUT done BOOLEAN
 ) AS $$
 BEGIN
-    CREATE EXTENSION IF NOT EXISTS fetchq;
+    -- CREATE EXTENSION IF NOT EXISTS fetchq;
     PERFORM fetchq_destroy();
     DROP EXTENSION fetchq;
     done = TRUE;

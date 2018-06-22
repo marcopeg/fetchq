@@ -1,7 +1,5 @@
 
--- declare test case
--- DROP FUNCTION IF EXISTS fetchq_test__create_queue();
-CREATE OR REPLACE FUNCTION fetchq_test__create_queue (
+CREATE OR REPLACE FUNCTION fetchq_test__create_queue_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -35,6 +33,26 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
--- run test & cleanup
--- SELECT * FROM fetchq_test__create_queue();
--- DROP FUNCTION IF EXISTS fetchq_test__create_queue();
+CREATE OR REPLACE FUNCTION fetchq_test__create_queue_02 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'QUEUE NAME LENGTH SHOULD NOT EXCEED 40';
+	VAR_numDocs INTEGER;
+    VAR_r RECORD;
+BEGIN
+    -- initialize test
+    PERFORM fetchq_test_init();
+
+    -- create the queue (41 characters should not create the queue)
+    SELECT * INTO VAR_r FROM fetchq_create_queue('f1234567891234567891234567899999999999999');
+    IF VAR_r.was_created IS NOT false THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
