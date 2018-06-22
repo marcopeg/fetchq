@@ -15,6 +15,7 @@ build:
 		$(CURDIR)/src/init.sql \
 		$(CURDIR)/src/destroy.sql \
 		$(CURDIR)/src/get-queue-id.sql \
+		$(CURDIR)/src/create-queue-indexes.sql \
 		$(CURDIR)/src/create-queue.sql \
 		$(CURDIR)/src/drop-queue.sql \
 		$(CURDIR)/src/metric-set.sql \

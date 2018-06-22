@@ -4,19 +4,17 @@
 -- { was_created: TRUE }
 DROP FUNCTION IF EXISTS fetchq_create_queue(CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_create_queue (
-	PAR_domainStr VARCHAR,
+	PAR_queue VARCHAR,
 	OUT was_created BOOLEAN,
 	OUT queue_id BIGINT
 ) AS $$
 DECLARE
-	-- VAR_table_name VARCHAR = 'fetchq__';
 	VAR_q VARCHAR;
 BEGIN
 	was_created = TRUE;
-	-- VAR_table_name = VAR_table_name || PAR_domainStr;
 
 	-- pick the queue id
-	SELECT t.queue_id INTO queue_id FROM fetchq_get_queue_id(PAR_domainStr) AS t;
+	SELECT t.queue_id INTO queue_id FROM fetchq_get_queue_id(PAR_queue) AS t;
 
 	VAR_q = 'CREATE TABLE fetchq__%s__documents (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
@@ -33,7 +31,7 @@ BEGIN
 	VAR_q = VAR_q || 'payload JSONB,';
 	VAR_q = VAR_q || 'UNIQUE(subject)';
 	VAR_q = VAR_q || ');';
-	VAR_q = FORMAT(VAR_q, PAR_domainStr);
+	VAR_q = FORMAT(VAR_q, PAR_queue);
 	EXECUTE VAR_q;
 
 	-- errors table
@@ -45,7 +43,7 @@ BEGIN
 	VAR_q = VAR_q || 'details JSONB,';
 	VAR_q = VAR_q || 'ref_id VARCHAR';
 	VAR_q = VAR_q || ');';
-	VAR_q = FORMAT(VAR_q, PAR_domainStr);
+	VAR_q = FORMAT(VAR_q, PAR_queue);
 	EXECUTE VAR_q;
 
 	-- stats history
@@ -55,18 +53,18 @@ BEGIN
 	VAR_q = VAR_q || 'value bigint,';
 	VAR_q = VAR_q || 'ts TIMESTAMP WITH TIME ZONE';
 	VAR_q = VAR_q || ');';
-	VAR_q = FORMAT(VAR_q, PAR_domainStr);
+	VAR_q = FORMAT(VAR_q, PAR_queue);
 	EXECUTE VAR_q;
 
 	-- add indexes
-	--PERFORM lq_create_indexes(PAR_domainStr, 0);
+	PERFORM fetchq_create_queue_indexes(PAR_queue, 0, 1);
 
 	-- add new maintenance tasks
 	INSERT INTO fetchq_sys_jobs (domain, subject, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
-	('mnt', PAR_domainStr, NOW(), NULL, 0, 0, '{}', '{}'),
-	('sts', PAR_domainStr, NOW(), NULL, 0, 0, '{}', '{}'),
-	('cmp', PAR_domainStr, NOW(), NULL, 0, 0, '{}', '{}'),
-	('cln', PAR_domainStr, NOW(), NULL, 0, 0, '{}', '{}')
+	('mnt', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
+	('sts', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
+	('cmp', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
+	('cln', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}')
 	ON CONFLICT DO NOTHING;
 
 	EXCEPTION WHEN OTHERS THEN BEGIN
