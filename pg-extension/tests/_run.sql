@@ -1,4 +1,5 @@
 
+-- regression tests
 SELECT * FROM fetchq_test__init();
 SELECT * FROM fetchq_test__create_queue();
 SELECT * FROM fetchq_test__drop_queue();
@@ -26,3 +27,8 @@ SELECT * FROM fetchq_test__complete_02();
 SELECT * FROM fetchq_test__kill_01();
 SELECT * FROM fetchq_test__kill_02();
 SELECT * FROM fetchq_test__drop_01();
+
+-- load tests
+-- SELECT * FROM fetchq_test__load_01(10000);
+-- SELECT * FROM fetchq_test__load_02(5000);
+-- SELECT * FROM fetchq_test__load_03(2, 5000);

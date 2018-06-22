@@ -58,6 +58,7 @@ build-test:
 		$(CURDIR)/tests/complete.test.sql \
 		$(CURDIR)/tests/kill.test.sql \
 		$(CURDIR)/tests/drop.test.sql \
+		$(CURDIR)/tests/load.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 

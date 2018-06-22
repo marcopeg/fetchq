@@ -6,7 +6,7 @@ const { requestData } = require('../middlewares/request-data')
 const createAppRouter = (settings) => {
     const router = express.Router()
 
-    router.use(bodyParser.json())
+    router.use(bodyParser.json({ limit: '1mb' }))
     router.use(requestData())
 
     router.use('/v1', createV1Router())
