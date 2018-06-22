@@ -14,8 +14,10 @@ SELECT * FROM fetchq_test__pick_02();
 SELECT * FROM fetchq_test__pick_03();
 SELECT * FROM fetchq_test__pick_04();
 SELECT * FROM fetchq_test__mnt_make_pending_01();
-SELECT * FROM fetchq_test__mnt_reschedule_orphanse_01();
+SELECT * FROM fetchq_test__mnt_reschedule_orphans_01();
+SELECT * FROM fetchq_test__mnt_reschedule_orphans_02();
 SELECT * FROM fetchq_test__mnt_mark_dead_01();
+SELECT * FROM fetchq_test__mnt_mark_dead_02();
 SELECT * FROM fetchq_test__mnt_run_01();
 SELECT * FROM fetchq_test__mnt_run_all_01();
 SELECT * FROM fetchq_test__reschedule_01();
@@ -29,6 +31,7 @@ SELECT * FROM fetchq_test__complete_02();
 SELECT * FROM fetchq_test__kill_01();
 SELECT * FROM fetchq_test__kill_02();
 SELECT * FROM fetchq_test__drop_01();
+SELECT * FROM fetchq_test__queue_set_max_attempts_01();
 
 -- load tests
 -- SELECT * FROM fetchq_test__load_01(10000);

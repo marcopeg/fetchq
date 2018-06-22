@@ -57,7 +57,7 @@ BEGIN
 	EXECUTE VAR_q;
 
 	-- add indexes
-	PERFORM fetchq_create_queue_indexes(PAR_queue, 0, 1);
+	PERFORM fetchq_create_queue_indexes(PAR_queue, 0, 5);
 
 	-- add new maintenance tasks
 	INSERT INTO fetchq_sys_jobs (domain, subject, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
