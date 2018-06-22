@@ -14,8 +14,8 @@ BEGIN
 	VAR_q = VAR_q || 'UPDATE fetchq__%s__documents SET status = 1 ';
 	VAR_q = VAR_q || 'WHERE id IN ( ';
 	VAR_q = VAR_q || 'SELECT id FROM fetchq__%s__documents ';
-	VAR_q = VAR_q || 'WHERE status = 0 AND next_iteration < now() ';
-	VAR_q = VAR_q || 'ORDER BY priority DESC, next_iteration ASC, attempts ASC ';
+	VAR_q = VAR_q || 'WHERE lock_upgrade IS NULL AND status = 0 AND next_iteration < NOW() ';
+	VAR_q = VAR_q || 'ORDER BY next_iteration ASC, attempts ASC ';
 	VAR_q = VAR_q || 'LIMIT %s  ';
 	VAR_q = VAR_q || 'FOR UPDATE); ';
 	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, PAR_limit);

@@ -3,6 +3,7 @@
 SELECT * FROM fetchq_test__init();
 SELECT * FROM fetchq_test__create_queue_01();
 SELECT * FROM fetchq_test__create_queue_02();
+SELECT * FROM fetchq_test__create_queue_03();
 SELECT * FROM fetchq_test__drop_queue();
 SELECT * FROM fetchq_test__metrics_01();
 SELECT * FROM fetchq_test__metrics_02();
@@ -32,6 +33,9 @@ SELECT * FROM fetchq_test__kill_01();
 SELECT * FROM fetchq_test__kill_02();
 SELECT * FROM fetchq_test__drop_01();
 SELECT * FROM fetchq_test__queue_set_max_attempts_01();
+SELECT * FROM fetchq_test__queue_set_current_version_01();
+SELECT * FROM fetchq_test__queue_drop_version_01();
+SELECT * FROM fetchq_test__queue_drop_version_02();
 
 -- load tests
 -- SELECT * FROM fetchq_test__load_01(10000);
