@@ -8,7 +8,7 @@ BEGIN
     -- Queues Index
     CREATE TABLE fetchq_sys_queues (
         id BIGINT NOT NULL,
-        name CHARACTER VARYING(50) NOT NULL,
+        name CHARACTER VARYING(40) NOT NULL,
         is_active BOOLEAN DEFAULT true,
         created_at TIMESTAMP WITH TIME ZONE,
         config JSON DEFAULT '{}'
@@ -29,8 +29,8 @@ BEGIN
     -- Metrics Overview
     CREATE TABLE fetchq_sys_metrics (
         id BIGINT NOT NULL,
-        queue CHARACTER VARYING(25) NOT NULL,
-        metric CHARACTER VARYING(25) NOT NULL,
+        queue CHARACTER VARYING(40) NOT NULL,
+        metric CHARACTER VARYING(40) NOT NULL,
         value BIGINT NOT NULL,
         updated_at TIMESTAMP WITH TIME ZONE
     );
@@ -51,8 +51,8 @@ BEGIN
     CREATE TABLE fetchq_sys_metrics_writes (
         id BIGINT NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE,
-        queue CHARACTER VARYING(25) NOT NULL,
-        metric CHARACTER VARYING(25) NOT NULL,
+        queue CHARACTER VARYING(40) NOT NULL,
+        metric CHARACTER VARYING(40) NOT NULL,
         increment BIGINT,
         reset BIGINT
     );
@@ -73,8 +73,8 @@ BEGIN
     -- Maintenance Jobs
     CREATE TABLE fetchq_sys_jobs (
         id bigint NOT NULL,
-        domain character varying(50) NOT NULL,
-        subject character varying(50) NOT NULL,
+        domain character varying(40) NOT NULL,
+        subject character varying(40) NOT NULL,
         attempts integer DEFAULT 0,
         iterations integer DEFAULT 0,
         next_iteration timestamp with time zone,
