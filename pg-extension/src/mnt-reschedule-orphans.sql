@@ -8,16 +8,21 @@ CREATE OR REPLACE FUNCTION fetchq_mnt_reschedule_orphans (
 	OUT affected_rows INTEGER
 ) AS $$
 DECLARE
-	MAX_ATTEMPTS CONSTANT INTEGER := 5;
 	VAR_q VARCHAR;
+	VAR_r RECORD;
 BEGIN
+	-- get the current attempts limit
+	VAR_q = '';
+	VAR_q = VAR_q || 'SELECT max_attempts FROM fetchq_sys_queues ';
+	VAR_q = VAR_q || 'WHERE name = ''%s'' LIMIT 1';
+	EXECUTE FORMAT(VAR_q, PAR_queue) INTO VAR_r;
+
 	VAR_q = '';
 	VAR_q = VAR_q || 'UPDATE fetchq__%s__documents SET status = 1 ';
 	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM fetchq__%s__documents ';
 	VAR_q = VAR_q || 'WHERE lock_upgrade IS NULL AND status = 2 AND next_iteration < NOW() AND attempts < %s ';
 	VAR_q = VAR_q || 'LIMIT %s FOR UPDATE );';
-	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, MAX_ATTEMPTS, PAR_limit);
-	EXECUTE VAR_q;
+	EXECUTE FORMAT(VAR_q, PAR_queue, PAR_queue, VAR_r.max_attempts, PAR_limit);
 	GET DIAGNOSTICS affected_rows := ROW_COUNT;
 
 	PERFORM fetchq_metric_log_increment(PAR_queue, 'err', affected_rows);
