@@ -7,17 +7,17 @@ const pg = require('./lib/pg')
 describe.only('Load Test', function () {
     this.timeout(60 * 1000 * 60)
     const queue = 'foo'
-    const docs = 500000
+    const docs = 5000000
     const chunk = 10000
-    const iterations = 10
-    const limit = 500
+    const iterations = 5
+    const limit = 250
 
     const logs = []
     
-    before(async function () {
-        await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
-    })
+    // before(async function () {
+    //     await pg.reset()
+    //     await request.post(url('/v1/q')).send({ name: 'foo' })
+    // })
 
     after(function () {
         console.log('')
@@ -26,7 +26,7 @@ describe.only('Load Test', function () {
         logs.forEach(l => console.log(l))
     })
 
-    it('should populate large amount of data', async function () {
+    it.skip('should populate large amount of data', async function () {
         const res = await populateQueue({
             queue,
             docs,
@@ -36,7 +36,7 @@ describe.only('Load Test', function () {
         logs.push(res)
     })
 
-    describe.skip('process documents', function () {
+    describe('process documents', function () {
         it('should pick and **reschedule** from massive amount of data', async function () {
             const r2 = await processQueue({
                 queue,

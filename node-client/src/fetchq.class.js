@@ -179,7 +179,7 @@ class Fetchq {
                 `'${duration}'`,
                 ')',
             ].join(' ')
-            console.log(q)
+            // console.log(q)
             const res = await this.pool.query(q)
             return res.rows
         } catch (err) {
