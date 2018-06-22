@@ -21,7 +21,8 @@ describe('FetchQ pick', function () {
             subject: 'a2',
             version: 0,
             priority: 0,
-            nextIteration: moment(),
+            // forcefully in the past
+            nextIteration: moment().subtract(1, 'second'),
             payload: { a: 2 },
         })
         await request.post(url('/v1/q/foo')).send({
@@ -43,12 +44,10 @@ describe('FetchQ pick', function () {
     })
 
     it('should not pick the same document twice', async function () {
-        await request.post(url('/v1/pick')).send({ queue: 'foo' })
-        const docs = (await request.post(url('/v1/pick')).send({
-            queue: 'foo',
-        })).body
-        expect(docs.length).to.equal(1)
-        expect(docs[0].subject).to.equal('a2')
+        const r1 = await request.post(url('/v1/pick')).send({ queue: 'foo' })
+        const r2 = await request.post(url('/v1/pick')).send({ queue: 'foo' })
+        expect(r2.body.length).to.equal(1)
+        expect(r2.body[0].subject).to.equal('a2')
     })
 
     it('should establish a custom lock duration', async function () {
