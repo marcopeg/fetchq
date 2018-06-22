@@ -30,7 +30,7 @@ BEGIN
 	EXECUTE FORMAT(VAR_q, PAR_queue);
 
 	-- re-index the table
-	RAISE NOTICE '%', VAR_r.current_version;
+	-- RAISE NOTICE '%', VAR_r.current_version;
 	PERFORM fetchq_create_queue_indexes(PAR_queue, VAR_r.current_version, PAR_maxAttempts);
 
 	EXCEPTION WHEN OTHERS THEN BEGIN
