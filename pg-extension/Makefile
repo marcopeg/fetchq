@@ -1,3 +1,5 @@
+
+registry ?= fetchq
 version ?= 0.0.1
 pg_version ?= 9.6
 
@@ -43,6 +45,22 @@ build:
 		$(CURDIR)/src/queue-drop-version.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
+build-image: reset build
+	docker build --no-cache -t fetchq:9.6-${version} -f Dockerfile-9.6 .
+	docker build --no-cache -t fetchq:10.4-${version} -f Dockerfile-10.4 .
+
+publish: build-image
+	docker tag fetchq:9.6-${version} ${registry}/fetchq:9.6-${version}
+	docker tag fetchq:9.6-${version} ${registry}/fetchq:9.6-latest
+	docker push ${registry}/fetchq:9.6-${version}
+	docker push ${registry}/fetchq:9.6-latest
+	docker tag fetchq:10.4-${version} ${registry}/fetchq:10.4-${version}
+	docker tag fetchq:10.4-${version} ${registry}/fetchq:10.4-latest
+	docker tag fetchq:10.4-${version} ${registry}/fetchq:latest
+	docker push ${registry}/fetchq:10.4-${version}
+	docker push ${registry}/fetchq:10.4-latest
+	docker push ${registry}/fetchq:latest
+
 build-test:
 	mkdir -p $(CURDIR)/data
 	cat $(CURDIR)/tests/_before.sql \
@@ -81,6 +99,17 @@ start-pg:
 		-v $(CURDIR)/extension/fetchq--${version}.sql:/usr/share/postgresql/$(pg_version)/extension/fetchq--${version}.sql \
 		-v $(CURDIR)/data/fetchq--${version}.test.sql:/tests/fetchq--${version}.test.sql \
 		postgres:$(pg_version)
+
+start-pg-prod:
+	docker run --rm -d \
+		--name fetchq \
+		-p 5432:5432 \
+		-e "POSTGRES_USER=fetchq" \
+		-e "POSTGRES_PASSWORD=fetchq" \
+		-e "POSTGRES_DB=fetchq" \
+		-v $(CURDIR)/data/pg:/var/lib/postgresql/data \
+		fetchq:$(version)
+	docker logs -f fetchq
 
 start-delay:
 	sleep 20

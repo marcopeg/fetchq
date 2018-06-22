@@ -51,3 +51,17 @@ res - documents that have been rescheduled
 rej - documents that have been rejected
 orp - documents that have been rescheduled because they were orphans
 err - (= rej + orp)
+
+## Run from Docker Hub
+
+https://hub.docker.com/r/fetchq/fetchq/tags/
+
+```
+docker run --rm -d \
+		--name fetchq \
+		-p 5432:5432 \
+		-e "POSTGRES_USER=fetchq" \
+		-e "POSTGRES_PASSWORD=fetchq" \
+		-e "POSTGRES_DB=fetchq" \
+		fetchq/fetchq:10.4
+```
