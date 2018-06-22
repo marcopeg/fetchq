@@ -10,6 +10,8 @@ BEGIN
         id BIGINT NOT NULL,
         name CHARACTER VARYING(40) NOT NULL,
         is_active BOOLEAN DEFAULT true,
+        current_version INTEGER DEFAULT 0,
+        max_attempts INTEGER DEFAULT 5,
         created_at TIMESTAMP WITH TIME ZONE,
         config JSON DEFAULT '{}'
     );

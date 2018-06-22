@@ -29,6 +29,7 @@ SELECT * FROM fetchq_test__complete_02();
 SELECT * FROM fetchq_test__kill_01();
 SELECT * FROM fetchq_test__kill_02();
 SELECT * FROM fetchq_test__drop_01();
+SELECT * FROM fetchq_test__queue_set_max_attempts_01();
 
 -- load tests
 -- SELECT * FROM fetchq_test__load_01(10000);
