@@ -1,5 +1,6 @@
 
 registry ?= fetchq
+name ?= fetchq
 version ?= 0.0.1
 pg_version ?= 9.6
 
@@ -46,20 +47,20 @@ build:
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-image: reset build
-	docker build --no-cache -t fetchq:9.6-${version} -f Dockerfile-9.6 .
-	docker build --no-cache -t fetchq:10.4-${version} -f Dockerfile-10.4 .
+	docker build --no-cache -t ${name}:9.6-${version} -f Dockerfile-9.6 .
+	docker build --no-cache -t ${name}:10.4-${version} -f Dockerfile-10.4 .
 
 publish: build-image
-	docker tag fetchq:9.6-${version} ${registry}/fetchq:9.6-${version}
-	docker tag fetchq:9.6-${version} ${registry}/fetchq:9.6-latest
-	docker push ${registry}/fetchq:9.6-${version}
-	docker push ${registry}/fetchq:9.6-latest
-	docker tag fetchq:10.4-${version} ${registry}/fetchq:10.4-${version}
-	docker tag fetchq:10.4-${version} ${registry}/fetchq:10.4-latest
-	docker tag fetchq:10.4-${version} ${registry}/fetchq:latest
-	docker push ${registry}/fetchq:10.4-${version}
-	docker push ${registry}/fetchq:10.4-latest
-	docker push ${registry}/fetchq:latest
+	docker tag ${name}:9.6-${version} ${registry}/${name}:9.6-${version}
+	docker tag ${name}:9.6-${version} ${registry}/${name}:9.6-latest
+	docker push ${registry}/${name}:9.6-${version}
+	docker push ${registry}/${name}:9.6-latest
+	docker tag ${name}:10.4-${version} ${registry}/${name}:10.4-${version}
+	docker tag ${name}:10.4-${version} ${registry}/${name}:10.4-latest
+	docker tag ${name}:10.4-${version} ${registry}/${name}:latest
+	docker push ${registry}/${name}:10.4-${version}
+	docker push ${registry}/${name}:10.4-latest
+	docker push ${registry}/${name}:latest
 
 build-test:
 	mkdir -p $(CURDIR)/data
