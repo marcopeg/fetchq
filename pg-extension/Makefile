@@ -38,7 +38,9 @@ build:
 		$(CURDIR)/src/complete.sql \
 		$(CURDIR)/src/kill.sql \
 		$(CURDIR)/src/drop.sql \
-		$(CURDIR)/src/queue_set_max_attempts.sql \
+		$(CURDIR)/src/queue-set-max-attempts.sql \
+		$(CURDIR)/src/queue-set-current-version.sql \
+		$(CURDIR)/src/queue-drop-version.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
 build-test:
@@ -61,7 +63,9 @@ build-test:
 		$(CURDIR)/tests/kill.test.sql \
 		$(CURDIR)/tests/drop.test.sql \
 		$(CURDIR)/tests/load.test.sql \
-		$(CURDIR)/tests/queue_set_max_attempts.test.sql \
+		$(CURDIR)/tests/queue-set-max-attempts.test.sql \
+		$(CURDIR)/tests/queue-set-current-version.test.sql \
+		$(CURDIR)/tests/queue-drop-version.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
 

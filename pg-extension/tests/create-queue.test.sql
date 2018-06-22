@@ -56,3 +56,28 @@ BEGIN
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__create_queue_03 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'SHOULD CREATE A QUEUE OF 40 characters length';
+	VAR_numDocs INTEGER;
+    VAR_r RECORD;
+BEGIN
+    -- initialize test
+    PERFORM fetchq_test_init();
+
+    -- create the queue (41 characters should not create the queue)
+    SELECT * INTO VAR_r FROM fetchq_create_queue('f12345678912345678912345678999999999999a');
+    IF VAR_r.was_created IS NOT true THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
