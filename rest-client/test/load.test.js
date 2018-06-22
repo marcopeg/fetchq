@@ -4,7 +4,7 @@ const request = require('superagent')
 const url = require('./lib/url')
 const pg = require('./lib/pg')
 
-describe.only('Load Test', function () {
+describe.skip('Load Test', function () {
     this.timeout(60 * 1000 * 60)
     const queue = 'foo'
     const docs = 5000000
@@ -14,10 +14,10 @@ describe.only('Load Test', function () {
 
     const logs = []
     
-    // before(async function () {
-    //     await pg.reset()
-    //     await request.post(url('/v1/q')).send({ name: 'foo' })
-    // })
+    before(async function () {
+        await pg.reset()
+        await request.post(url('/v1/q')).send({ name: 'foo' })
+    })
 
     after(function () {
         console.log('')
@@ -26,7 +26,7 @@ describe.only('Load Test', function () {
         logs.forEach(l => console.log(l))
     })
 
-    it.skip('should populate large amount of data', async function () {
+    it('should populate large amount of data', async function () {
         const res = await populateQueue({
             queue,
             docs,
