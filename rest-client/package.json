@@ -38,6 +38,8 @@
     "body-parser": "^1.18.3",
     "compression": "^1.7.2",
     "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^0.13.2",
     "mocha": "^5.2.0",
     "node-env-file": "^0.1.8",
     "winston": "^2.4.2"
