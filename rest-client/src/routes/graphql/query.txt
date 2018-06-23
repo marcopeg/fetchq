@@ -1,0 +1,21 @@
+== Query
+
+query DefaultQuery(
+  $uid: Int!
+  $search: String
+) {
+  character(id: $uid) {
+    name
+    age
+  }
+  characters(search: $search) {
+    name
+  }
+}
+
+== Variables
+
+{
+  "uid": 1,
+  "search": "30"
+}

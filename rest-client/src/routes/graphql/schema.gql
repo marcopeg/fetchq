@@ -1,0 +1,14 @@
+
+type Character {
+    name: String!
+    age: Int!
+}
+
+type Query {
+    hello: String
+    foo: Int
+    faa: [String]!
+    characters(search: String): [Character]!
+    character(id: Int!): Character
+}
+
