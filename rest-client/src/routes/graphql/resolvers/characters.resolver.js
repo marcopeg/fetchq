@@ -11,7 +11,7 @@ const data = [
         age: 29,
     },
     {
-        id: 2,
+        id: 3,
         name: 'Angela',
         age: 23,
     },
@@ -34,7 +34,25 @@ const createCharacterResolver = () => ({ id }, b, c) => new Promise((resolve, r
     resolve(data.find(i => i.id === id))
 })
 
+const createCreateCharacterMutation = () => (fields) => new Promise((resolve, reject) => {
+    const duplicate = data.find(i => i.name.toLowerCase() === fields.name.toLowerCase())
+    if (duplicate) {
+        return reject('duplicate name')
+    }
+
+    const newId = data
+        .map(i => i.id)
+        .reduce((a, b) => a + b, 0)
+    const item = {
+        ...fields,
+        id: newId,
+    }
+    data.push(item)
+    resolve(item)
+})
+
 module.exports = {
     createCharactersResolver,
     createCharacterResolver,
+    createCreateCharacterMutation,
 }

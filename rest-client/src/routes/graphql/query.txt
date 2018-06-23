@@ -1,21 +1,45 @@
 == Query
 
-query DefaultQuery(
-  $uid: Int!
-  $search: String
+query DefaultQuery {
+  foo
+  faa
+}
+
+query CharactersQuery(
+  $showUser: Int!
+  $searchUser: String
 ) {
-  character(id: $uid) {
+  character (id: $showUser) {
     name
     age
   }
-  characters(search: $search) {
+  characters(search: $searchUser) {
+    id
     name
   }
 }
 
+mutation CreateCharacterMutation (
+  $name: String!
+  $age: Int!
+) {
+  createCharacter(
+    name: $name
+    age: $age
+  ) {
+    id
+    name
+    age
+  }
+}
+
+
+
 == Variables
 
 {
-  "uid": 1,
-  "search": "30"
+  "searchUser": "",
+  "showUser": 1,
+  "name": "Alfonso",
+  "age": 22
 }

@@ -2,6 +2,7 @@
 const {
     createCharactersResolver,
     createCharacterResolver,
+    createCreateCharacterMutation,
 } = require('./resolvers/characters.resolver')
 
 const createResolver = () => ({
@@ -10,6 +11,7 @@ const createResolver = () => ({
     faa: () => [ 'hello', 'world' ],
     characters: createCharactersResolver(),
     character: createCharacterResolver(),
+    createCharacter: createCreateCharacterMutation(),
 })
 
 module.exports = {
