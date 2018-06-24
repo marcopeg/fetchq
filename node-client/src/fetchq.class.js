@@ -137,11 +137,27 @@ class Fetchq {
         }
     }
 
-    async metricGet (queue = null, metric = null) {
+    async metricGet (queue, metric = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_metric_get(',
-                `'${queue}',`,
+                `'${queue}'`,
+                metric ? `, '${metric}'` : '',
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return metric ? res.rows[0] : res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+        }
+    }
+
+    async metricGetTotal (metric) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_total(',
                 `'${metric}'`,
                 ')',
             ].join(' ')
@@ -150,7 +166,7 @@ class Fetchq {
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
-            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+            throw new Error(`[fetchq] metricGetTotal() - ${err.message}`)
         }
     }
 
