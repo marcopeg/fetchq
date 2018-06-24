@@ -170,6 +170,36 @@ class Fetchq {
         }
     }
 
+    async metricGetCommon (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_common(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGetCommon() - ${err.message}`)
+        }
+    }
+
+    async metricGetAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGetAll() - ${err.message}`)
+        }
+    }
+
     async mntRun (queue, limit = 100) {
         try {
             const q = [

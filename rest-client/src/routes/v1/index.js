@@ -13,6 +13,7 @@ const { fetchqKill } = require('./middlewares/fetchq-kill')
 const { fetchqDrop } = require('./middlewares/fetchq-drop')
 const { fetchqMetricLogPack } = require('./middlewares/fetchq-metric-log-pack')
 const { fetchqMetricGetTotal } = require('./middlewares/fetchq-metric-get-total')
+const { fetchqMetricGetCommon } = require('./middlewares/fetchq-metric-get-common')
 const { fetchqMetricGet } = require('./middlewares/fetchq-metric-get')
 const { fetchqMntRun } = require('./middlewares/fetchq-mnt-run')
 const { fetchqMntRunAll } = require('./middlewares/fetchq-mnt-run-all')
@@ -41,6 +42,7 @@ const createV1Router = (settings) => {
     // metrics
     router.post('/metric/log/pack', fetchqMetricLogPack())
     router.post('/metric/get/total', fetchqMetricGetTotal())
+    router.post('/metric/get/common', fetchqMetricGetCommon())
     router.post('/metric/get', fetchqMetricGet())
 
     // maintenance

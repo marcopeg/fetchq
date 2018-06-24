@@ -4,7 +4,7 @@ const url = require('./lib/url')
 const pg = require('./lib/pg')
 
 
-describe.only('FetchQ Metrics', function () {
+describe('FetchQ Metrics', function () {
     beforeEach(async function () {
         await pg.reset()
 
@@ -43,4 +43,62 @@ describe.only('FetchQ Metrics', function () {
         expect(r1.body.current_value).to.equal(2)
     })
 
+    it('should get common metrics for a queue', async function () {
+        const r1 = await request.post(url('/v1/metric/get/common')).send({
+            queue: 'foo',
+        })
+        expect(r1.body).to.deep.equal({
+            cnt: 1,
+            pnd: 1,
+            pln: 0,
+            act: 0,
+            cpl: null,
+            kll: 0,
+            ent: 1,
+            drp: null,
+            pkd: null,
+            prc: null,
+            res: null,
+            rej: null,
+            orp: 0,
+            err: 0,
+        })
+    })
+
+    it('should get common metrics for all queue', async function () {
+        const r1 = await request.post(url('/v1/metric/get/common')).send({})
+        expect(r1.body).to.deep.equal([ {
+            queue: 'foo',
+            cnt: 1,
+            pnd: 1,
+            pln: 0,
+            act: 0,
+            cpl: null,
+            kll: 0,
+            ent: 1,
+            drp: null,
+            pkd: null,
+            prc: null,
+            res: null,
+            rej: null,
+            orp: 0,
+            err: 0,
+        }, {
+            queue: 'faa',
+            cnt: 1,
+            pnd: 0,
+            pln: 0,
+            act: 1,
+            cpl: null,
+            kll: 0,
+            ent: 1,
+            drp: null,
+            pkd: 1,
+            prc: null,
+            res: null,
+            rej: null,
+            orp: 0,
+            err: 0,
+        } ])
+    })
 })
