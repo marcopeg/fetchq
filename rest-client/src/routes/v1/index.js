@@ -15,7 +15,8 @@ const { fetchqMetricLogPack } = require('./middlewares/fetchq-metric-log-pack')
 const { fetchqMetricGetTotal } = require('./middlewares/fetchq-metric-get-total')
 const { fetchqMetricGetCommon } = require('./middlewares/fetchq-metric-get-common')
 const { fetchqMetricGet } = require('./middlewares/fetchq-metric-get')
-const { fetchqMetricCompute, fetchqMetricComputeAll } = require('./middlewares/fetchq-metric-compute')
+const { fetchqMetricCompute } = require('./middlewares/fetchq-metric-compute')
+const { fetchqMetricReset } = require('./middlewares/fetchq-metric-reset')
 const { fetchqMntRun } = require('./middlewares/fetchq-mnt-run')
 const { fetchqMntRunAll } = require('./middlewares/fetchq-mnt-run-all')
 
@@ -46,7 +47,7 @@ const createV1Router = (settings) => {
     router.post('/metric/get/common', fetchqMetricGetCommon())
     router.post('/metric/get', fetchqMetricGet())
     router.post('/metric/compute', fetchqMetricCompute())
-    router.post('/metric/compute', fetchqMetricCompute())
+    router.post('/metric/reset', fetchqMetricReset())
 
     // maintenance
     router.post('/mnt/run/all', fetchqMntRunAll())

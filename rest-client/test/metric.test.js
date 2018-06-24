@@ -103,6 +103,8 @@ describe('FetchQ Metrics', function () {
     })
 
     it('should compute metrics on the fly', async function () {
+        await pg.query('truncate fetchq_sys_metrics')
+        await pg.query('truncate fetchq_sys_metrics_writes')
         const r1 = await request.post(url('/v1/metric/compute')).send({
             queue: 'foo',
         })
@@ -110,7 +112,28 @@ describe('FetchQ Metrics', function () {
     })
 
     it('should compute all metrics on the fly', async function () {
+        await pg.query('truncate fetchq_sys_metrics')
+        await pg.query('truncate fetchq_sys_metrics_writes')
         const r1 = await request.post(url('/v1/metric/compute'))
+        expect(r1.body).to.deep.equal([
+            { queue: 'foo', cnt: 1, pln: 0, pnd: 1, act: 0, cpl: 0, kll: 0 },
+            { queue: 'faa', cnt: 1, pln: 0, pnd: 0, act: 0, cpl: 0, kll: 0 },
+        ])
+    })
+
+    it('should reset metrics on the fly', async function () {
+        await pg.query('truncate fetchq_sys_metrics')
+        await pg.query('truncate fetchq_sys_metrics_writes')
+        const r1 = await request.post(url('/v1/metric/reset')).send({
+            queue: 'foo',
+        })
+        expect(r1.body).to.deep.equal({ cnt: 1, pln: 0, pnd: 1, act: 0, kll: 0, cpl: 0 })
+    })
+
+    it('should reset all metrics on the fly', async function () {
+        await pg.query('truncate fetchq_sys_metrics')
+        await pg.query('truncate fetchq_sys_metrics_writes')
+        const r1 = await request.post(url('/v1/metric/reset'))
         expect(r1.body).to.deep.equal([
             { queue: 'foo', cnt: 1, pln: 0, pnd: 1, act: 0, cpl: 0, kll: 0 },
             { queue: 'faa', cnt: 1, pln: 0, pnd: 0, act: 0, cpl: 0, kll: 0 },

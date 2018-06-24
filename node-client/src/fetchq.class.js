@@ -226,7 +226,37 @@ class Fetchq {
             return res.rows
         } catch (err) {
             this.logger.debug(err)
-            throw new Error(`[fetchq] metricCompute() - ${err.message}`)
+            throw new Error(`[fetchq] metricComputeAll() - ${err.message}`)
+        }
+    }
+    
+    async metricReset (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_reset(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricReset() - ${err.message}`)
+        }
+    }
+
+    async metricResetAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_reset_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricResetAll() - ${err.message}`)
         }
     }
 
