@@ -63,7 +63,7 @@ BEGIN
     END IF;
     
     -- cleanup
-    -- PERFORM fetchq_test_clean();
+    PERFORM fetchq_test_clean();
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
