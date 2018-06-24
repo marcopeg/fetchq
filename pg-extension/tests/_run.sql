@@ -12,6 +12,7 @@ SELECT * FROM fetchq_test__metric_get_total_01();
 SELECT * FROM fetchq_test__metric_get_common_01();
 SELECT * FROM fetchq_test__metric_get_all_01();
 SELECT * FROM fetchq_test__metric_compute_01();
+SELECT * FROM fetchq_test__metric_compute_all_01();
 SELECT * FROM fetchq_test__push_01();
 SELECT * FROM fetchq_test__push_02();
 SELECT * FROM fetchq_test__push_03();
