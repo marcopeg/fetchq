@@ -154,6 +154,23 @@ class Fetchq {
         }
     }
 
+    async mntRun (queue, limit = 100) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_mnt_run(',
+                `'${queue}',`,
+                limit,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] mntRun() - ${err.message}`)
+        }
+    }
+
     async mntRunAll (limit = 100) {
         try {
             const q = [
@@ -162,7 +179,7 @@ class Fetchq {
                 ')',
             ].join(' ')
             const res = await this.pool.query(q)
-            return res.rows[0]
+            return res.rows
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] mntRunAll() - ${err.message}`)
