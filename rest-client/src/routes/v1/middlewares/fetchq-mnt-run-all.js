@@ -6,7 +6,7 @@ const fetchqMntRunAll = () => async (req, res, next) => {
         const info = await req.fetchq.mntRunAll(req.body.limit)
         res.send(info)
     } catch (err) {
-        winston.verbose(`post://api/v1/pick - ${err.message}`)
+        winston.verbose(`post://api/v1/mnt/run/all - ${err.message}`)
         winston.debug(err)
         next(err)
     }

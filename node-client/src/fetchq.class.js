@@ -137,11 +137,27 @@ class Fetchq {
         }
     }
 
-    async metricGet (queue = null, metric = null) {
+    async metricGet (queue, metric = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_metric_get(',
-                `'${queue}',`,
+                `'${queue}'`,
+                metric ? `, '${metric}'` : '',
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return metric ? res.rows[0] : res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+        }
+    }
+
+    async metricGetTotal (metric) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_total(',
                 `'${metric}'`,
                 ')',
             ].join(' ')
@@ -150,7 +166,114 @@ class Fetchq {
             return res.rows[0]
         } catch (err) {
             this.logger.debug(err)
-            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+            throw new Error(`[fetchq] metricGetTotal() - ${err.message}`)
+        }
+    }
+
+    async metricGetCommon (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_common(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGetCommon() - ${err.message}`)
+        }
+    }
+
+    async metricGetAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_get_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricGetAll() - ${err.message}`)
+        }
+    }
+
+    async metricCompute (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_compute(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricCompute() - ${err.message}`)
+        }
+    }
+
+    async metricComputeAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_compute_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricComputeAll() - ${err.message}`)
+        }
+    }
+    
+    async metricReset (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_reset(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricReset() - ${err.message}`)
+        }
+    }
+
+    async metricResetAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_reset_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricResetAll() - ${err.message}`)
+        }
+    }
+
+    async mntRun (queue, limit = 100) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_mnt_run(',
+                `'${queue}',`,
+                limit,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] mntRun() - ${err.message}`)
         }
     }
 
@@ -162,7 +285,7 @@ class Fetchq {
                 ')',
             ].join(' ')
             const res = await this.pool.query(q)
-            return res.rows[0]
+            return res.rows
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] mntRunAll() - ${err.message}`)
