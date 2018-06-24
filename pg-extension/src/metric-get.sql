@@ -32,3 +32,20 @@ BEGIN
 --	raise log '%', VAR_r.updated_at;
 END; $$
 LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS fetchq_metric_get(CHARACTER VARYING);
+CREATE OR REPLACE FUNCTION fetchq_metric_get (
+	PAR_queue VARCHAR
+) RETURNS TABLE (
+	metric VARCHAR,
+	current_value BIGINT,
+	last_update TIMESTAMP WITH TIME ZONE
+) AS $$
+BEGIN
+	RETURN QUERY
+	SELECT t.metric, t.value AS current_value, t.updated_at AS last_update
+	FROM fetchq_sys_metrics AS t
+	WHERE queue = PAR_queue
+	ORDER BY metric ASC;
+END; $$
+LANGUAGE plpgsql;
