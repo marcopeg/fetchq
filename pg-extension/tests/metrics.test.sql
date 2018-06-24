@@ -224,3 +224,40 @@ BEGIN
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fetchq_test__metrics_06 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'COULD NOT GET ALL METRICS';
+    VAR_r RECORD;
+    VAR_affectedRows INTEGER;
+BEGIN
+
+    -- initialize test
+    PERFORM fetchq_test_init();
+
+    -- set counters
+    PERFORM fetchq_create_queue('foo');
+    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_create_queue('faa');
+    PERFORM fetchq_push('faa', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 2, '5m');
+    PERFORM fetchq_reschedule('faa', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');
+    PERFORM fetchq_metric_log_pack();
+
+    -- run the test
+    PERFORM fetchq_metric_get_all();
+    GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    
+    -- test result rows
+    IF VAR_affectedRows <> 2 THEN
+        RAISE EXCEPTION 'failed - % (affected_rows, expected "2", got "%")', VAR_testName, VAR_affectedRows;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;

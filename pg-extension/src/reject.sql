@@ -34,6 +34,7 @@ BEGIN
         PERFORM fetchq_log_error(PAR_queue, VAR_r.subject, PAR_message, PAR_details);
 
         -- update metrics
+        PERFORM fetchq_metric_log_increment(PAR_queue, 'prc', 1);
         PERFORM fetchq_metric_log_increment(PAR_queue, 'err', 1);
 		PERFORM fetchq_metric_log_increment(PAR_queue, 'rej', 1);
 		PERFORM fetchq_metric_log_decrement(PAR_queue, 'act', 1);
