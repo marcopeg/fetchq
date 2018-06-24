@@ -200,6 +200,36 @@ class Fetchq {
         }
     }
 
+    async metricCompute (queue) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_compute(',
+                `'${queue}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricCompute() - ${err.message}`)
+        }
+    }
+
+    async metricComputeAll () {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_metric_compute_all()',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] metricCompute() - ${err.message}`)
+        }
+    }
+
     async mntRun (queue, limit = 100) {
         try {
             const q = [

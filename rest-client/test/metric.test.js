@@ -101,4 +101,19 @@ describe('FetchQ Metrics', function () {
             err: 0,
         } ])
     })
+
+    it('should compute metrics on the fly', async function () {
+        const r1 = await request.post(url('/v1/metric/compute')).send({
+            queue: 'foo',
+        })
+        expect(r1.body).to.deep.equal({ cnt: 1, pln: 0, pnd: 1, act: 0, kll: 0, cpl: 0 })
+    })
+
+    it('should compute all metrics on the fly', async function () {
+        const r1 = await request.post(url('/v1/metric/compute'))
+        expect(r1.body).to.deep.equal([
+            { queue: 'foo', cnt: 1, pln: 0, pnd: 1, act: 0, cpl: 0, kll: 0 },
+            { queue: 'faa', cnt: 1, pln: 0, pnd: 0, act: 0, cpl: 0, kll: 0 },
+        ])
+    })
 })
