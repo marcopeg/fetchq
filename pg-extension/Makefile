@@ -31,6 +31,7 @@ build:
 		$(CURDIR)/src/metric-get-total.sql \
 		$(CURDIR)/src/metric-get-common.sql \
 		$(CURDIR)/src/metric-get-all.sql \
+		$(CURDIR)/src/metric-compute.sql \
 		$(CURDIR)/src/push.sql \
 		$(CURDIR)/src/push-many.sql \
 		$(CURDIR)/src/pick.sql \
@@ -75,6 +76,7 @@ build-test:
 		$(CURDIR)/tests/metric-get-total.test.sql \
 		$(CURDIR)/tests/metric-get-common.test.sql \
 		$(CURDIR)/tests/metric-get-all.test.sql \
+		$(CURDIR)/tests/metric-compute.test.sql \
 		$(CURDIR)/tests/push.test.sql \
 		$(CURDIR)/tests/pick.test.sql \
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
