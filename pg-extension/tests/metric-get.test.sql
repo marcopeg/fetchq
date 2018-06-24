@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__metrics_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__metric_get_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -46,7 +46,7 @@ END; $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__metrics_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__metric_get_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -88,6 +88,51 @@ BEGIN
     -- cleanup test
     PERFORM fetchq_test_clean();
 
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__metric_get_03 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'COULD NOT GET ALL QUEUE METRICS';
+    VAR_qA VARCHAR = 'foo';
+    VAR_r RECORD;
+    VAR_affectedRows INTEGER;
+BEGIN
+
+    -- initialize test
+    PERFORM fetchq_test_init();
+
+    -- set counters
+    PERFORM fetchq_metric_set(VAR_qA, 'a', 2);
+    PERFORM fetchq_metric_set(VAR_qA, 'b', 3);
+    PERFORM fetchq_metric_increment(VAR_qA, 'c', 3);
+    PERFORM fetchq_metric_increment(VAR_qA, 'd', 4);
+    PERFORM fetchq_metric_log_decrement(VAR_qA, 'a', 1);
+    PERFORM fetchq_metric_log_decrement(VAR_qA, 'b', 1);
+    PERFORM fetchq_metric_log_decrement(VAR_qA, 'd', 5);
+    PERFORM fetchq_metric_log_pack();
+
+    -- run the test
+    PERFORM fetchq_metric_get(VAR_qA);
+    GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    
+    -- test result rows
+    IF VAR_affectedRows <> 4 THEN
+        RAISE EXCEPTION 'failed - % (affected_rows, expected "4", got "%")', VAR_testName, VAR_affectedRows;
+    END IF;
+
+    -- test result order
+    SELECT * INTO VAR_r FROM fetchq_metric_get(VAR_qA);
+    IF VAR_r.metric <> 'a' THEN
+        RAISE EXCEPTION 'failed - % (metric, expected "a", got "%")', VAR_testName, VAR_r.metric;
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;

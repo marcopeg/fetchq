@@ -151,3 +151,48 @@ BEGIN
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION fetchq_test__pick_05 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+    VAR_testName VARCHAR = 'IT SHOULD PICK MULTIPLE DOCUMENTS';
+    VAR_affectedRows INTEGER;
+    VAR_r RECORD;
+BEGIN
+    
+    -- initialize test
+    PERFORM fetchq_test_init();
+    PERFORM fetchq_create_queue('foo');
+
+    -- insert dummy data
+    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '50s', '{}');
+    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '40s', '{}');
+
+    -- get first document
+    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    IF VAR_affectedRows <> 1 THEN
+        RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;
+    END IF;
+    IF VAR_r.subject <> 'a1' THEN
+        RAISE EXCEPTION 'failed - % (subject, expected "a1", received %)', VAR_testName, VAR_r.subject;
+    END IF;
+
+    -- get second document
+    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    IF VAR_affectedRows <> 1 THEN
+        RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;
+    END IF;
+    IF VAR_r.subject <> 'a2' THEN
+        RAISE EXCEPTION 'failed - % (subject, expected "a2", received %)', VAR_testName, VAR_r.subject;
+    END IF;
+
+    -- cleanup
+    PERFORM fetchq_test_clean();
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;

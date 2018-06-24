@@ -49,6 +49,9 @@ BEGIN
 	VAR_q = FORMAT(VAR_q, VAR_updateCtx, VAR_tableName, PAR_duration, VAR_tableName, PAR_version, PAR_limit, VAR_tempTable, VAR_updateCtx);
 	EXECUTE VAR_q;
 	GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+
+	-- RAISE NOTICE 'attempt';
+	-- RAISE NOTICE 'aff rows %', VAR_affectedRows;
 	
 	-- update counters
 	PERFORM fetchq_metric_log_increment(PAR_queue, 'pkd', VAR_affectedRows);
@@ -61,6 +64,10 @@ BEGIN
 	VAR_q = VAR_q || 'FROM %s); ';
 	VAR_q = FORMAT(VAR_q, VAR_tableName, VAR_tempTable);
 	RETURN QUERY EXECUTE VAR_q;
+
+	-- drop temporary table
+	VAR_q = FORMAT('DROP TABLE %s;', VAR_tempTable);
+	EXECUTE VAR_q;	
 
 	EXCEPTION WHEN OTHERS THEN BEGIN END;
 END; $$
