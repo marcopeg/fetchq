@@ -9,6 +9,7 @@ SELECT * FROM fetchq_test__metrics_01();
 SELECT * FROM fetchq_test__metrics_02();
 SELECT * FROM fetchq_test__metrics_03();
 SELECT * FROM fetchq_test__metrics_04();
+SELECT * FROM fetchq_test__metrics_05();
 SELECT * FROM fetchq_test__push_01();
 SELECT * FROM fetchq_test__push_02();
 SELECT * FROM fetchq_test__push_03();
