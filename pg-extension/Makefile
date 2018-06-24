@@ -28,6 +28,9 @@ build:
 		$(CURDIR)/src/metric-log-decrement.sql \
 		$(CURDIR)/src/metric-log-pack.sql \
 		$(CURDIR)/src/metric-get.sql \
+		$(CURDIR)/src/metric-get-total.sql \
+		$(CURDIR)/src/metric-get-common.sql \
+		$(CURDIR)/src/metric-get-all.sql \
 		$(CURDIR)/src/push.sql \
 		$(CURDIR)/src/push-many.sql \
 		$(CURDIR)/src/pick.sql \
@@ -68,7 +71,10 @@ build-test:
 		$(CURDIR)/tests/init.test.sql \
 		$(CURDIR)/tests/create-queue.test.sql \
 		$(CURDIR)/tests/drop-queue.test.sql \
-		$(CURDIR)/tests/metrics.test.sql \
+		$(CURDIR)/tests/metric-get.test.sql \
+		$(CURDIR)/tests/metric-get-total.test.sql \
+		$(CURDIR)/tests/metric-get-common.test.sql \
+		$(CURDIR)/tests/metric-get-all.test.sql \
 		$(CURDIR)/tests/push.test.sql \
 		$(CURDIR)/tests/pick.test.sql \
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
