@@ -1,6 +1,6 @@
 
-DROP FUNCTION IF EXISTS fetchq_drop(character varying, integer);
-CREATE OR REPLACE FUNCTION fetchq_drop (
+DROP FUNCTION IF EXISTS fetchq_doc_drop(character varying, integer);
+CREATE OR REPLACE FUNCTION fetchq_doc_drop (
 	PAR_queue VARCHAR,
 	PAR_docId INTEGER,
 	OUT affected_rows INTEGER

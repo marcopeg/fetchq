@@ -12,26 +12,26 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '10s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 1, NOW() - INTERVAL '9s', '{}');
-    PERFORM fetchq_push('foo', 'a3', 0, 1, NOW() - INTERVAL '8s', '{}');
-    PERFORM fetchq_push('foo', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
-    PERFORM fetchq_push('foo', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '10s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 1, NOW() - INTERVAL '9s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a3', 0, 1, NOW() - INTERVAL '8s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
     
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}');
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_complete('foo', VAR_r.id);
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_complete('foo', VAR_r.id);
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_kill('foo', VAR_r.id);
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_kill('foo', VAR_r.id);
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_drop('foo', VAR_r.id);
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_drop('foo', VAR_r.id);
 
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();

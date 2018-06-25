@@ -1,7 +1,7 @@
 
 -- declare test case
 -- DROP FUNCTION IF EXISTS fetchq_test__pick();
-CREATE OR REPLACE FUNCTION fetchq_test__pick_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_pick_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -14,11 +14,11 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '2s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '2s', '{}');
 
     -- get first document
-    SELECT * INTO VAR_r from fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r from fetchq_doc_pick('foo', 0, 1, '5m');
     IF VAR_r.subject != 'a2' THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
@@ -32,7 +32,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__pick_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_pick_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -46,11 +46,11 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
 
     -- get first document
-    SELECT * INTO VAR_r from fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r from fetchq_doc_pick('foo', 0, 1, '5m');
     IF VAR_r.subject <> 'a1' THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
@@ -65,7 +65,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__pick_03 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_pick_03 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -78,12 +78,12 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
 
     -- get first document
-    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
     GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
     IF VAR_affectedRows <> 2 THEN
         RAISE EXCEPTION 'failed - % (returned % rows instead of 2)', VAR_testName, VAR_affectedRows;
@@ -98,7 +98,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__pick_04 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_pick_04 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -112,13 +112,13 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a4', 0, 0, NOW() + INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a4', 0, 0, NOW() + INTERVAL '1s', '{}');
 
     -- get first document
-    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
     PERFORM fetchq_metric_log_pack();
     
     -- test CNT
@@ -154,7 +154,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__pick_05 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_pick_05 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -168,11 +168,11 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '50s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '40s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '50s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '40s', '{}');
 
     -- get first document
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
     IF VAR_affectedRows <> 1 THEN
         RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;
@@ -182,7 +182,7 @@ BEGIN
     END IF;
 
     -- get second document
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
     IF VAR_affectedRows <> 1 THEN
         RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;

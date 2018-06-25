@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS fetchq_kill(CHARACTER VARYING, INTEGER);
-CREATE OR REPLACE FUNCTION fetchq_kill (
+DROP FUNCTION IF EXISTS fetchq_doc_kill(CHARACTER VARYING, INTEGER);
+CREATE OR REPLACE FUNCTION fetchq_doc_kill (
 	PAR_queue VARCHAR,
 	PAR_docId INTEGER,
 	OUT affected_rows INTEGER
@@ -8,14 +8,14 @@ DECLARE
 	VAR_table_name VARCHAR = 'fetchq_';
 	VAR_q VARCHAR;
 BEGIN
-	VAR_q = 'WITH fetchq_kill_lock_%s AS ( ';
+	VAR_q = 'WITH fetchq_doc_kill_lock_%s AS ( ';
 	VAR_q = VAR_q || 'UPDATE fetchq__%s__documents AS lc SET ';
     VAR_q = VAR_q || 'status = -1,';
     VAR_q = VAR_q || 'attempts = 0,';
     VAR_q = VAR_q || 'iterations = lc.iterations + 1,';
     VAR_q = VAR_q || 'last_iteration = NOW()';
 	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM fetchq__%s__documents WHERE id = %s AND status = 2 LIMIT 1 ) RETURNING version) ';
-	VAR_q = VAR_q || 'SELECT version FROM fetchq_kill_lock_%s LIMIT 1;';
+	VAR_q = VAR_q || 'SELECT version FROM fetchq_doc_kill_lock_%s LIMIT 1;';
 	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, PAR_queue, PAR_docId, PAR_queue);
 
 	EXECUTE VAR_q;
@@ -32,8 +32,8 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS fetchq_kill(CHARACTER VARYING, INTEGER, JSONB);
-CREATE OR REPLACE FUNCTION fetchq_kill (
+DROP FUNCTION IF EXISTS fetchq_doc_kill(CHARACTER VARYING, INTEGER, JSONB);
+CREATE OR REPLACE FUNCTION fetchq_doc_kill (
 	PAR_queue VARCHAR,
 	PAR_docId INTEGER,
     PAR_payload JSONB,
@@ -43,7 +43,7 @@ DECLARE
 	VAR_table_name VARCHAR = 'fetchq_';
 	VAR_q VARCHAR;
 BEGIN
-	VAR_q = 'WITH fetchq_kill_lock_%s AS ( ';
+	VAR_q = 'WITH fetchq_doc_kill_lock_%s AS ( ';
 	VAR_q = VAR_q || 'UPDATE fetchq__%s__documents AS lc SET ';
     VAR_q = VAR_q || 'payload = ''%s'',';
     VAR_q = VAR_q || 'status = -1,';
@@ -51,7 +51,7 @@ BEGIN
     VAR_q = VAR_q || 'iterations = lc.iterations + 1,';
     VAR_q = VAR_q || 'last_iteration = NOW()';
 	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM fetchq__%s__documents WHERE id = %s AND status = 2 LIMIT 1 ) RETURNING version) ';
-	VAR_q = VAR_q || 'SELECT version FROM fetchq_kill_lock_%s LIMIT 1;';
+	VAR_q = VAR_q || 'SELECT version FROM fetchq_doc_kill_lock_%s LIMIT 1;';
 	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, PAR_payload, PAR_queue, PAR_docId, PAR_queue);
 
 	EXECUTE VAR_q;

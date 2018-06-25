@@ -1,9 +1,9 @@
 
 const winston = require('winston')
 
-const fetchqReschedule = () => async (req, res, next) => {
+const fetchqDocReschedule = () => async (req, res, next) => {
     try {
-        const info = await req.fetchq.reschedule(req.body.queue, req.body.documentId, req.body.nextIteration, req.body.payload)
+        const info = await req.fetchq.docReschedule(req.body.queue, req.body.documentId, req.body.nextIteration, req.body.payload)
         res.send(info)
     } catch (err) {
         winston.verbose(`post://api/v1/reschedule - ${err.message}`)
@@ -13,5 +13,5 @@ const fetchqReschedule = () => async (req, res, next) => {
 }
 
 module.exports = {
-    fetchqReschedule,
+    fetchqDocReschedule,
 }

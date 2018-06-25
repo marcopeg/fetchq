@@ -118,10 +118,10 @@ class Fetchq {
     // @TODO: validate queue priority
     // @TODO: validate queue nextIteration
     // @TODO: validate queue payload
-    async push (queue, doc = {}) {
+    async docPush (queue, doc = {}) {
         try {
             const q = [
-                'SELECT * FROM fetchq_push(',
+                'SELECT * FROM fetchq_doc_push(',
                 `'${queue}',`,
                 `'${doc.subject}',`,
                 `${doc.version || 0},`,
@@ -139,10 +139,10 @@ class Fetchq {
         }
     }
 
-    async pushMany (queue, data = {}) {
+    async docPushMany (queue, data = {}) {
         try {
             const q = [
-                'SELECT * FROM fetchq_push(',
+                'SELECT * FROM fetchq_doc_push(',
                 `'${queue}',`,
                 `${data.priority || 0},`,
                 data.nextIteration ? `'${data.nextIteration}',` : 'NOW(),',
@@ -163,6 +163,117 @@ class Fetchq {
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] pushMany() - ${err.message}`)
+        }
+    }
+
+    async docPick (queue = null, version = 0, limit = 1, duration = '5m') {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_pick(',
+                `'${queue}',`,
+                `${version},`,
+                `${limit},`,
+                `'${duration}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] pick() - ${err.message}`)
+        }
+    }
+
+    async docReschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_reschedule(',
+                `'${queue}',`,
+                `${documentId},`,
+                nextIteration === null ? 'NOW()' : `'${nextIteration}'`,
+                payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] doc_reschedule() - ${err.message}`)
+        }
+    }
+    
+    async docReject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_reject(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${errorMsg || ''}',`,
+                `'${JSON.stringify(errorDetails || {}).replace(/'/g, '\'\'\'\'')}'`,
+                refId === null ? '' : `, '${refId}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] reject() - ${err.message}`)
+        }
+    }
+
+    async docComplete (queue = null, documentId = 0, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_complete(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] complete() - ${err.message}`)
+        }
+    }
+
+    async docKill (queue = null, documentId = 0, payload = null) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_kill(',
+                `'${queue}',`,
+                `${documentId},`,
+                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] kill() - ${err.message}`)
+        }
+    }
+
+    async docDrop (queue = null, documentId = 0) {
+        try {
+            const q = [
+                'SELECT * FROM fetchq_doc_drop(',
+                `'${queue}',`,
+                `${documentId}`,
+                ')',
+            ].join(' ')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows[0]
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] drop() - ${err.message}`)
         }
     }
 
@@ -332,117 +443,6 @@ class Fetchq {
         } catch (err) {
             this.logger.debug(err)
             throw new Error(`[fetchq] mntRunAll() - ${err.message}`)
-        }
-    }
-    
-    async pick (queue = null, version = 0, limit = 1, duration = '5m') {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_pick(',
-                `'${queue}',`,
-                `${version},`,
-                `${limit},`,
-                `'${duration}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] pick() - ${err.message}`)
-        }
-    }
-
-    async reschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_reschedule(',
-                `'${queue}',`,
-                `${documentId},`,
-                nextIteration === null ? 'NOW()' : `'${nextIteration}'`,
-                payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] pick() - ${err.message}`)
-        }
-    }
-    
-    async reject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_reject(',
-                `'${queue}',`,
-                `${documentId},`,
-                `'${errorMsg || ''}',`,
-                `'${JSON.stringify(errorDetails || {}).replace(/'/g, '\'\'\'\'')}'`,
-                refId === null ? '' : `, '${refId}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] reject() - ${err.message}`)
-        }
-    }
-
-    async complete (queue = null, documentId = 0, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_complete(',
-                `'${queue}',`,
-                `${documentId},`,
-                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] complete() - ${err.message}`)
-        }
-    }
-
-    async kill (queue = null, documentId = 0, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_kill(',
-                `'${queue}',`,
-                `${documentId},`,
-                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] kill() - ${err.message}`)
-        }
-    }
-
-    async drop (queue = null, documentId = 0) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_drop(',
-                `'${queue}',`,
-                `${documentId}`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] drop() - ${err.message}`)
         }
     }
 }

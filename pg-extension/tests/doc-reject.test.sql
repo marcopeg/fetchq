@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__reject_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_reject_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -13,11 +13,11 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}');
+    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
@@ -50,7 +50,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__reject_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_reject_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -63,11 +63,11 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}', 'xxx');
+    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}', 'xxx');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 

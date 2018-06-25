@@ -1,13 +1,13 @@
 
 const winston = require('winston')
 
-const fetchqPush = () => async (req, res, next) => {
+const fetchqDocPush = () => async (req, res, next) => {
     try {
         let info = null
         if (req.body.docs) {
-            info = await req.fetchq.pushMany(req.params.name, req.body)
+            info = await req.fetchq.docPushMany(req.params.name, req.body)
         } else {
-            info = await req.fetchq.push(req.params.name, req.body)
+            info = await req.fetchq.docPush(req.params.name, req.body)
         }
         // console.log(info)
         res.send(info)
@@ -19,5 +19,5 @@ const fetchqPush = () => async (req, res, next) => {
 }
 
 module.exports = {
-    fetchqPush,
+    fetchqDocPush,
 }

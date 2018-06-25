@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__push_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_push_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -14,7 +14,7 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- should be able to queue a document with future schedule
-    SELECT * INTO VAR_queuedDocs FROM fetchq_push('foo', 'a1', 0, 0, NOW() + INTERVAL '1m', '{}');
+    SELECT * INTO VAR_queuedDocs FROM fetchq_doc_push('foo', 'a1', 0, 0, NOW() + INTERVAL '1m', '{}');
     IF VAR_queuedDocs <> 1 THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
@@ -40,7 +40,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__push_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_push_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -54,7 +54,7 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- should be able to queue a document with past schedule
-    SELECT * INTO VAR_queuedDocs FROM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1m', '{}');
+    SELECT * INTO VAR_queuedDocs FROM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1m', '{}');
     IF VAR_queuedDocs <> 1 THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
@@ -79,7 +79,7 @@ END; $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__push_03 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_push_03 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -92,7 +92,7 @@ BEGIN
     PERFORM fetchq_test_init();
     PERFORM fetchq_create_queue('foo');
 
-    SELECT * INTO VAR_queuedDocs FROM fetchq_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
+    SELECT * INTO VAR_queuedDocs FROM fetchq_doc_push( 'foo', 0, NOW(), '( ''a1'', 0, ''{"a":1}'', {DATA}), (''a2'', 1, ''{"a":2}'', {DATA} )');
     IF VAR_queuedDocs <> 2 THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
