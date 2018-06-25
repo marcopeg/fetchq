@@ -19,7 +19,7 @@ BEGIN
     FOR VAR_r IN
 		SELECT generate_series(1, PAR_limit) AS id, md5(random()::text) AS descr
 	LOOP
-        PERFORM fetchq_push('foo', VAR_r.descr, 0, 0, NOW() + (random() * (NOW() + '60 days' - NOW())) + '-30 days', '{}');
+        PERFORM fetchq_doc_push('foo', VAR_r.descr, 0, 0, NOW() + (random() * (NOW() + '60 days' - NOW())) + '-30 days', '{}');
 	END LOOP;
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
@@ -61,7 +61,7 @@ BEGIN
 
     -- Generate the push command with multiple documents
     StartTime := clock_timestamp();
-    VAR_q = 'select * from fetchq_push(''foo'', 0, %s, ''';
+    VAR_q = 'select * from fetchq_doc_push(''foo'', 0, %s, ''';
     FOR VAR_r IN
 		SELECT generate_series(1, PAR_limit - 1) AS id, md5(random()::text) AS descr
 	LOOP
@@ -115,7 +115,7 @@ BEGIN
 
     -- Generate the push command with multiple documents
     StartTime := clock_timestamp();
-    VAR_q = 'select * from fetchq_push(''foo'', 0, ''%s'', ''';
+    VAR_q = 'select * from fetchq_doc_push(''foo'', 0, ''%s'', ''';
     FOR VAR_r IN
 		SELECT generate_series(1, PAR_limit - 1) AS id, md5(random()::text) AS descr
 	LOOP

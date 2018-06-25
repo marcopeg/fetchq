@@ -13,7 +13,7 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
     SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
@@ -63,7 +63,7 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
     SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
 
     -- perform reschedule

@@ -12,7 +12,7 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data & force the date in the past
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
     PERFORM fetchq_pick('foo', 0, 1, '5m');
     UPDATE fetchq__foo__documents SET attempts = 5, next_iteration = NOW() - INTERVAL '1 milliseconds';
     
@@ -49,7 +49,7 @@ BEGIN
     PERFORM fetchq_queue_set_max_attempts('foo', 1);
 
     -- insert dummy data & force the date in the past
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
     PERFORM fetchq_pick('foo', 0, 1, '5m');
     UPDATE fetchq__foo__documents SET next_iteration = NOW() - INTERVAL '1 milliseconds';
     

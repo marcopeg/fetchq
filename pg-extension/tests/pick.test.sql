@@ -14,8 +14,8 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '2s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '2s', '{}');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq_pick('foo', 0, 1, '5m');
@@ -46,8 +46,8 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq_pick('foo', 0, 1, '5m');
@@ -78,9 +78,9 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
 
     -- get first document
     PERFORM fetchq_pick('foo', 0, 2, '5m');
@@ -112,10 +112,10 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_push('foo', 'a4', 0, 0, NOW() + INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a3', 0, 0, NOW() - INTERVAL '1s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a4', 0, 0, NOW() + INTERVAL '1s', '{}');
 
     -- get first document
     PERFORM fetchq_pick('foo', 0, 2, '5m');
@@ -168,8 +168,8 @@ BEGIN
     PERFORM fetchq_create_queue('foo');
 
     -- insert dummy data
-    PERFORM fetchq_push('foo', 'a1', 0, 0, NOW() - INTERVAL '50s', '{}');
-    PERFORM fetchq_push('foo', 'a2', 0, 0, NOW() - INTERVAL '40s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '50s', '{}');
+    PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() - INTERVAL '40s', '{}');
 
     -- get first document
     SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
