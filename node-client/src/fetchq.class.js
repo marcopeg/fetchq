@@ -185,7 +185,7 @@ class Fetchq {
         }
     }
 
-    async reschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
+    async docReschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_reschedule(',
