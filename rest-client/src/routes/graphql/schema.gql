@@ -1,0 +1,37 @@
+
+enum QuerySortOrder {
+    ASC
+    DESC
+}
+
+type Queue {
+    id: Int!
+    name: String!
+    is_active: Boolean
+    current_version: Int
+    max_attempts: Int
+    created_at: String
+}
+
+type QueueResult {
+    queue_id: Int
+    was_created: Boolean
+    was_dropped: Boolean
+    queue: Queue
+}
+
+type Query {
+    # list all available queues
+    queues (
+        sortBy: String,
+        sortOrder: QuerySortOrder
+    ): [ Queue ]!
+
+    # get a queue by name
+    queue (name: String!): Queue
+}
+
+type Mutation {
+    createQueue(name: String!): QueueResult
+    dropQueue(name: String!): QueueResult
+}

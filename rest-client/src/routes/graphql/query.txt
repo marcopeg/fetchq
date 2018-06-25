@@ -1,0 +1,76 @@
+== Query
+
+query DefaultQuery {
+  foo
+  faa
+}
+
+query CharactersQuery(
+  $showUser: Int!
+  $searchUser: String
+) {
+  character (id: $showUser) {
+    name
+    age
+  }
+  characters(search: $searchUser) {
+    id
+    name
+  }
+}
+
+mutation CreateCharacterMutation (
+  $name: String!
+  $age: Int!
+) {
+  createCharacter(
+    name: $name
+    age: $age
+  ) {
+    id
+    name
+    age
+  }
+}
+
+query GetQueues {
+  queues (
+    sortBy:"created_at"
+    sortOrder: DESC
+  ) {
+    id
+    name
+    current_version
+  }
+}
+
+query GetQueue {
+  queue(name: "faa") {
+    id
+  }
+}
+
+mutation CreateQueue {
+  createQueue(
+    name: "fai"
+  ) {
+    queue_id
+    was_created
+  }
+}
+
+mutation DropQueue {
+  createQueue(name: "fai") { was_created }
+  dropQueue(name:"fai") { was_dropped }
+}
+
+
+
+== Variables
+
+{
+  "searchUser": "",
+  "showUser": 1,
+  "name": "Alfonso",
+  "age": 22
+}
