@@ -118,7 +118,7 @@ class Fetchq {
     // @TODO: validate queue priority
     // @TODO: validate queue nextIteration
     // @TODO: validate queue payload
-    async push (queue, doc = {}) {
+    async docPush (queue, doc = {}) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_push(',
@@ -139,7 +139,7 @@ class Fetchq {
         }
     }
 
-    async pushMany (queue, data = {}) {
+    async docPushMany (queue, data = {}) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_push(',
