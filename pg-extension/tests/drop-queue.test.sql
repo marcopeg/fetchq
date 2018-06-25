@@ -1,6 +1,4 @@
 
--- declare test case
--- DROP FUNCTION IF EXISTS fetchq_test__drop_queue();
 CREATE OR REPLACE FUNCTION fetchq_test__drop_queue_01 (
     OUT passed BOOLEAN
 ) AS $$
@@ -49,11 +47,37 @@ BEGIN
 
 
     -- cleanup test
-    -- PERFORM fetchq_test_clean();
+    PERFORM fetchq_test_clean();
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
 
--- run test & cleanup
--- SELECT * FROM fetchq_test__drop_queue();
--- DROP FUNCTION IF EXISTS fetchq_test__drop_queue();
+CREATE OR REPLACE FUNCTION fetchq_test__drop_queue_02 (
+    OUT passed BOOLEAN
+) AS $$
+DECLARE
+	VAR_numDocs INTEGER;
+    VAR_r1 RECORD;
+    VAR_r2 RECORD;
+BEGIN
+    -- initialize test
+    PERFORM fetchq_test_init();
+
+    -- create & drop the queue
+    SELECT * INTO VAR_r1 FROM fetchq_create_queue('foo');
+    SELECT * INTO VAR_r2 FROM fetchq_drop_queue('foo');
+    IF VAR_r2.was_dropped IS NOT true THEN
+        RAISE EXCEPTION 'could not drop the queue';
+    END IF;
+    IF VAR_r2.queue_id IS NULL THEN
+        RAISE EXCEPTION 'drop queue failed to return queue_id';
+    END IF;
+    IF VAR_r1.queue_id != VAR_r2.queue_id THEN
+        RAISE EXCEPTION 'drop queue failed to return the correct queue_id';
+    END IF;
+
+    -- cleanup test
+    PERFORM fetchq_test_clean();
+    passed = TRUE;
+END; $$
+LANGUAGE plpgsql;

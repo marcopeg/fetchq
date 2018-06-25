@@ -5,36 +5,39 @@
 DROP FUNCTION IF EXISTS fetchq_drop_queue(CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_drop_queue (
 	PAR_queue VARCHAR,
-	OUT was_dropped BOOLEAN
+	OUT was_dropped BOOLEAN,
+	OUT queue_id INTEGER
 ) AS $$
 DECLARE
-	table_name VARCHAR = 'fetchq__';
-	drop_query VARCHAR;
+	VAR_tableName VARCHAR = 'fetchq__';
+	VAR_q VARCHAR;
+	VAR_r RECORD;
 BEGIN
 	was_dropped = TRUE;
-	table_name = table_name || PAR_queue;
+	VAR_tableName = VAR_tableName || PAR_queue;
 
 	-- drop indexes
 	-- PERFORM fetchq_drop_queue_indexes(PAR_queue);
 
 	-- drop queue table
-	drop_query = 'DROP TABLE %s__documents;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__documents;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop errors table
-	drop_query = 'DROP TABLE %s__errors;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__errors;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop stats table
-	drop_query = 'DROP TABLE %s__metrics;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__metrics;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop domain namespace
 	DELETE FROM fetchq_sys_queues
-	WHERE name = PAR_queue;
+	WHERE name = PAR_queue RETURNING id INTO VAR_r;
+	queue_id = VAR_r.id;
 
 	-- drop maintenance tasks
 	DELETE FROM fetchq_sys_jobs WHERE subject = PAR_queue;
