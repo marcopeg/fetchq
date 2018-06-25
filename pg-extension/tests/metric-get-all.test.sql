@@ -14,10 +14,10 @@ BEGIN
     -- set counters
     PERFORM fetchq_create_queue('foo');
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
     PERFORM fetchq_create_queue('faa');
     PERFORM fetchq_doc_push('faa', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 2, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 2, '5m');
     PERFORM fetchq_reschedule('faa', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');
     PERFORM fetchq_metric_log_pack();
 

@@ -13,7 +13,7 @@ BEGIN
 
     -- insert dummy data & force the date in the past
     PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
-    PERFORM fetchq_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 1, '5m');
     UPDATE fetchq__foo__documents SET next_iteration = NOW() - INTERVAL '1 milliseconds';
     
     PERFORM fetchq_mnt_reschedule_orphans('foo', 100);
@@ -49,7 +49,7 @@ BEGIN
 
     -- insert dummy data & force the date in the past
     PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1 milliseconds', '{}');
-    PERFORM fetchq_pick('foo', 0, 1, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 1, '5m');
     UPDATE fetchq__foo__documents SET next_iteration = NOW() - INTERVAL '1 milliseconds';
     
     PERFORM fetchq_mnt_reschedule_orphans('foo', 100);

@@ -18,15 +18,15 @@ BEGIN
     PERFORM fetchq_doc_push('foo', 'a3', 0, 1, NOW() - INTERVAL '8s', '{}');
     PERFORM fetchq_doc_push('foo', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
     PERFORM fetchq_doc_push('foo', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_complete('foo', VAR_r.id);
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_kill('foo', VAR_r.id);
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_drop('foo', VAR_r.id);
 
     -- insert dummy data - queue faa
@@ -36,15 +36,15 @@ BEGIN
     PERFORM fetchq_doc_push('faa', 'a3', 0, 1, NOW() - INTERVAL '8s', '{}');
     PERFORM fetchq_doc_push('faa', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
     PERFORM fetchq_doc_push('faa', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_reschedule('faa', VAR_r.id, NOW() + INTERVAL '1y');
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_reject('faa', VAR_r.id, 'faa', '{"a":1}');
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_complete('faa', VAR_r.id);
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_kill('faa', VAR_r.id);
-    SELECT * INTO VAR_r FROM fetchq_pick('faa', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_drop('faa', VAR_r.id);
 
     -- run maintenance

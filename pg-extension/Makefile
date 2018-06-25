@@ -36,7 +36,7 @@ build:
 		$(CURDIR)/src/metric-reset.sql \
 		$(CURDIR)/src/metric-reset-all.sql \
 		$(CURDIR)/src/doc-push.sql \
-		$(CURDIR)/src/pick.sql \
+		$(CURDIR)/src/doc-pick.sql \
 		$(CURDIR)/src/mnt-make-pending.sql \
 		$(CURDIR)/src/mnt-reschedule-orphans.sql \
 		$(CURDIR)/src/mnt-mark-dead.sql \
@@ -83,7 +83,7 @@ build-test:
 		$(CURDIR)/tests/metric-reset.test.sql \
 		$(CURDIR)/tests/metric-reset-all.test.sql \
 		$(CURDIR)/tests/doc-push.test.sql \
-		$(CURDIR)/tests/pick.test.sql \
+		$(CURDIR)/tests/doc-pick.test.sql \
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
 		$(CURDIR)/tests/mnt-reschedule-orphans.test.sql \
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \

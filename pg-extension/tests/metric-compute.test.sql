@@ -18,19 +18,19 @@ BEGIN
     PERFORM fetchq_doc_push('foo', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
     PERFORM fetchq_doc_push('foo', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
     
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}');
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_complete('foo', VAR_r.id);
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_kill('foo', VAR_r.id);
 
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_drop('foo', VAR_r.id);
 
     PERFORM fetchq_mnt_run_all(100);

@@ -14,7 +14,7 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
     PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
@@ -48,7 +48,7 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 2, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
     PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');

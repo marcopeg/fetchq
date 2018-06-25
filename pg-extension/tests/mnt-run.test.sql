@@ -25,7 +25,7 @@ BEGIN
     WHERE subject = 'a2';
 
     PERFORM fetchq_mnt_run('foo', 100);
-    PERFORM fetchq_pick('foo', 0, 3, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 3, '5m');
 
     UPDATE fetchq__foo__documents
     SET next_iteration = NOW() - INTERVAL '1 milliseconds'

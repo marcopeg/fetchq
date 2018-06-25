@@ -185,7 +185,7 @@ DECLARE
     Delta double precision;
 BEGIN
     StartTime := clock_timestamp();
-    SELECT * INTO VAR_r FROM fetchq_pick(PAR_queue, 0, PAR_limit, '5m');
+    SELECT * INTO VAR_r FROM fetchq_doc_pick(PAR_queue, 0, PAR_limit, '5m');
     RAISE NOTICE '%', VAR_r;
     -- PERFORM fetchq_reschedule(PAR_queue, VAR_r.id, NOW() + INTERVAL '1y');
     EndTime := clock_timestamp();
@@ -244,7 +244,7 @@ BEGIN
     --     RAISE NOTICE 'pick & resolve: % docs/s', docsPerSecond;
 	-- END LOOP;
 
-    -- SELECT * INTO VAR_r FROM fetchq_pick('foo', 0, 1, '1m');
+    -- SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '1m');
     -- RAISE NOTICE '%', VAR_r;
 
     -- cleanup
