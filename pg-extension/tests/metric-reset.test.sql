@@ -20,7 +20,7 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_reject('foo', VAR_r.id, 'foo', '{"a":1}');
+    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_complete('foo', VAR_r.id);
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
