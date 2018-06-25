@@ -37,11 +37,11 @@ build:
 		$(CURDIR)/src/metric-reset-all.sql \
 		$(CURDIR)/src/doc-push.sql \
 		$(CURDIR)/src/doc-pick.sql \
+		$(CURDIR)/src/doc-reschedule.sql \
 		$(CURDIR)/src/mnt-make-pending.sql \
 		$(CURDIR)/src/mnt-reschedule-orphans.sql \
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
-		$(CURDIR)/src/reschedule.sql \
 		$(CURDIR)/src/log-error.sql \
 		$(CURDIR)/src/reject.sql \
 		$(CURDIR)/src/complete.sql \
@@ -84,11 +84,11 @@ build-test:
 		$(CURDIR)/tests/metric-reset-all.test.sql \
 		$(CURDIR)/tests/doc-push.test.sql \
 		$(CURDIR)/tests/doc-pick.test.sql \
+		$(CURDIR)/tests/doc-reschedule.test.sql \
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
 		$(CURDIR)/tests/mnt-reschedule-orphans.test.sql \
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \
 		$(CURDIR)/tests/mnt-run.test.sql \
-		$(CURDIR)/tests/reschedule.test.sql \
 		$(CURDIR)/tests/log-error.test.sql \
 		$(CURDIR)/tests/reject.test.sql \
 		$(CURDIR)/tests/complete.test.sql \

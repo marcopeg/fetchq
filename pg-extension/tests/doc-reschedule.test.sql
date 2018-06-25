@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__reschedule_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_reschedule_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -17,7 +17,7 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
+    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents WHERE id = VAR_r.id;
@@ -34,7 +34,7 @@ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION fetchq_test__reschedule_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__doc_reschedule_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -51,7 +51,7 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');
+    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents 
