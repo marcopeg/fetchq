@@ -46,14 +46,24 @@ mutation CreateQueue {
   ) {
     queue_id
     was_created
+    queue { id, name }
   }
 }
 */
 const createQueueResolver = () => async (params, args, root) => {
-    console.log(root.fieldNodes)
+    const attributes = root.fieldNodes
+        .find(i => i.name.value === root.fieldName)
+        .selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
     const res = await client.createQueue(params.name)
-    const queue = await client.getQueue(params.name)
+
+    // make the queue data optional
+    let queue = null
+    if (attributes.indexOf('queue') !== -1) {
+        queue = await client.getQueue(params.name)
+        console.log(queue)
+    }
+    
     return {
         ...res,
         queue,

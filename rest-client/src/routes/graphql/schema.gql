@@ -10,6 +10,7 @@ type Queue {
     is_active: Boolean
     current_version: Int
     max_attempts: Int
+    created_at: String
 }
 
 type QueueResult {
@@ -21,10 +22,10 @@ type QueueResult {
 
 type Query {
     # list all available queues
-    queues(
+    queues (
         sortBy: String,
         sortOrder: QuerySortOrder
-    ): [Queue]!
+    ): [ Queue ]!
 
     # get a queue by name
     queue (name: String!): Queue
