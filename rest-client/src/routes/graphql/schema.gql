@@ -36,6 +36,9 @@ type Query {
         sortBy: String,
         sortOrder: QuerySortOrder
     ): [Queue]!
+
+    # get a queue by name
+    queue (name: String!): Queue
 }
 
 type Mutation {

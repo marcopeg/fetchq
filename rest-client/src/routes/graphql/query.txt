@@ -33,6 +33,37 @@ mutation CreateCharacterMutation (
   }
 }
 
+query GetQueues {
+  queues (
+    sortBy:"created_at"
+    sortOrder: DESC
+  ) {
+    id
+    name
+    current_version
+  }
+}
+
+query GetQueue {
+  queue(name: "faa") {
+    id
+  }
+}
+
+mutation CreateQueue {
+  createQueue(
+    name: "fai"
+  ) {
+    queue_id
+    was_created
+  }
+}
+
+mutation DropQueue {
+  createQueue(name: "fai") { was_created }
+  dropQueue(name:"fai") { was_dropped }
+}
+
 
 
 == Variables

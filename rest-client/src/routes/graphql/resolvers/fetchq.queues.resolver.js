@@ -4,8 +4,13 @@ const fetchq = require('../../../services/fetchq')
 const fetchqQueuesResolver = () => async (params, args, root) => {
     const attributes = root.fieldNodes[0].selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
-    const result = await client.listQueues({ ...params, attributes })
-    return result
+    return await client.listQueues({ ...params, attributes })
+}
+
+const fetchqQueueResolver = () => async (params, args, root) => {
+    const attributes = root.fieldNodes[0].selectionSet.selections.map(selection => selection.name.value)
+    const client = fetchq.getClient()
+    return await client.getQueue(params.name, { attributes })
 }
 
 const createQueueResolver = () => async (params, args, root) => {
@@ -25,6 +30,7 @@ const dropQueueResolver = () => async (params, args, root) => {
 
 module.exports = {
     fetchqQueuesResolver,
+    fetchqQueueResolver,
     createQueueResolver,
     dropQueueResolver,
 }
