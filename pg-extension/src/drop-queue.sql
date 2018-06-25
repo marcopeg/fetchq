@@ -2,9 +2,9 @@
 -- DROP A QUEUE
 -- returns:
 -- { was_dropped: TRUE }
-DROP FUNCTION IF EXISTS fetchq_drop_queue(character varying);
+DROP FUNCTION IF EXISTS fetchq_drop_queue(CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_drop_queue (
-	domainStr VARCHAR,
+	PAR_queue VARCHAR,
 	OUT was_dropped BOOLEAN
 ) AS $$
 DECLARE
@@ -12,10 +12,10 @@ DECLARE
 	drop_query VARCHAR;
 BEGIN
 	was_dropped = TRUE;
-	table_name = table_name || domainStr;
+	table_name = table_name || PAR_queue;
 
 	-- drop indexes
-	-- PERFORM fetchq_drop_queue_indexes(domainStr);
+	-- PERFORM fetchq_drop_queue_indexes(PAR_queue);
 
 	-- drop queue table
 	drop_query = 'DROP TABLE %s__documents;';
@@ -34,18 +34,18 @@ BEGIN
 
 	-- drop domain namespace
 	DELETE FROM fetchq_sys_queues
-	WHERE name = domainStr;
+	WHERE name = PAR_queue;
 
 	-- drop maintenance tasks
-	DELETE FROM fetchq_sys_jobs WHERE subject = domainStr;
+	DELETE FROM fetchq_sys_jobs WHERE subject = PAR_queue;
 
 	-- drop counters
-	-- DELETE FROM lq__metrics
-	-- WHERE queue = domainStr;
+	DELETE FROM fetchq_sys_metrics
+	WHERE queue = PAR_queue;
 
 	-- drop metrics logs
-	-- DELETE FROM lq__metrics_writes
-	-- WHERE queue = domainStr;
+	DELETE FROM fetchq_sys_metrics_writes
+	WHERE queue = PAR_queue;
 
 	EXCEPTION WHEN OTHERS THEN BEGIN
 		was_dropped = FALSE;

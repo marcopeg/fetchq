@@ -4,7 +4,7 @@ SELECT * FROM fetchq_test__init();
 SELECT * FROM fetchq_test__create_queue_01();
 SELECT * FROM fetchq_test__create_queue_02();
 SELECT * FROM fetchq_test__create_queue_03();
-SELECT * FROM fetchq_test__drop_queue();
+SELECT * FROM fetchq_test__drop_queue_01();
 SELECT * FROM fetchq_test__metric_get_01();
 SELECT * FROM fetchq_test__metric_get_02();
 SELECT * FROM fetchq_test__metric_get_03();
