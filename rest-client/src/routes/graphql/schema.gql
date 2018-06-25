@@ -10,6 +10,7 @@ type Queue {
     is_active: Boolean
     current_version: Int
     max_attempts: Int
+    was_created: Boolean # used when creating a new param
 }
 
 type Character {
@@ -37,4 +38,8 @@ type Mutation {
         name: String!
         age: Int!
     ): Character
+
+    createQueue(
+        name: String!
+    ): Queue
 }

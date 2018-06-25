@@ -19,7 +19,8 @@ const {
 } = require('./resolvers/characters.resolver')
 
 const {
-    createFetchqQueuesResolver,
+    fetchqQueuesResolver,
+    createQueueResolver,
 } = require('./resolvers/fetchq.queues.resolver')
 
 const createResolver = () => ({
@@ -30,7 +31,8 @@ const createResolver = () => ({
     character: createCharacterResolver(),
     createCharacter: createCreateCharacterMutation(),
 
-    queues: createFetchqQueuesResolver(),
+    queues: fetchqQueuesResolver(),
+    createQueue: createQueueResolver(),
 })
 
 module.exports = {
