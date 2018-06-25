@@ -40,12 +40,12 @@ build:
 		$(CURDIR)/src/doc-reschedule.sql \
 		$(CURDIR)/src/doc-reject.sql \
 		$(CURDIR)/src/doc-complete.sql \
+		$(CURDIR)/src/doc-kill.sql \
 		$(CURDIR)/src/mnt-make-pending.sql \
 		$(CURDIR)/src/mnt-reschedule-orphans.sql \
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
 		$(CURDIR)/src/log-error.sql \
-		$(CURDIR)/src/kill.sql \
 		$(CURDIR)/src/drop.sql \
 		$(CURDIR)/src/queue-set-max-attempts.sql \
 		$(CURDIR)/src/queue-set-current-version.sql \
@@ -87,12 +87,12 @@ build-test:
 		$(CURDIR)/tests/doc-reschedule.test.sql \
 		$(CURDIR)/tests/doc-reject.test.sql \
 		$(CURDIR)/tests/doc-complete.test.sql \
+		$(CURDIR)/tests/doc-kill.test.sql \
 		$(CURDIR)/tests/mnt-make-pending.test.sql \
 		$(CURDIR)/tests/mnt-reschedule-orphans.test.sql \
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \
 		$(CURDIR)/tests/mnt-run.test.sql \
 		$(CURDIR)/tests/log-error.test.sql \
-		$(CURDIR)/tests/kill.test.sql \
 		$(CURDIR)/tests/drop.test.sql \
 		$(CURDIR)/tests/load.test.sql \
 		$(CURDIR)/tests/queue-set-max-attempts.test.sql \
