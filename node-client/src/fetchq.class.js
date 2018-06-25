@@ -224,7 +224,7 @@ class Fetchq {
         }
     }
 
-    async complete (queue = null, documentId = 0, payload = null) {
+    async docComplete (queue = null, documentId = 0, payload = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_complete(',
@@ -242,7 +242,7 @@ class Fetchq {
         }
     }
 
-    async kill (queue = null, documentId = 0, payload = null) {
+    async docKill (queue = null, documentId = 0, payload = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_kill(',
@@ -260,7 +260,7 @@ class Fetchq {
         }
     }
 
-    async drop (queue = null, documentId = 0) {
+    async docDrop (queue = null, documentId = 0) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_drop(',
