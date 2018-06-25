@@ -1,4 +1,17 @@
 
+enum QuerySortOrder {
+    ASC
+    DESC
+}
+
+type Queue {
+    id: Int!
+    name: String!
+    is_active: Boolean
+    current_version: Int
+    max_attempts: Int
+}
+
 type Character {
     id: Int!
     name: String!
@@ -11,6 +24,12 @@ type Query {
     faa: [String]!
     characters(search: String): [Character]!
     character(id: Int!): Character
+    
+    # list all available queues
+    queues(
+        sortBy: String,
+        sortOrder: QuerySortOrder
+    ): [Queue]!
 }
 
 type Mutation {

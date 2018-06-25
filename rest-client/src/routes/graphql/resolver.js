@@ -1,9 +1,26 @@
 
+/*
+query GetQueues {
+  queues (
+    sortBy: "name"
+    sortOrder: "ASC"
+  ) {
+    id
+    name
+    current_version
+  }
+}
+*/
+
 const {
     createCharactersResolver,
     createCharacterResolver,
     createCreateCharacterMutation,
 } = require('./resolvers/characters.resolver')
+
+const {
+    createFetchqQueuesResolver,
+} = require('./resolvers/fetchq.queues.resolver')
 
 const createResolver = () => ({
     hello: () => 'Hello world!',
@@ -12,6 +29,8 @@ const createResolver = () => ({
     characters: createCharactersResolver(),
     character: createCharacterResolver(),
     createCharacter: createCreateCharacterMutation(),
+
+    queues: createFetchqQueuesResolver(),
 })
 
 module.exports = {
