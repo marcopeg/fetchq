@@ -204,7 +204,7 @@ class Fetchq {
         }
     }
     
-    async reject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
+    async docReject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_reject(',
