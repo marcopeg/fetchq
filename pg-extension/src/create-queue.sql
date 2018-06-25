@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS fetchq_create_queue(CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_create_queue (
 	PAR_queue VARCHAR,
 	OUT was_created BOOLEAN,
-	OUT queue_id BIGINT
+	OUT queue_id INTEGER
 ) AS $$
 DECLARE
 	VAR_q VARCHAR;

@@ -36,6 +36,7 @@ describe('FetchQ createQueue', function () {
             const res = await request.delete(url('/v1/q/foo'))
             expect(res.statusCode).to.equal(200)
             expect(res.body.was_dropped).to.equal(true)
+            expect(res.body.queue_id).to.equal(queueId)
         })
 
         it('should not drop a queue twice', async function () {

@@ -2,50 +2,53 @@
 -- DROP A QUEUE
 -- returns:
 -- { was_dropped: TRUE }
-DROP FUNCTION IF EXISTS fetchq_drop_queue(character varying);
+DROP FUNCTION IF EXISTS fetchq_drop_queue(CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_drop_queue (
-	domainStr VARCHAR,
-	OUT was_dropped BOOLEAN
+	PAR_queue VARCHAR,
+	OUT was_dropped BOOLEAN,
+	OUT queue_id INTEGER
 ) AS $$
 DECLARE
-	table_name VARCHAR = 'fetchq__';
-	drop_query VARCHAR;
+	VAR_tableName VARCHAR = 'fetchq__';
+	VAR_q VARCHAR;
+	VAR_r RECORD;
 BEGIN
 	was_dropped = TRUE;
-	table_name = table_name || domainStr;
+	VAR_tableName = VAR_tableName || PAR_queue;
 
 	-- drop indexes
-	-- PERFORM fetchq_drop_queue_indexes(domainStr);
+	-- PERFORM fetchq_drop_queue_indexes(PAR_queue);
 
 	-- drop queue table
-	drop_query = 'DROP TABLE %s__documents;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__documents;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop errors table
-	drop_query = 'DROP TABLE %s__errors;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__errors;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop stats table
-	drop_query = 'DROP TABLE %s__metrics;';
-	drop_query = FORMAT(drop_query, table_name);
-	EXECUTE drop_query;
+	VAR_q = 'DROP TABLE %s__metrics;';
+	VAR_q = FORMAT(VAR_q, VAR_tableName);
+	EXECUTE VAR_q;
 
 	-- drop domain namespace
 	DELETE FROM fetchq_sys_queues
-	WHERE name = domainStr;
+	WHERE name = PAR_queue RETURNING id INTO VAR_r;
+	queue_id = VAR_r.id;
 
 	-- drop maintenance tasks
-	DELETE FROM fetchq_sys_jobs WHERE subject = domainStr;
+	DELETE FROM fetchq_sys_jobs WHERE subject = PAR_queue;
 
 	-- drop counters
-	-- DELETE FROM lq__metrics
-	-- WHERE queue = domainStr;
+	DELETE FROM fetchq_sys_metrics
+	WHERE queue = PAR_queue;
 
 	-- drop metrics logs
-	-- DELETE FROM lq__metrics_writes
-	-- WHERE queue = domainStr;
+	DELETE FROM fetchq_sys_metrics_writes
+	WHERE queue = PAR_queue;
 
 	EXCEPTION WHEN OTHERS THEN BEGIN
 		was_dropped = FALSE;
