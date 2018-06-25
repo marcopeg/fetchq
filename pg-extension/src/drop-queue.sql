@@ -2,8 +2,8 @@
 -- DROP A QUEUE
 -- returns:
 -- { was_dropped: TRUE }
-DROP FUNCTION IF EXISTS fetchq_doc_drop_queue(CHARACTER VARYING);
-CREATE OR REPLACE FUNCTION fetchq_doc_drop_queue (
+DROP FUNCTION IF EXISTS fetchq_drop_queue(CHARACTER VARYING);
+CREATE OR REPLACE FUNCTION fetchq_drop_queue (
 	PAR_queue VARCHAR,
 	OUT was_dropped BOOLEAN,
 	OUT queue_id INTEGER
@@ -17,7 +17,7 @@ BEGIN
 	VAR_tableName = VAR_tableName || PAR_queue;
 
 	-- drop indexes
-	-- PERFORM fetchq_doc_drop_queue_indexes(PAR_queue);
+	-- PERFORM fetchq_drop_queue_indexes(PAR_queue);
 
 	-- drop queue table
 	VAR_q = 'DROP TABLE %s__documents;';

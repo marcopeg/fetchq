@@ -11,7 +11,7 @@ BEGIN
     FOR VAR_q IN
 		SELECT (name) FROM fetchq_sys_queues
 	LOOP
-        PERFORM fetchq_doc_drop_queue(VAR_q.name);
+        PERFORM fetchq_drop_queue(VAR_q.name);
 	END LOOP;
 
     -- Queues Index

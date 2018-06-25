@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION fetchq_test__doc_drop_queue_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__drop_queue_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -14,7 +14,7 @@ BEGIN
     PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() + INTERVAL '1m', '{}');
     PERFORM fetchq_metric_log_pack();
     PERFORM fetchq_doc_push('foo', 'a2', 0, 0, NOW() + INTERVAL '1m', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_drop_queue('foo');
+    SELECT * INTO VAR_r FROM fetchq_drop_queue('foo');
     IF VAR_r.was_dropped IS NOT true THEN
         RAISE EXCEPTION 'could not drop the queue';
     END IF;
@@ -52,7 +52,7 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION fetchq_test__doc_drop_queue_02 (
+CREATE OR REPLACE FUNCTION fetchq_test__drop_queue_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
@@ -65,7 +65,7 @@ BEGIN
 
     -- create & drop the queue
     SELECT * INTO VAR_r1 FROM fetchq_create_queue('foo');
-    SELECT * INTO VAR_r2 FROM fetchq_doc_drop_queue('foo');
+    SELECT * INTO VAR_r2 FROM fetchq_drop_queue('foo');
     IF VAR_r2.was_dropped IS NOT true THEN
         RAISE EXCEPTION 'could not drop the queue';
     END IF;
