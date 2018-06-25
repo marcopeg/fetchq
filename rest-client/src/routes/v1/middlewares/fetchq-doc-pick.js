@@ -1,9 +1,9 @@
 
 const winston = require('winston')
 
-const fetchqPick = () => async (req, res, next) => {
+const fetchqDocPick = () => async (req, res, next) => {
     try {
-        const info = await req.fetchq.pick(req.body.queue, req.body.version, req.body.limit, req.body.duration)
+        const info = await req.fetchq.docPick(req.body.queue, req.body.version, req.body.limit, req.body.duration)
         res.send(info)
     } catch (err) {
         winston.verbose(`post://api/v1/pick - ${err.message}`)
@@ -13,5 +13,5 @@ const fetchqPick = () => async (req, res, next) => {
 }
 
 module.exports = {
-    fetchqPick,
+    fetchqDocPick,
 }

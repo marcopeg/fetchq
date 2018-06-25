@@ -166,7 +166,7 @@ class Fetchq {
         }
     }
 
-    async pick (queue = null, version = 0, limit = 1, duration = '5m') {
+    async docPick (queue = null, version = 0, limit = 1, duration = '5m') {
         try {
             const q = [
                 'SELECT * FROM fetchq_doc_pick(',

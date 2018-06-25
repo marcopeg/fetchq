@@ -5,7 +5,7 @@ const { fetchqInfo } = require('./middlewares/fetchq-info')
 const { fetchqCreateQueue } = require('./middlewares/fetchq-create-queue')
 const { fetchqDropQueue } = require('./middlewares/fetchq-drop-queue')
 const { fetchqDocPush } = require('./middlewares/fetchq-doc-push')
-const { fetchqPick } = require('./middlewares/fetchq-pick')
+const { fetchqDocPick } = require('./middlewares/fetchq-doc-pick')
 const { fetchqReschedule } = require('./middlewares/fetchq-reschedule')
 const { fetchqReject } = require('./middlewares/fetchq-reject')
 const { fetchqComplete } = require('./middlewares/fetchq-complete')
@@ -34,7 +34,7 @@ const createV1Router = (settings) => {
     router.delete('/q/:name', fetchqDropQueue())
 
     // document api
-    router.post('/pick', fetchqPick())
+    router.post('/pick', fetchqDocPick())
     router.post('/reschedule', fetchqReschedule())
     router.post('/reject', fetchqReject())
     router.post('/complete', fetchqComplete())
