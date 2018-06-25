@@ -10,7 +10,12 @@ type Queue {
     is_active: Boolean
     current_version: Int
     max_attempts: Int
-    was_created: Boolean # used when creating a new param
+}
+
+type QueueResult {
+    queue_id: Int
+    was_created: Boolean
+    was_dropped: Boolean
 }
 
 type Character {
@@ -41,5 +46,9 @@ type Mutation {
 
     createQueue(
         name: String!
-    ): Queue
+    ): QueueResult
+
+    dropQueue(
+        name: String!
+    ): QueueResult
 }

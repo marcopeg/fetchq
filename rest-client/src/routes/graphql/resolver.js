@@ -21,6 +21,7 @@ const {
 const {
     fetchqQueuesResolver,
     createQueueResolver,
+    dropQueueResolver,
 } = require('./resolvers/fetchq.queues.resolver')
 
 const createResolver = () => ({
@@ -31,8 +32,10 @@ const createResolver = () => ({
     character: createCharacterResolver(),
     createCharacter: createCreateCharacterMutation(),
 
+    // FetchQ - queues
     queues: fetchqQueuesResolver(),
     createQueue: createQueueResolver(),
+    dropQueue: dropQueueResolver(),
 })
 
 module.exports = {
