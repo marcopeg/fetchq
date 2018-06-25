@@ -45,6 +45,30 @@ class Fetchq {
         }
     }
 
+    async listQueues (settings = {}) {
+        try {
+            const q = [
+                'SELECT ',
+                settings.attributes
+                    ? `${settings.attributes.join(', ')} `
+                    : '* ',
+                'FROM fetchq_sys_queues ORDER BY ',
+                settings.sortBy
+                    ? `${settings.sortBy }`
+                    : 'name ',
+                    settings.sortOrder
+                    ? `${settings.sortOrder }`
+                    : 'ASC ',
+            ].join('')
+            // console.log(q)
+            const res = await this.pool.query(q)
+            return res.rows
+        } catch (err) {
+            this.logger.debug(err)
+            throw new Error(`[fetchq] createQueue() - ${err.message}`)
+        }
+    }
+
     // @TODO: validate queue name
     async createQueue (name) {
         try {
