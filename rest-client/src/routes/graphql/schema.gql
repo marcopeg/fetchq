@@ -16,21 +16,10 @@ type QueueResult {
     queue_id: Int
     was_created: Boolean
     was_dropped: Boolean
-}
-
-type Character {
-    id: Int!
-    name: String!
-    age: Int!
+    queue: Queue
 }
 
 type Query {
-    hello: String
-    foo: Int
-    faa: [String]!
-    characters(search: String): [Character]!
-    character(id: Int!): Character
-    
     # list all available queues
     queues(
         sortBy: String,
@@ -42,16 +31,6 @@ type Query {
 }
 
 type Mutation {
-    createCharacter(
-        name: String!
-        age: Int!
-    ): Character
-
-    createQueue(
-        name: String!
-    ): QueueResult
-
-    dropQueue(
-        name: String!
-    ): QueueResult
+    createQueue(name: String!): QueueResult
+    dropQueue(name: String!): QueueResult
 }
