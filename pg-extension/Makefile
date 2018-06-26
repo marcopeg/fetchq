@@ -52,6 +52,7 @@ build:
 		$(CURDIR)/src/queue-set-errors-retention.sql \
 		$(CURDIR)/src/queue-drop-version.sql \
 		$(CURDIR)/src/queue-drop-errors.sql \
+		$(CURDIR)/src/queue-drop-metrics.sql \
 		$(CURDIR)/src/utils-ts-retain.sql \
 		> $(CURDIR)/extension/fetchq--${version}.sql
 
@@ -102,6 +103,7 @@ build-test:
 		$(CURDIR)/tests/queue-set-current-version.test.sql \
 		$(CURDIR)/tests/queue-drop-version.test.sql \
 		$(CURDIR)/tests/queue-drop-errors.test.sql \
+		$(CURDIR)/tests/queue-drop-metrics.test.sql \
 		$(CURDIR)/tests/utils-ts-retain.test.sql \
 		$(CURDIR)/tests/_run.sql \
 		> $(CURDIR)/data/fetchq--${version}.test.sql
