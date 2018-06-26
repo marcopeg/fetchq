@@ -25,7 +25,7 @@ describe('FetchQ reject', function () {
     it('should set a document as rejected', async function () {
         const r1 = await request.post(url('/v1/reject')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
             message: 'aaa',
             details: { e: true },
         })
@@ -45,7 +45,7 @@ describe('FetchQ reject', function () {
     it('should set a document as rejected with refId', async function () {
         const r1 = await request.post(url('/v1/reject')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
             message: 'aaa',
             details: { e: true },
             refId: 'xxx',

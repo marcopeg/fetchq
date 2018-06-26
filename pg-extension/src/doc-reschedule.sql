@@ -2,10 +2,10 @@
 -- RESCHEDULE AN ACTIVE DOCUMENT
 -- returns:
 -- { affected_rows: 1 }
-DROP FUNCTION IF EXISTS fetchq_doc_reschedule(CHARACTER VARYING, INTEGER, TIMESTAMP WITH TIME ZONE);
+DROP FUNCTION IF EXISTS fetchq_doc_reschedule(CHARACTER VARYING, CHARACTER VARYING, TIMESTAMP WITH TIME ZONE);
 CREATE OR REPLACE FUNCTION fetchq_doc_reschedule (
 	PAR_queue VARCHAR,
-	PAR_docId INTEGER,
+	PAR_subject VARCHAR,
 	PAR_nextIteration TIMESTAMP WITH TIME ZONE,
 	OUT affected_rows INTEGER
 ) AS $$
@@ -21,9 +21,9 @@ BEGIN
 	VAR_q = 'WITH %s AS ( ';
 	VAR_q = VAR_q || 'UPDATE %s AS lc SET ';
 	VAR_q = VAR_q || 'status = 0, next_iteration = ''%s'', attempts = 0, iterations = lc.iterations + 1, last_iteration = NOW() ';
-	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM %s WHERE id = %s AND status = 2 LIMIT 1 ) RETURNING version) ';
+	VAR_q = VAR_q || 'WHERE subject IN ( SELECT subject FROM %s WHERE subject = ''%s'' AND status = 2 LIMIT 1 ) RETURNING version) ';
 	VAR_q = VAR_q || 'SELECT version FROM %s LIMIT 1;';
-	VAR_q = FORMAT(VAR_q, VAR_lockName, VAR_tableName, PAR_nextIteration, VAR_tableName, PAR_docId, VAR_lockName);
+	VAR_q = FORMAT(VAR_q, VAR_lockName, VAR_tableName, PAR_nextIteration, VAR_tableName, PAR_subject, VAR_lockName);
 
 --	raise log '%', VAR_q;
 
@@ -44,12 +44,15 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS fetchq_doc_reschedule(CHARACTER VARYING, INTEGER, TIMESTAMP WITH TIME ZONE, JSONB);
+-- RESCHEDULE AN ACTIVE DOCUMENT
+-- returns:
+-- { affected_rows: 1 }
+DROP FUNCTION IF EXISTS fetchq_doc_reschedule(CHARACTER VARYING, CHARACTER VARYING, TIMESTAMP WITH TIME ZONE, JSONB);
 CREATE OR REPLACE FUNCTION fetchq_doc_reschedule (
 	PAR_queue VARCHAR,
-	PAR_docId INTEGER,
+	PAR_subject VARCHAR,
 	PAR_nextIteration TIMESTAMP WITH TIME ZONE,
-    PAR_payload JSONB,
+	PAR_payload JSONB,
 	OUT affected_rows INTEGER
 ) AS $$
 DECLARE
@@ -64,9 +67,9 @@ BEGIN
 	VAR_q = 'WITH %s AS ( ';
 	VAR_q = VAR_q || 'UPDATE %s AS lc SET ';
 	VAR_q = VAR_q || 'payload = ''%s'', status = 0, next_iteration = ''%s'', attempts = 0, iterations = lc.iterations + 1, last_iteration = NOW() ';
-	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM %s WHERE id = %s AND status = 2 LIMIT 1 ) RETURNING version) ';
+	VAR_q = VAR_q || 'WHERE subject IN ( SELECT subject FROM %s WHERE subject = ''%s'' AND status = 2 LIMIT 1 ) RETURNING version) ';
 	VAR_q = VAR_q || 'SELECT version FROM %s LIMIT 1;';
-	VAR_q = FORMAT(VAR_q, VAR_lockName, VAR_tableName, PAR_payload, PAR_nextIteration, VAR_tableName, PAR_docId, VAR_lockName);
+	VAR_q = FORMAT(VAR_q, VAR_lockName, VAR_tableName, PAR_payload, PAR_nextIteration, VAR_tableName, PAR_subject, VAR_lockName);
 
 --	raise log '%', VAR_q;
 

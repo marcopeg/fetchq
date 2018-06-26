@@ -17,8 +17,7 @@ BEGIN
 	SELECT t.queue_id INTO queue_id FROM fetchq_queue_get_id(PAR_queue) AS t;
 
 	VAR_q = 'CREATE TABLE fetchq__%s__documents (';
-	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
-	VAR_q = VAR_q || 'subject CHARACTER VARYING(50) NOT NULL,';
+	VAR_q = VAR_q || 'subject CHARACTER VARYING(50) NOT NULL PRIMARY KEY,';
 	VAR_q = VAR_q || 'version INTEGER DEFAULT 0,';
 	VAR_q = VAR_q || 'priority INTEGER DEFAULT 0,';
 	VAR_q = VAR_q || 'status INTEGER DEFAULT 0,';

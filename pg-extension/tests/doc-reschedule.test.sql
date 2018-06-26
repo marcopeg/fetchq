@@ -14,13 +14,13 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
+    PERFORM fetchq_doc_reschedule('foo', 'a1', NOW() + INTERVAL '1y');
 
     -- get first document
-    SELECT * INTO VAR_r from fetchq__foo__documents WHERE id = VAR_r.id;
+    SELECT * INTO VAR_r from fetchq__foo__documents WHERE subject = 'a1';
     IF VAR_r.iterations IS NULL THEN
         RAISE EXCEPTION 'failed - % (unespected number of iterations)', VAR_testName;
     END IF;
@@ -48,14 +48,14 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y', '{"a":1}');
+    PERFORM fetchq_doc_reschedule('foo', 'a1', NOW() + INTERVAL '1y', '{"a":1}');
 
     -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents 
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND payload @> '{"a": 1}';
 
     IF VAR_r.iterations IS NULL THEN

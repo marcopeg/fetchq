@@ -19,12 +19,15 @@ BEGIN
 
     -- get first document
     SELECT * INTO VAR_r from fetchq_doc_pick('foo', 0, 1, '5m');
+    IF VAR_r.subject IS NULL THEN
+        RAISE EXCEPTION 'failed (null value) - %', VAR_testName;
+    END IF;
     IF VAR_r.subject != 'a2' THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
 
     -- cleanup
-    PERFORM fetchq_test_clean();
+    -- PERFORM fetchq_test_clean();
 
     passed = TRUE;
 END; $$
@@ -51,6 +54,9 @@ BEGIN
 
     -- get first document
     SELECT * INTO VAR_r from fetchq_doc_pick('foo', 0, 1, '5m');
+    IF VAR_r.subject IS NULL THEN
+        RAISE EXCEPTION 'failed (null value) - %', VAR_testName;
+    END IF;
     IF VAR_r.subject <> 'a1' THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
@@ -174,6 +180,9 @@ BEGIN
     -- get first document
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    IF VAR_r.subject IS NULL THEN
+        RAISE EXCEPTION 'failed (null value) - %', VAR_testName;
+    END IF;
     IF VAR_affectedRows <> 1 THEN
         RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;
     END IF;
@@ -184,6 +193,9 @@ BEGIN
     -- get second document
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
+    IF VAR_r.subject IS NULL THEN
+        RAISE EXCEPTION 'failed (null value) - %', VAR_testName;
+    END IF;
     IF VAR_affectedRows <> 1 THEN
         RAISE EXCEPTION 'failed - % (count, expected 1, received %)', VAR_testName, VAR_affectedRows;
     END IF;

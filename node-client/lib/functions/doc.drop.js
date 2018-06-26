@@ -1,10 +1,10 @@
 
-const createDocDrop = (ctx) => async (queue = null, documentId = 0) => {
+const createDocDrop = (ctx) => async (queue = null, subject) => {
     try {
         const q = [
             'SELECT * FROM fetchq_doc_drop(',
             `'${queue}',`,
-            `${documentId}`,
+            `'${subject}'`,
             ')',
         ].join(' ')
         // console.log(q)

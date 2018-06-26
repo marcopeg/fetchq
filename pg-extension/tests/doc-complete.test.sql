@@ -13,20 +13,20 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_complete('foo', VAR_r.id);
+    PERFORM fetchq_doc_complete('foo', 'a1');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = 3
     AND iterations = 1
     AND next_iteration >= '2970-01-01';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after complete)', VAR_testName;
     END IF;
 
@@ -51,20 +51,20 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_complete('foo', VAR_r.id, '{"a":22}');
+    PERFORM fetchq_doc_complete('foo', 'a1', '{"a":22}');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = 3
     AND iterations = 1
     AND next_iteration >= '2970-01-01';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after complete)', VAR_testName;
     END IF;
 
