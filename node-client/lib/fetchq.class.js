@@ -13,6 +13,7 @@ const { createDocPushMany } = require('./functions/doc.push-many')
 const { createDocPick } = require('./functions/doc.pick')
 const { createDocReschedule } = require('./functions/doc.reschedule')
 const { createDocReject } = require('./functions/doc.reject')
+const { createDocComplete } = require('./functions/doc.complete')
 
 class Fetchq {
     constructor (config = {}) {
@@ -41,24 +42,7 @@ class Fetchq {
             pick: createDocPick(this),
             reschedule: createDocReschedule(this),
             reject: createDocReject(this),
-        }
-    }
-
-    async docComplete (queue = null, documentId = 0, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_complete(',
-                `'${queue}',`,
-                `${documentId},`,
-                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] complete() - ${err.message}`)
+            complete: createDocComplete(this),
         }
     }
 
