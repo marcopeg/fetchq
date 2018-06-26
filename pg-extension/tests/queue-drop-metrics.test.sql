@@ -35,8 +35,8 @@ BEGIN
     IF VAR_r.removed_rows IS NULL THEN
         RAISE EXCEPTION 'failed - (null value) %', VAR_testName;
     END IF;
-    IF VAR_r.removed_rows != 7 THEN
-        RAISE NOTICE 'failed - (expected: 7, got: %) %', VAR_r.removed_rows, VAR_testName;
+    IF VAR_r.removed_rows >= 5 THEN
+        RAISE NOTICE 'failed - (expected >= 5, got: %) %', VAR_r.removed_rows, VAR_testName;
     END IF;
 
     -- cleanup
@@ -82,8 +82,8 @@ BEGIN
     IF VAR_r.removed_rows IS NULL THEN
         RAISE EXCEPTION 'failed - (null value) %', VAR_testName;
     END IF;
-    IF VAR_r.removed_rows != 7 THEN
-        RAISE NOTICE 'failed - (expected: 7, got: %) %', VAR_r.removed_rows, VAR_testName;
+    IF VAR_r.removed_rows >= 5 THEN
+        RAISE NOTICE 'failed - (expected >= 5, got: %) %', VAR_r.removed_rows, VAR_testName;
     END IF;
 
     -- cleanup
