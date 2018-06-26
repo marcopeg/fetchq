@@ -91,7 +91,7 @@ class Fetchq {
     // @TODO: validate queue name
     async createQueue (name) {
         try {
-            const q = `SELECT * FROM fetchq_create_queue('${name}')`
+            const q = `SELECT * FROM fetchq_queue_create('${name}')`
             const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
@@ -101,9 +101,9 @@ class Fetchq {
     }
     
     // @TODO: validate queue name
-    async dropQueue (name) {
+    async queueDrop (name) {
         try {
-            const q = `SELECT * FROM fetchq_drop_queue('${name}')`
+            const q = `SELECT * FROM fetchq_queue_drop('${name}')`
             const res = await this.pool.query(q)
             return res.rows[0]
         } catch (err) {
