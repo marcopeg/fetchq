@@ -25,7 +25,7 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_doc_complete('foo', VAR_r.id);
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_doc_kill('foo', VAR_r.id);
+    PERFORM fetchq_doc_kill('foo', VAR_r.subject);
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_doc_drop('foo', VAR_r.subject);
 
@@ -43,7 +43,7 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_doc_complete('faa', VAR_r.id);
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
-    PERFORM fetchq_doc_kill('faa', VAR_r.id);
+    PERFORM fetchq_doc_kill('faa', VAR_r.subject);
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_doc_drop('faa', VAR_r.subject);
 

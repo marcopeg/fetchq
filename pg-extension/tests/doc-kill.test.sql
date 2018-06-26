@@ -16,13 +16,13 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_kill('foo', VAR_r.id);
+    PERFORM fetchq_doc_kill('foo', 'a1');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = -1
     AND iterations = 1;
     IF VAR_r.id IS NULL THEN
@@ -53,13 +53,13 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_kill('foo', VAR_r.id, '{"a":22}');
+    PERFORM fetchq_doc_kill('foo', 'a1', '{"a":22}');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = -1
     AND iterations = 1;
     IF VAR_r.id IS NULL THEN
