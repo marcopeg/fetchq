@@ -8,6 +8,8 @@ const { createQueueList } = require('./functions/queue.list')
 const { createQueueGet } = require('./functions/queue.get')
 const { createQueueCreate } = require('./functions/queue.create')
 const { createQueueDrop } = require('./functions/queue.drop')
+const { createDocPush } = require('./functions/doc.push')
+const { createDocPushMany } = require('./functions/doc.push-many')
 
 class Fetchq {
     constructor (config = {}) {
@@ -29,61 +31,61 @@ class Fetchq {
             create: createQueueCreate(this),
             drop: createQueueDrop(this),
         }
-    }
 
-    // @TODO: validate queue name
-    // @TODO: validate queue subject
-    // @TODO: validate queue version
-    // @TODO: validate queue priority
-    // @TODO: validate queue nextIteration
-    // @TODO: validate queue payload
-    async docPush (queue, doc = {}) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_push(',
-                `'${queue}',`,
-                `'${doc.subject}',`,
-                `${doc.version || 0},`,
-                `${doc.priority || 0},`,
-                doc.nextIteration ? `'${doc.nextIteration}',` : 'NOW(),',
-                `'${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')'
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] push() - ${err.message}`)
+        this.doc = {
+            push: createDocPush(this),
+            pushMany: createDocPushMany(this),
         }
     }
 
-    async docPushMany (queue, data = {}) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_push(',
-                `'${queue}',`,
-                `${data.priority || 0},`,
-                data.nextIteration ? `'${data.nextIteration}',` : 'NOW(),',
-                '\'(',
-                data.docs
-                    .map(doc => [
-                        `''${doc.subject}''`,
-                        `${doc.priority || 0}`,
-                        `''${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}''`,
-                        '{DATA}'
-                    ].join(', '))
-                    .join('), ('),
-                ')\')'
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] pushMany() - ${err.message}`)
-        }
-    }
+    
+    // async docPush (queue, doc = {}) {
+    //     try {
+    //         const q = [
+    //             'SELECT * FROM fetchq_doc_push(',
+    //             `'${queue}',`,
+    //             `'${doc.subject}',`,
+    //             `${doc.version || 0},`,
+    //             `${doc.priority || 0},`,
+    //             doc.nextIteration ? `'${doc.nextIteration}',` : 'NOW(),',
+    //             `'${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}'`,
+    //             ')'
+    //         ].join(' ')
+    //         // console.log(q)
+    //         const res = await this.pool.query(q)
+    //         return res.rows[0]
+    //     } catch (err) {
+    //         this.logger.debug(err)
+    //         throw new Error(`[fetchq] push() - ${err.message}`)
+    //     }
+    // }
+
+    // async docPushMany (queue, data = {}) {
+    //     try {
+    //         const q = [
+    //             'SELECT * FROM fetchq_doc_push(',
+    //             `'${queue}',`,
+    //             `${data.priority || 0},`,
+    //             data.nextIteration ? `'${data.nextIteration}',` : 'NOW(),',
+    //             '\'(',
+    //             data.docs
+    //                 .map(doc => [
+    //                     `''${doc.subject}''`,
+    //                     `${doc.priority || 0}`,
+    //                     `''${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}''`,
+    //                     '{DATA}'
+    //                 ].join(', '))
+    //                 .join('), ('),
+    //             ')\')'
+    //         ].join(' ')
+    //         // console.log(q)
+    //         const res = await this.pool.query(q)
+    //         return res.rows[0]
+    //     } catch (err) {
+    //         this.logger.debug(err)
+    //         throw new Error(`[fetchq] pushMany() - ${err.message}`)
+    //     }
+    // }
 
     async docPick (queue = null, version = 0, limit = 1, duration = '5m') {
         try {
