@@ -13,6 +13,8 @@ SELECT * FROM fetchq_test__queue_drop_version_02();
 SELECT * FROM fetchq_test__queue_drop_errors_01();
 SELECT * FROM fetchq_test__queue_drop_errors_02();
 SELECT * FROM fetchq_test__queue_drop_errors_03();
+SELECT * FROM fetchq_test__queue_drop_metrics_01();
+SELECT * FROM fetchq_test__queue_drop_metrics_02();
 
 SELECT * FROM fetchq_test__doc_push_01();
 SELECT * FROM fetchq_test__doc_push_02();

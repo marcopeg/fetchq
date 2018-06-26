@@ -48,9 +48,9 @@ BEGIN
 	-- stats history
 	VAR_q = 'CREATE TABLE fetchq__%s__metrics (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
+	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE,';
 	VAR_q = VAR_q || 'metric CHARACTER VARYING(50) NOT NULL,';
-	VAR_q = VAR_q || 'value bigint,';
-	VAR_q = VAR_q || 'ts TIMESTAMP WITH TIME ZONE';
+	VAR_q = VAR_q || 'value bigint';
 	VAR_q = VAR_q || ');';
 	VAR_q = FORMAT(VAR_q, PAR_queue);
 	EXECUTE VAR_q;
