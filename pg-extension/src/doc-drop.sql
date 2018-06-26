@@ -1,8 +1,8 @@
 
-DROP FUNCTION IF EXISTS fetchq_doc_drop(character varying, integer);
+DROP FUNCTION IF EXISTS fetchq_doc_drop(CHARACTER VARYING, CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_doc_drop (
 	PAR_queue VARCHAR,
-	PAR_docId INTEGER,
+	PAR_subject VARCHAR,
 	OUT affected_rows INTEGER
 ) AS $$
 DECLARE
@@ -10,8 +10,8 @@ DECLARE
 	VAR_version INTEGER;
 BEGIN
 
-	VAR_q = 'DELETE FROM fetchq__%s__documents WHERE id = %s AND status = 2 RETURNING version;';
-	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_docId);
+	VAR_q = 'DELETE FROM fetchq__%s__documents WHERE subject = ''%s'' AND status = 2 RETURNING version;';
+	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_subject);
 
 	EXECUTE VAR_q INTO VAR_version;
 	GET DIAGNOSTICS affected_rows := ROW_COUNT;

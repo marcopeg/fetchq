@@ -13,16 +13,16 @@ BEGIN
 
     -- insert dummy data
     PERFORM fetchq_doc_push('foo', 'a1', 0, 1, NOW() - INTERVAL '1s', '{}');
-    SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
+    PERFORM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_drop('foo', VAR_r.id);
+    PERFORM fetchq_doc_drop('foo', 'a1');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- get no docs
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id;
+    WHERE subject = 'a1';
     IF VAR_r.id IS NOT NULL THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
