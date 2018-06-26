@@ -14,6 +14,10 @@ const { createDocPick } = require('./functions/doc.pick')
 const { createDocReschedule } = require('./functions/doc.reschedule')
 const { createDocReject } = require('./functions/doc.reject')
 const { createDocComplete } = require('./functions/doc.complete')
+const { createDocKill } = require('./functions/doc.kill')
+const { createDocDrop } = require('./functions/doc.drop')
+const { createMetricLogPack } = require('./functions/metric.log-pack')
+const { createMetricGet } = require('./functions/metric.get')
 
 class Fetchq {
     constructor (config = {}) {
@@ -43,72 +47,13 @@ class Fetchq {
             reschedule: createDocReschedule(this),
             reject: createDocReject(this),
             complete: createDocComplete(this),
+            kill: createDocKill(this),
+            drop: createDocDrop(this),
         }
-    }
 
-    async docKill (queue = null, documentId = 0, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_kill(',
-                `'${queue}',`,
-                `${documentId},`,
-                `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] kill() - ${err.message}`)
-        }
-    }
-
-    async docDrop (queue = null, documentId = 0) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_drop(',
-                `'${queue}',`,
-                `${documentId}`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] drop() - ${err.message}`)
-        }
-    }
-
-    async metricLogPack () {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_metric_log_pack()',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] metricLogPack() - ${err.message}`)
-        }
-    }
-
-    async metricGet (queue, metric = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_metric_get(',
-                `'${queue}'`,
-                metric ? `, '${metric}'` : '',
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return metric ? res.rows[0] : res.rows
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] metricGet() - ${err.message}`)
+        this.metric = {
+            logPack: createMetricLogPack(this),
+            get: createMetricGet(this),
         }
     }
 
