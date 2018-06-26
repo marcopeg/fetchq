@@ -1,9 +1,9 @@
 
 const winston = require('winston')
 
-const fetchqDropQueue = () => async (req, res, next) => {
+const fetchqQueueDrop = () => async (req, res, next) => {
     try {
-        const info = await req.fetchq.dropQueue(req.params.name)
+        const info = await req.fetchq.queue.drop(req.params.name)
         res.send(info)
     } catch (err) {
         winston.verbose(`/api/v1/q/${req.params.name} - ${err.message}`)
@@ -13,5 +13,5 @@ const fetchqDropQueue = () => async (req, res, next) => {
 }
 
 module.exports = {
-    fetchqDropQueue,
+    fetchqQueueDrop,
 }

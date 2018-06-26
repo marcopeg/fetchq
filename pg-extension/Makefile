@@ -17,10 +17,7 @@ build:
 	cat $(CURDIR)/src/info.sql \
 		$(CURDIR)/src/init.sql \
 		$(CURDIR)/src/destroy.sql \
-		$(CURDIR)/src/get-queue-id.sql \
-		$(CURDIR)/src/create-queue-indexes.sql \
-		$(CURDIR)/src/create-queue.sql \
-		$(CURDIR)/src/drop-queue.sql \
+		$(CURDIR)/src/queue-create-indexes.sql \
 		$(CURDIR)/src/metric-set.sql \
 		$(CURDIR)/src/metric-increment.sql \
 		$(CURDIR)/src/metric-log-set.sql \
@@ -47,6 +44,9 @@ build:
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
 		$(CURDIR)/src/log-error.sql \
+		$(CURDIR)/src/queue-get-id.sql \
+		$(CURDIR)/src/queue-create.sql \
+		$(CURDIR)/src/queue-drop.sql \
 		$(CURDIR)/src/queue-set-max-attempts.sql \
 		$(CURDIR)/src/queue-set-current-version.sql \
 		$(CURDIR)/src/queue-drop-version.sql \
@@ -72,8 +72,6 @@ build-test:
 	mkdir -p $(CURDIR)/data
 	cat $(CURDIR)/tests/_before.sql \
 		$(CURDIR)/tests/init.test.sql \
-		$(CURDIR)/tests/create-queue.test.sql \
-		$(CURDIR)/tests/drop-queue.test.sql \
 		$(CURDIR)/tests/metric-get.test.sql \
 		$(CURDIR)/tests/metric-get-total.test.sql \
 		$(CURDIR)/tests/metric-get-common.test.sql \
@@ -95,6 +93,8 @@ build-test:
 		$(CURDIR)/tests/mnt-run.test.sql \
 		$(CURDIR)/tests/log-error.test.sql \
 		$(CURDIR)/tests/load.test.sql \
+		$(CURDIR)/tests/queue-create.test.sql \
+		$(CURDIR)/tests/queue-drop.test.sql \
 		$(CURDIR)/tests/queue-set-max-attempts.test.sql \
 		$(CURDIR)/tests/queue-set-current-version.test.sql \
 		$(CURDIR)/tests/queue-drop-version.test.sql \

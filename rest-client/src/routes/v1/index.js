@@ -2,8 +2,8 @@ const express = require('express')
 const { fetchqGetClient } = require('./middlewares/fetchq-get-client')
 const { fetchqInit } = require('./middlewares/fetchq-init')
 const { fetchqInfo } = require('./middlewares/fetchq-info')
-const { fetchqCreateQueue } = require('./middlewares/fetchq-create-queue')
-const { fetchqDropQueue } = require('./middlewares/fetchq-drop-queue')
+const { fetchqQueueCreate } = require('./middlewares/fetchq-queue-create')
+const { fetchqQueueDrop } = require('./middlewares/fetchq-queue-drop')
 const { fetchqDocPush } = require('./middlewares/fetchq-doc-push')
 const { fetchqDocPick } = require('./middlewares/fetchq-doc-pick')
 const { fetchqDocReschedule } = require('./middlewares/fetchq-doc-reschedule')
@@ -18,7 +18,6 @@ const { fetchqMetricGet } = require('./middlewares/fetchq-metric-get')
 const { fetchqMetricCompute } = require('./middlewares/fetchq-metric-compute')
 const { fetchqMetricReset } = require('./middlewares/fetchq-metric-reset')
 const { fetchqMntRun } = require('./middlewares/fetchq-mnt-run')
-const { fetchqMntRunAll } = require('./middlewares/fetchq-mnt-run-all')
 
 const createV1Router = (settings) => {
     const router = express.Router()
@@ -29,9 +28,9 @@ const createV1Router = (settings) => {
     router.get('/info', fetchqInfo())
 
     // queue api
-    router.post('/q', fetchqCreateQueue())
+    router.post('/q', fetchqQueueCreate())
     router.post('/q/:name', fetchqDocPush())
-    router.delete('/q/:name', fetchqDropQueue())
+    router.delete('/q/:name', fetchqQueueDrop())
 
     // document api
     router.post('/pick', fetchqDocPick())
@@ -50,7 +49,6 @@ const createV1Router = (settings) => {
     router.post('/metric/reset', fetchqMetricReset())
 
     // maintenance
-    router.post('/mnt/run/all', fetchqMntRunAll())
     router.post('/mnt/run', fetchqMntRun())
 
     return router

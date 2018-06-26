@@ -31,7 +31,7 @@ describe('FetchQ reschedule', function () {
         })
 
         // test on collected metrics
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
         const r2 = await request.post(url('/v1/metric/get')).send({
             queue: 'foo',
@@ -51,7 +51,7 @@ describe('FetchQ reschedule', function () {
         })
 
         // test on collected metrics
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
         const r2 = await request.post(url('/v1/metric/get')).send({
             queue: 'foo',
@@ -88,7 +88,7 @@ describe('FetchQ reschedule', function () {
         })
 
         // re-pick the document that was scheduled as pending
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
         const doc1 = (await request.post(url('/v1/pick')).send({
             queue: 'foo',

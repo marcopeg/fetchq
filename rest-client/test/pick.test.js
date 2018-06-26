@@ -62,7 +62,7 @@ describe('FetchQ pick', function () {
             limit: 1,
         })
         await pause(1)
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         const docs = (await request.post(url('/v1/pick')).send({
             queue: 'foo',
         })).body

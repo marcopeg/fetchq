@@ -9,7 +9,7 @@ BEGIN
 
     -- initialize test
     PERFORM fetchq_test_init();
-    PERFORM fetchq_create_queue('foo');
+    PERFORM fetchq_queue_create('foo');
 
     -- test set counters
     PERFORM fetchq_metric_set('a', 'b', 4);
