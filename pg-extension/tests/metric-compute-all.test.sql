@@ -19,7 +19,7 @@ BEGIN
     PERFORM fetchq_doc_push('foo', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
     PERFORM fetchq_doc_push('foo', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_doc_reschedule('foo', VAR_r.id, NOW() + INTERVAL '1y');
+    PERFORM fetchq_doc_reschedule('foo', VAR_r.subject, NOW() + INTERVAL '1y');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_doc_reject('foo', VAR_r.subject, 'foo', '{"a":1}');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
@@ -37,7 +37,7 @@ BEGIN
     PERFORM fetchq_doc_push('faa', 'a4', 0, 1, NOW() - INTERVAL '7s', '{}');
     PERFORM fetchq_doc_push('faa', 'a5', 0, 1, NOW() - INTERVAL '6s', '{}');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
-    PERFORM fetchq_doc_reschedule('faa', VAR_r.id, NOW() + INTERVAL '1y');
+    PERFORM fetchq_doc_reschedule('faa', VAR_r.subject, NOW() + INTERVAL '1y');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
     PERFORM fetchq_doc_reject('faa', VAR_r.subject, 'faa', '{"a":1}');
     SELECT * INTO VAR_r FROM fetchq_doc_pick('faa', 0, 1, '5m');
