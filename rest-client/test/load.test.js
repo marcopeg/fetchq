@@ -7,7 +7,7 @@ const pg = require('./lib/pg')
 describe.skip('Load Test', function () {
     this.timeout(60 * 1000 * 60)
     const queue = 'foo'
-    const docs = 5000000
+    const docs = 1000000
     const chunk = 10000
     const iterations = 2
     const limit = 250
