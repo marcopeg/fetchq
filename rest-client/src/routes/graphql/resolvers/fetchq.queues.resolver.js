@@ -19,7 +19,7 @@ const fetchqQueuesResolver = () => async (params, args, root) => {
         .find(i => i.name.value === root.fieldName)
         .selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
-    return await client.listQueues({ ...params, attributes })
+    return await client.queueList({ ...params, attributes })
 }
 
 /*
@@ -36,7 +36,7 @@ const fetchqQueueResolver = () => async (params, args, root) => {
         .find(i => i.name.value === root.fieldName)
         .selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
-    return await client.getQueue(params.name, { attributes })
+    return await client.queueGet(params.name, { attributes })
 }
 
 /*
@@ -55,12 +55,12 @@ const createQueueResolver = () => async (params, args, root) => {
         .find(i => i.name.value === root.fieldName)
         .selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
-    const res = await client.createQueue(params.name)
+    const res = await client.queueCreate(params.name)
 
     // make the queue data optional
     let queue = null
     if (attributes.indexOf('queue') !== -1) {
-        queue = await client.getQueue(params.name)
+        queue = await client.queueGet(params.name)
         console.log(queue)
     }
     
@@ -81,9 +81,9 @@ mutation DropQueue {
 */
 const dropQueueResolver = () => async (params, args, root) => {
     const client = fetchq.getClient()
-    const queue = await client.getQueue(params.name, { attributes: ['id'] })
+    const queue = await client.queueGet(params.name, { attributes: ['id'] })
     return {
-        ...await client.dropQueue(params.name),
+        ...await client.queueDrop(params.name),
         queue_id: queue.id,
     }
 }

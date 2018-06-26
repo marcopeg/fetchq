@@ -45,7 +45,7 @@ class Fetchq {
         }
     }
 
-    async listQueues (settings = {}) {
+    async queueList (settings = {}) {
         try {
             const q = [
                 'SELECT ',
@@ -69,7 +69,7 @@ class Fetchq {
         }
     }
 
-    async getQueue (name, settings = {}) {
+    async queueGet (name, settings = {}) {
         try {
             const q = [
                 'SELECT ',
