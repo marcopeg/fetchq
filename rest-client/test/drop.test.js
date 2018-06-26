@@ -28,7 +28,7 @@ describe('FetchQ drop', function () {
         })
 
         // test on collected metrics
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
         const r2 = await request.post(url('/v1/metric/get')).send({
             queue: 'foo',

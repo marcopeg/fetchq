@@ -4,7 +4,7 @@ const url = require('./lib/url')
 const pg = require('./lib/pg')
 
 
-describe('FetchQ Maintenance', function () {
+describe('FetchQ Mnt', function () {
     beforeEach(async function () {
         await pg.reset()
 
@@ -34,7 +34,7 @@ describe('FetchQ Maintenance', function () {
     })
 
     it('should run ALL queue maintenance', async function () {
-        const r1 = await request.post(url('/v1/mnt/run/all')).send({
+        const r1 = await request.post(url('/v1/mnt/run')).send({
             limit: 1,
         })
         expect(r1.body).to.deep.equal([ {

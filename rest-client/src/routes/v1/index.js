@@ -18,7 +18,6 @@ const { fetchqMetricGet } = require('./middlewares/fetchq-metric-get')
 const { fetchqMetricCompute } = require('./middlewares/fetchq-metric-compute')
 const { fetchqMetricReset } = require('./middlewares/fetchq-metric-reset')
 const { fetchqMntRun } = require('./middlewares/fetchq-mnt-run')
-const { fetchqMntRunAll } = require('./middlewares/fetchq-mnt-run-all')
 
 const createV1Router = (settings) => {
     const router = express.Router()
@@ -50,7 +49,6 @@ const createV1Router = (settings) => {
     router.post('/metric/reset', fetchqMetricReset())
 
     // maintenance
-    // router.post('/mnt/run/all', fetchqMntRunAll())
     router.post('/mnt/run', fetchqMntRun())
 
     return router
