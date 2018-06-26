@@ -9,7 +9,7 @@ describe.skip('Load Test', function () {
     const queue = 'foo'
     const docs = 5000000
     const chunk = 10000
-    const iterations = 5
+    const iterations = 2
     const limit = 250
 
     const logs = []
@@ -138,7 +138,7 @@ const populateQueue = async (settings = {}) => {
         queuedDocs += res.body.queued_docs
         elapsed.push(new Date() - start)
 
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
     }
 
@@ -170,14 +170,14 @@ const processQueue = async (settings = {}) => {
 
         const pdocs = docs.map(doc => request.post(url(`/v1/${action}`)).send({
             queue,
-            documentId: doc.id,
+            subject: doc.subject,
             nextIteration,
         }))
         await Promise.all(pdocs)
         processedDocs += docs.length
         totalElapsed += new Date() - start
 
-        await request.post(url('/v1/mnt/run/all'))
+        await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
     }
     

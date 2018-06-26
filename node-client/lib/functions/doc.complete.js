@@ -1,10 +1,10 @@
 
-const createDocComplete = (ctx) => async (queue = null, documentId = 0, payload = null) => {
+const createDocComplete = (ctx) => async (queue = null, subject, payload = null) => {
     try {
         const q = [
             'SELECT * FROM fetchq_doc_complete(',
             `'${queue}',`,
-            `${documentId},`,
+            `'${subject}',`,
             `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
             ')',
         ].join(' ')

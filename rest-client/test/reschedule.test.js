@@ -27,7 +27,7 @@ describe('FetchQ reschedule', function () {
         // console.log(doc)
         const r1 = await request.post(url('/v1/reschedule')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
         })
 
         // test on collected metrics
@@ -46,7 +46,7 @@ describe('FetchQ reschedule', function () {
         // console.log(doc)
         const r1 = await request.post(url('/v1/reschedule')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
             nextIteration: moment().add(1, 'year'),
         })
 
@@ -65,21 +65,21 @@ describe('FetchQ reschedule', function () {
     it('should reschedule with payload', async function () {
         await request.post(url('/v1/reschedule')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
             payload: {
                 ...doc.payload,
                 res: true,
             },
         })
 
-        const r1 = await pg.query(`select * from fetchq__foo__documents where id = ${doc.id}`)
+        const r1 = await pg.query(`select * from fetchq__foo__documents where subject = '${doc.subject}'`)
         expect(r1.rows[0].payload.res).to.equal(true)
     })
 
     it('should reschedule in the past', async function () {
         await request.post(url('/v1/reschedule')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
             nextIteration: moment().subtract(1, 'year'),
             payload: {
                 ...doc.payload,

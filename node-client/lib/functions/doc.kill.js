@@ -1,10 +1,10 @@
 
-const createDocKill = (ctx) => async (queue = null, documentId = 0, payload = null) => {
+const createDocKill = (ctx) => async (queue = null, subject, payload = null) => {
     try {
         const q = [
             'SELECT * FROM fetchq_doc_kill(',
             `'${queue}',`,
-            `${documentId},`,
+            `'${subject}',`,
             `'${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
             ')',
         ].join(' ')

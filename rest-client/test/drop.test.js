@@ -24,7 +24,7 @@ describe('FetchQ drop', function () {
     it('should drop a document', async function () {
         const r1 = await request.post(url('/v1/drop')).send({
             queue: 'foo',
-            documentId: doc.id,
+            subject: doc.subject,
         })
 
         // test on collected metrics

@@ -1,10 +1,10 @@
 
-const createDocReschedule = (ctx) => async (queue = null, documentId = 0, nextIteration = null, payload = null) => {
+const createDocReschedule = (ctx) => async (queue = null, subject, nextIteration = null, payload = null) => {
     try {
         const q = [
             'SELECT * FROM fetchq_doc_reschedule(',
             `'${queue}',`,
-            `${documentId},`,
+            `'${subject}',`,
             nextIteration === null ? 'NOW()' : `'${nextIteration}'`,
             payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
             ')',

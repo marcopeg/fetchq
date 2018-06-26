@@ -1,10 +1,10 @@
 
-const createDocReject = (ctx) => async (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) => {
+const createDocReject = (ctx) => async (queue = null, subject, errorMsg = null, errorDetails = null, refId = null) => {
     try {
         const q = [
             'SELECT * FROM fetchq_doc_reject(',
             `'${queue}',`,
-            `${documentId},`,
+            `'${subject}',`,
             `'${errorMsg || ''}',`,
             `'${JSON.stringify(errorDetails || {}).replace(/'/g, '\'\'\'\'')}'`,
             refId === null ? '' : `, '${refId}'`,
