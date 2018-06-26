@@ -1,6 +1,10 @@
 const winston = require('winston')
 const { Pool } = require('pg')
 
+const { createConnect } = require('./functions/connect')
+const { createInit } = require('./functions/init')
+const { createInfo } = require('./functions/info')
+
 class Fetchq {
     constructor (config = {}) {
         this.pool = new Pool()
@@ -10,40 +14,22 @@ class Fetchq {
                 new (winston.transports.Console)(),
             ]
         })
+
+        this.connect = createConnect(this)
+        this.init = createInit(this)
+        this.info = createInfo(this)
     }
 
-    async connect () {
-        try {
-            const res = await this.pool.query('SELECT NOW()')
-            this.logger.verbose(`[fetchq] now is: ${res.rows[0].now}`)
-        } catch (err) {
-            this.logger.error(`[fetchq] ${err.message}`)
-            this.logger.debug(err)
-            throw new Error('[fetchq] Could not connect to Postgres')
-        }
-    }
-
-    async init () {
-        try {
-            await this.pool.query('CREATE EXTENSION IF NOT EXISTS fetchq;')
-            const res = await this.pool.query('SELECT * FROM fetchq_init()')
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] info() - ${err.message}`)
-        }
-    }
-
-    async info () {
-        try {
-            const q = 'SELECT * FROM fetchq_info()'
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] info() - ${err.message}`)
-        }
-    }
+    // async info () {
+    //     try {
+    //         const q = 'SELECT * FROM fetchq_info()'
+    //         const res = await this.pool.query(q)
+    //         return res.rows[0]
+    //     } catch (err) {
+    //         this.logger.debug(err)
+    //         throw new Error(`[fetchq] info() - ${err.message}`)
+    //     }
+    // }
 
     async queueList (settings = {}) {
         try {

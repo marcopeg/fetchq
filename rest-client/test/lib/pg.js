@@ -16,14 +16,14 @@ const init = async () => {
 
 const dropSchema = async () => {
     await init()
-    await pool.query('DROP SCHEMA public CASCADE;')
-    await pool.query('CREATE SCHEMA public;')
+    await pool.query('DROP SCHEMA IF EXISTS public CASCADE;')
+    await pool.query('CREATE SCHEMA IF NOT EXISTS public;')
 }
 
 const reset = async () => {
     await init()
     await dropSchema()
-    await pool.query('CREATE EXTENSION fetchq;')
+    await pool.query('CREATE EXTENSION IF NOT EXISTS fetchq;')
     await pool.query('SELECT * FROM fetchq_init();')
 }
 

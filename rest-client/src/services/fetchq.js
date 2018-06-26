@@ -1,5 +1,5 @@
 const winston = require('winston')
-const { Fetchq } = require('../../../node-client/src/fetchq.class') // @TODO: will become an npm module
+const { Fetchq } = require('../../../node-client/lib/fetchq.class') // @TODO: will become an npm module
 
 let client = null
 
@@ -17,7 +17,7 @@ const start = async () => {
 }
 
 const getClient = () => client
-
+    
 module.exports = {
     init,
     start,
