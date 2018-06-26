@@ -1,6 +1,6 @@
 
-DROP FUNCTION IF EXISTS fetchq_create_queue_indexes(CHARACTER VARYING, INTEGER, INTEGER);
-CREATE OR REPLACE FUNCTION fetchq_create_queue_indexes (
+DROP FUNCTION IF EXISTS fetchq_queue_create_indexes(CHARACTER VARYING, INTEGER, INTEGER);
+CREATE OR REPLACE FUNCTION fetchq_queue_create_indexes (
 	PAR_queue VARCHAR,
     PAR_version INTEGER,
     PAR_attempts INTEGER,

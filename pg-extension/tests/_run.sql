@@ -1,9 +1,9 @@
 
 -- regression tests
 SELECT * FROM fetchq_test__init();
-SELECT * FROM fetchq_test__create_queue_01();
-SELECT * FROM fetchq_test__create_queue_02();
-SELECT * FROM fetchq_test__create_queue_03();
+SELECT * FROM fetchq_test__queue_create_01();
+SELECT * FROM fetchq_test__queue_create_02();
+SELECT * FROM fetchq_test__queue_create_03();
 SELECT * FROM fetchq_test__drop_queue_01();
 SELECT * FROM fetchq_test__drop_queue_02();
 SELECT * FROM fetchq_test__metric_get_01();
