@@ -14,7 +14,7 @@ BEGIN
 	was_created = TRUE;
 
 	-- pick the queue id
-	SELECT t.queue_id INTO queue_id FROM fetchq_get_queue_id(PAR_queue) AS t;
+	SELECT t.queue_id INTO queue_id FROM fetchq_queue_get_id(PAR_queue) AS t;
 
 	VAR_q = 'CREATE TABLE fetchq__%s__documents (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';

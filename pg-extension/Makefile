@@ -17,7 +17,6 @@ build:
 	cat $(CURDIR)/src/info.sql \
 		$(CURDIR)/src/init.sql \
 		$(CURDIR)/src/destroy.sql \
-		$(CURDIR)/src/get-queue-id.sql \
 		$(CURDIR)/src/create-queue-indexes.sql \
 		$(CURDIR)/src/metric-set.sql \
 		$(CURDIR)/src/metric-increment.sql \
@@ -45,6 +44,7 @@ build:
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
 		$(CURDIR)/src/log-error.sql \
+		$(CURDIR)/src/queue-get-id.sql \
 		$(CURDIR)/src/queue-create.sql \
 		$(CURDIR)/src/queue-drop.sql \
 		$(CURDIR)/src/queue-set-max-attempts.sql \
