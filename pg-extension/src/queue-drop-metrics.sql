@@ -41,3 +41,37 @@ BEGIN
 	END;
 END; $$
 LANGUAGE plpgsql;
+
+
+DROP FUNCTION IF EXISTS fetchq_queue_drop_metrics(CHARACTER VARYING);
+CREATE OR REPLACE FUNCTION fetchq_queue_drop_metrics (
+	PAR_queue VARCHAR,
+	OUT removed_rows INTEGER
+) AS $$
+DECLARE
+	VAR_q VARCHAR;
+	VAR_r RECORD;
+    VAR_retention VARCHAR = '[]';
+BEGIN
+    
+    VAR_q = 'SELECT metrics_retention FROM fetchq_sys_queues WHERE name = ''%s'';';
+	VAR_q = FORMAT(VAR_q, PAR_queue);
+	EXECUTE VAR_q INTO VAR_r;
+
+    -- override the default value
+    IF VAR_r.metrics_retention IS NOT NULL THEN
+        VAR_retention = VAR_r.metrics_retention;
+    END IF;
+
+    RAISE NOTICE 'retention %', VAR_retention;
+
+    -- run the operation
+    SELECT * INTO VAR_r FROM fetchq_queue_drop_metrics(PAR_queue, VAR_retention::jsonb);
+    removed_rows = VAR_r.removed_rows;
+
+    -- RAISE NOTICE 'removed roes %', removed_rows;
+	EXCEPTION WHEN OTHERS THEN BEGIN
+		removed_rows = 0;
+	END;
+END; $$
+LANGUAGE plpgsql;

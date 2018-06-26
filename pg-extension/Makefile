@@ -50,6 +50,7 @@ build:
 		$(CURDIR)/src/queue-set-max-attempts.sql \
 		$(CURDIR)/src/queue-set-current-version.sql \
 		$(CURDIR)/src/queue-set-errors-retention.sql \
+		$(CURDIR)/src/queue-set-metrics-retention.sql \
 		$(CURDIR)/src/queue-drop-version.sql \
 		$(CURDIR)/src/queue-drop-errors.sql \
 		$(CURDIR)/src/queue-drop-metrics.sql \
