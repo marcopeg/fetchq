@@ -50,7 +50,7 @@ const createV1Router = (settings) => {
     router.post('/metric/reset', fetchqMetricReset())
 
     // maintenance
-    router.post('/mnt/run/all', fetchqMntRunAll())
+    // router.post('/mnt/run/all', fetchqMntRunAll())
     router.post('/mnt/run', fetchqMntRun())
 
     return router
