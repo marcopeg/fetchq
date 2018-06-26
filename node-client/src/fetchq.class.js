@@ -89,7 +89,7 @@ class Fetchq {
     }
 
     // @TODO: validate queue name
-    async createQueue (name) {
+    async queueCreate (name) {
         try {
             const q = `SELECT * FROM fetchq_queue_create('${name}')`
             const res = await this.pool.query(q)
