@@ -11,6 +11,7 @@ const { createQueueDrop } = require('./functions/queue.drop')
 const { createDocPush } = require('./functions/doc.push')
 const { createDocPushMany } = require('./functions/doc.push-many')
 const { createDocPick } = require('./functions/doc.pick')
+const { createDocReschedule } = require('./functions/doc.reschedule')
 
 class Fetchq {
     constructor (config = {}) {
@@ -37,28 +38,10 @@ class Fetchq {
             push: createDocPush(this),
             pushMany: createDocPushMany(this),
             pick: createDocPick(this),
+            reschedule: createDocReschedule(this),
         }
     }
 
-    async docReschedule (queue = null, documentId = 0, nextIteration = null, payload = null) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_doc_reschedule(',
-                `'${queue}',`,
-                `${documentId},`,
-                nextIteration === null ? 'NOW()' : `'${nextIteration}'`,
-                payload === null ? '' : `, '${JSON.stringify(payload || {}).replace(/'/g, '\'\'\'\'')}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] doc_reschedule() - ${err.message}`)
-        }
-    }
-    
     async docReject (queue = null, documentId = 0, errorMsg = null, errorDetails = null, refId = null) {
         try {
             const q = [
