@@ -18,6 +18,9 @@ const { createDocKill } = require('./functions/doc.kill')
 const { createDocDrop } = require('./functions/doc.drop')
 const { createMetricLogPack } = require('./functions/metric.log-pack')
 const { createMetricGet } = require('./functions/metric.get')
+const { createMetricGetTotal } = require('./functions/metric.get-total')
+const { createMetricGetCommon } = require('./functions/metric.get-common')
+const { createMetricGetAll } = require('./functions/metric.get-all')
 
 class Fetchq {
     constructor (config = {}) {
@@ -54,54 +57,12 @@ class Fetchq {
         this.metric = {
             logPack: createMetricLogPack(this),
             get: createMetricGet(this),
+            getTotal: createMetricGetTotal(this),
+            getCommon: createMetricGetCommon(this),
+            getAll: createMetricGetAll(this),
         }
     }
 
-    async metricGetTotal (metric) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_metric_get_total(',
-                `'${metric}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] metricGetTotal() - ${err.message}`)
-        }
-    }
-
-    async metricGetCommon (queue) {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_metric_get_common(',
-                `'${queue}'`,
-                ')',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] metricGetCommon() - ${err.message}`)
-        }
-    }
-
-    async metricGetAll () {
-        try {
-            const q = [
-                'SELECT * FROM fetchq_metric_get_all()',
-            ].join(' ')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] metricGetAll() - ${err.message}`)
-        }
-    }
 
     async metricCompute (queue) {
         try {
