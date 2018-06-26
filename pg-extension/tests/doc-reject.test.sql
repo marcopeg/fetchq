@@ -17,13 +17,13 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}');
+    PERFORM fetchq_doc_reject('foo', 'a1', 'foo', '{"a":1}');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = 1
     AND iterations = 1
     AND next_iteration >= NOW() + INTERVAL '300s';
@@ -67,13 +67,13 @@ BEGIN
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 2, '5m');
 
     -- perform reschedule
-    PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}', 'xxx');
+    PERFORM fetchq_doc_reject('foo', 'a1', 'foo', '{"a":1}', 'xxx');
     PERFORM fetchq_mnt_run_all(100);
     PERFORM fetchq_metric_log_pack();
 
     -- get first document
     SELECT * INTO VAR_r from fetchq__foo__documents
-    WHERE id = VAR_r.id
+    WHERE subject = 'a1'
     AND status = 1
     AND iterations = 1
     AND next_iteration >= NOW() + INTERVAL '300s';

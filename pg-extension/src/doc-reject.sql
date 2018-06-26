@@ -1,8 +1,9 @@
+-- @TODO: MAX ATTEMTS MUST COME FROM THE QUEUE
 
-DROP FUNCTION IF EXISTS fetchq_doc_reject(CHARACTER VARYING, INTEGER, CHARACTER VARYING, JSONB);
+DROP FUNCTION IF EXISTS fetchq_doc_reject(CHARACTER VARYING, CHARACTER VARYING, CHARACTER VARYING, JSONB);
 CREATE OR REPLACE FUNCTION fetchq_doc_reject (
     PAR_queue VARCHAR,
-    PAR_docId INTEGER,
+    PAR_subject VARCHAR,
     PAR_message VARCHAR,
     PAR_details JSONB,
     OUT affected_rows INTEGER
@@ -18,10 +19,10 @@ BEGIN
 	VAR_q = VAR_q || 'lock_upgrade = CASE WHEN lq.lock_upgrade IS NULL THEN NULL ELSE NOW() END,';
 	VAR_q = VAR_q || 'iterations = lq.iterations + 1,';
 	VAR_q = VAR_q || 'last_iteration = NOW() ';
-	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM fetchq__%s__documents WHERE id = %s AND status = 2 LIMIT 1) ';
+	VAR_q = VAR_q || 'WHERE subject IN ( SELECT subject FROM fetchq__%s__documents WHERE subject = ''%s'' AND status = 2 LIMIT 1) ';
     VAR_q = VAR_q || 'RETURNING version, status, subject) ';
 	VAR_q = VAR_q || 'SELECT * FROM fetchq_doc_reject_lock_%s LIMIT 1; ';
-	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, MAX_ATTEMPTS, PAR_queue, PAR_docId, PAR_queue);
+	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, MAX_ATTEMPTS, PAR_queue, PAR_subject, PAR_queue);
 
 	EXECUTE VAR_q INTO VAR_r;
 	GET DIAGNOSTICS affected_rows := ROW_COUNT;
@@ -48,14 +49,13 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-
-DROP FUNCTION IF EXISTS fetchq_doc_reject(CHARACTER VARYING, INTEGER, CHARACTER VARYING, JSONB, CHARACTER VARYING);
+DROP FUNCTION IF EXISTS fetchq_doc_reject(CHARACTER VARYING, CHARACTER VARYING, CHARACTER VARYING, JSONB, CHARACTER VARYING);
 CREATE OR REPLACE FUNCTION fetchq_doc_reject (
     PAR_queue VARCHAR,
-    PAR_docId INTEGER,
+    PAR_subject VARCHAR,
     PAR_message VARCHAR,
     PAR_details JSONB,
-    PAR_refId VARCHAR,
+	PAR_refId VARCHAR,
     OUT affected_rows INTEGER
 ) AS $$
 DECLARE
@@ -69,10 +69,10 @@ BEGIN
 	VAR_q = VAR_q || 'lock_upgrade = CASE WHEN lq.lock_upgrade IS NULL THEN NULL ELSE NOW() END,';
 	VAR_q = VAR_q || 'iterations = lq.iterations + 1,';
 	VAR_q = VAR_q || 'last_iteration = NOW() ';
-	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM fetchq__%s__documents WHERE id = %s AND status = 2 LIMIT 1) ';
+	VAR_q = VAR_q || 'WHERE subject IN ( SELECT subject FROM fetchq__%s__documents WHERE subject = ''%s'' AND status = 2 LIMIT 1) ';
     VAR_q = VAR_q || 'RETURNING version, status, subject) ';
 	VAR_q = VAR_q || 'SELECT * FROM fetchq_doc_reject_lock_%s LIMIT 1; ';
-	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, MAX_ATTEMPTS, PAR_queue, PAR_docId, PAR_queue);
+	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, MAX_ATTEMPTS, PAR_queue, PAR_subject, PAR_queue);
 
 	EXECUTE VAR_q INTO VAR_r;
 	GET DIAGNOSTICS affected_rows := ROW_COUNT;
@@ -85,6 +85,7 @@ BEGIN
         PERFORM fetchq_log_error(PAR_queue, VAR_r.subject, PAR_message, PAR_details, PAR_refId);
 
         -- update metrics
+        PERFORM fetchq_metric_log_increment(PAR_queue, 'prc', 1);
         PERFORM fetchq_metric_log_increment(PAR_queue, 'err', 1);
 		PERFORM fetchq_metric_log_increment(PAR_queue, 'rej', 1);
 		PERFORM fetchq_metric_log_decrement(PAR_queue, 'act', 1);
