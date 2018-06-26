@@ -6,6 +6,8 @@ const { createInit } = require('./functions/init')
 const { createInfo } = require('./functions/info')
 const { createQueueList } = require('./functions/queue.list')
 const { createQueueGet } = require('./functions/queue.get')
+const { createQueueCreate } = require('./functions/queue.create')
+const { createQueueDrop } = require('./functions/queue.drop')
 
 class Fetchq {
     constructor (config = {}) {
@@ -24,34 +26,8 @@ class Fetchq {
         this.queue = {
             list: createQueueList(this),
             get: createQueueGet(this),
-        }
-
-        // backword compatibility
-        // this.queueList = createQueueList(this)
-        // this.queueGet = createQueueGet(this)
-    }
-
-    // @TODO: validate queue name
-    async queueCreate (name) {
-        try {
-            const q = `SELECT * FROM fetchq_queue_create('${name}')`
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] createQueue() - ${err.message}`)
-        }
-    }
-    
-    // @TODO: validate queue name
-    async queueDrop (name) {
-        try {
-            const q = `SELECT * FROM fetchq_queue_drop('${name}')`
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] dropQueue() - ${err.message}`)
+            create: createQueueCreate(this),
+            drop: createQueueDrop(this),
         }
     }
 

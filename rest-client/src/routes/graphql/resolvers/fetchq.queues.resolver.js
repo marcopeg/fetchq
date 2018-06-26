@@ -55,7 +55,7 @@ const createQueueResolver = () => async (params, args, root) => {
         .find(i => i.name.value === root.fieldName)
         .selectionSet.selections.map(selection => selection.name.value)
     const client = fetchq.getClient()
-    const res = await client.queueCreate(params.name)
+    const res = await client.queue.create(params.name)
 
     // make the queue data optional
     let queue = null
@@ -83,7 +83,7 @@ const dropQueueResolver = () => async (params, args, root) => {
     const client = fetchq.getClient()
     const queue = await client.queue.get(params.name, { attributes: ['id'] })
     return {
-        ...await client.queueDrop(params.name),
+        ...await client.queue.drop(params.name),
         queue_id: queue.id,
     }
 }

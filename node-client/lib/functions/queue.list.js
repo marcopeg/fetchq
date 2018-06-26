@@ -19,7 +19,7 @@ const createQueueList = (ctx) => async (settings = {}) => {
         return res.rows
     } catch (err) {
         ctx.logger.debug(err)
-        throw new Error(`[fetchq] createQueue() - ${err.message}`)
+        throw new Error(`[fetchq] queue.list() - ${err.message}`)
     }
 }
 

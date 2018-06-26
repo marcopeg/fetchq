@@ -6,7 +6,7 @@ const createConnect = (ctx) => async () => {
     } catch (err) {
         ctx.logger.error(`[fetchq] ${err.message}`)
         ctx.logger.debug(err)
-        throw new Error('[fetchq] Could not connect to Postgres')
+        throw new Error(`[fetchq] connect() - ${err.message}`)
     }
 }
 

@@ -6,7 +6,7 @@ const createInit = (ctx) => async () => {
         return res.rows[0]
     } catch (err) {
         ctx.logger.debug(err)
-        throw new Error(`[fetchq] info() - ${err.message}`)
+        throw new Error(`[fetchq] init() - ${err.message}`)
     }
 }
 
