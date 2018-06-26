@@ -52,6 +52,8 @@ SELECT * FROM fetchq_test__mnt_run_all_01();
 SELECT * FROM fetchq_test__log_error_01();
 SELECT * FROM fetchq_test__log_error_02();
 
+SELECT * FROM fetchq_test__utils_ts_retain_01();
+
 -- load tests
 -- SELECT * FROM fetchq_test__load_01(10000);
 -- SELECT * FROM fetchq_test__load_02(5000);
