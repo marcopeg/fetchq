@@ -26,7 +26,7 @@ BEGIN
     AND status = 3
     AND iterations = 1
     AND next_iteration >= '2970-01-01';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after complete)', VAR_testName;
     END IF;
 
@@ -64,7 +64,7 @@ BEGIN
     AND status = 3
     AND iterations = 1
     AND next_iteration >= '2970-01-01';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after complete)', VAR_testName;
     END IF;
 

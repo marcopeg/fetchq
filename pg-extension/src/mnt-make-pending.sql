@@ -12,8 +12,8 @@ DECLARE
 BEGIN
     VAR_q = '';
 	VAR_q = VAR_q || 'UPDATE fetchq__%s__documents SET status = 1 ';
-	VAR_q = VAR_q || 'WHERE id IN ( ';
-	VAR_q = VAR_q || 'SELECT id FROM fetchq__%s__documents ';
+	VAR_q = VAR_q || 'WHERE subject IN ( ';
+	VAR_q = VAR_q || 'SELECT subject FROM fetchq__%s__documents ';
 	VAR_q = VAR_q || 'WHERE lock_upgrade IS NULL AND status = 0 AND next_iteration < NOW() ';
 	VAR_q = VAR_q || 'ORDER BY next_iteration ASC, attempts ASC ';
 	VAR_q = VAR_q || 'LIMIT %s  ';

@@ -23,7 +23,7 @@ BEGIN
     -- get no docs
     SELECT * INTO VAR_r from fetchq__foo__documents
     WHERE subject = 'a1';
-    IF VAR_r.id IS NOT NULL THEN
+    IF VAR_r.subject IS NOT NULL THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
 

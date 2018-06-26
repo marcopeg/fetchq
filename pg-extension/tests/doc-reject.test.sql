@@ -27,7 +27,7 @@ BEGIN
     AND status = 1
     AND iterations = 1
     AND next_iteration >= NOW() + INTERVAL '300s';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after reject)', VAR_testName;
     END IF;
 
@@ -77,7 +77,7 @@ BEGIN
     AND status = 1
     AND iterations = 1
     AND next_iteration >= NOW() + INTERVAL '300s';
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after reject)', VAR_testName;
     END IF;
 

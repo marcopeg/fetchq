@@ -25,7 +25,7 @@ BEGIN
     WHERE subject = 'a1'
     AND status = -1
     AND iterations = 1;
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after kill)', VAR_testName;
     END IF;
 
@@ -62,7 +62,7 @@ BEGIN
     WHERE subject = 'a1'
     AND status = -1
     AND iterations = 1;
-    IF VAR_r.id IS NULL THEN
+    IF VAR_r.subject IS NULL THEN
         RAISE EXCEPTION 'failed - % (failed to find the document after kill)', VAR_testName;
     END IF;
 

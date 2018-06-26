@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION fetchq_doc_pick (
 	PAR_limit INTEGER,
 	PAR_duration VARCHAR
 ) RETURNS TABLE (
-	id INTEGER,
 	subject VARCHAR,
 	payload JSONB,
 	version INTEGER,
@@ -33,19 +32,19 @@ BEGIN
 	VAR_updateCtx = FORMAT('fetchq__%s__pick_ctx', PAR_queue);
 
 	-- create temporary table
-	VAR_q = FORMAT('CREATE TEMP TABLE %s (id BIGINT) ON COMMIT DROP;', VAR_tempTable);
+	VAR_q = FORMAT('CREATE TEMP TABLE %s (subject VARCHAR(50)) ON COMMIT DROP;', VAR_tempTable);
 	EXECUTE VAR_q;
 
 	-- perform lock on the rows
 	VAR_q = 'WITH %s AS ( ';
 	VAR_q = VAR_q || 'UPDATE %s ';
 	VAR_q = VAR_q || 'SET status = 2, next_iteration = NOW() + ''%s'', attempts = attempts + 1 ';
-	VAR_q = VAR_q || 'WHERE id IN ( SELECT id FROM %s ';
+	VAR_q = VAR_q || 'WHERE subject IN ( SELECT subject FROM %s ';
     VAR_q = VAR_q || 'WHERE lock_upgrade IS NULL AND status = 1 AND version = %s AND next_iteration < NOW() ';
 	VAR_q = VAR_q || 'ORDER BY priority DESC, next_iteration ASC, attempts ASC ';
-	VAR_q = VAR_q || 'LIMIT %s FOR UPDATE SKIP LOCKED) RETURNING id) ';
-	VAR_q = VAR_q || 'INSERT INTO %s (id) ';
-	VAR_q = VAR_q || 'SELECT id FROM %s; ';
+	VAR_q = VAR_q || 'LIMIT %s FOR UPDATE SKIP LOCKED) RETURNING subject) ';
+	VAR_q = VAR_q || 'INSERT INTO %s (subject) ';
+	VAR_q = VAR_q || 'SELECT subject FROM %s; ';
 	VAR_q = FORMAT(VAR_q, VAR_updateCtx, VAR_tableName, PAR_duration, VAR_tableName, PAR_version, PAR_limit, VAR_tempTable, VAR_updateCtx);
 	EXECUTE VAR_q;
 	GET DIAGNOSTICS VAR_affectedRows := ROW_COUNT;
@@ -59,8 +58,8 @@ BEGIN
 	PERFORM fetchq_metric_log_decrement(PAR_queue, 'pnd', VAR_affectedRows);
 
 	-- return documents
-	VAR_q = 'SELECT id, subject, payload, version, priority, attempts, iterations, created_at, last_iteration, next_iteration, lock_upgrade ';
-	VAR_q = VAR_q || 'FROM %s WHERE id IN ( SELECT id ';
+	VAR_q = 'SELECT subject, payload, version, priority, attempts, iterations, created_at, last_iteration, next_iteration, lock_upgrade ';
+	VAR_q = VAR_q || 'FROM %s WHERE subject IN ( SELECT subject ';
 	VAR_q = VAR_q || 'FROM %s); ';
 	VAR_q = FORMAT(VAR_q, VAR_tableName, VAR_tempTable);
 	RETURN QUERY EXECUTE VAR_q;
