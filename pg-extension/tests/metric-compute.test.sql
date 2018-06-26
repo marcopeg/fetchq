@@ -25,7 +25,7 @@ BEGIN
     PERFORM fetchq_doc_reject('foo', VAR_r.id, 'foo', '{"a":1}');
 
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
-    PERFORM fetchq_doc_complete('foo', VAR_r.id);
+    PERFORM fetchq_doc_complete('foo', VAR_r.subject);
 
     SELECT * INTO VAR_r FROM fetchq_doc_pick('foo', 0, 1, '5m');
     PERFORM fetchq_doc_kill('foo', VAR_r.subject);
