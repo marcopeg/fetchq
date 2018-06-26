@@ -23,6 +23,7 @@ SELECT * FROM fetchq_test__doc_reschedule_01();
 SELECT * FROM fetchq_test__doc_reschedule_02();
 SELECT * FROM fetchq_test__doc_reject_01();
 SELECT * FROM fetchq_test__doc_reject_02();
+SELECT * FROM fetchq_test__doc_reject_03();
 SELECT * FROM fetchq_test__doc_complete_01();
 SELECT * FROM fetchq_test__doc_complete_02();
 SELECT * FROM fetchq_test__doc_kill_01();

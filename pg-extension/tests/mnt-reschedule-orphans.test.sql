@@ -57,6 +57,9 @@ BEGIN
 
     -- run the test
     SELECT * INTO VAR_r FROM fetchq_metric_get('foo', 'err');
+    IF VAR_r.current_value IS NULL THEN
+        RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
     IF VAR_r.current_value != 0 THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
