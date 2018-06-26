@@ -54,4 +54,4 @@ SELECT * FROM fetchq_test__log_error_02();
 -- load tests
 -- SELECT * FROM fetchq_test__load_01(10000);
 -- SELECT * FROM fetchq_test__load_02(5000);
--- SELECT * FROM fetchq_test__load_03(2, 5000);
+-- SELECT * FROM fetchq_test__load_03(10, 10000);

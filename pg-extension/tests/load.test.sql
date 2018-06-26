@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION fetchq_test__load_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'LOAD TEST 01';
+    VAR_testName VARCHAR = 'LOAD TEST 01 - INSERT ONE BY ONE';
     VAR_r RECORD;
     StartTime timestamptz;
     EndTime timestamptz;
@@ -23,7 +23,9 @@ BEGIN
 	END LOOP;
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
+    RAISE NOTICE '%', VAR_testName;
     RAISE NOTICE 'Insert Duration in millisecs=%', ROUND(Delta);
+    RAISE NOTICE 'Docs/sec: %', ROUND(PAR_limit * 1000 / Delta);
 
     -- run maintenance
     StartTime := clock_timestamp();
@@ -32,7 +34,7 @@ BEGIN
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE 'Maintenance Duration in millisecs=%', ROUND(Delta);
-
+    
     -- cleanup
     PERFORM fetchq_test_clean();
 
@@ -46,7 +48,7 @@ CREATE OR REPLACE FUNCTION fetchq_test__load_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'LOAD TEST 02';
+    VAR_testName VARCHAR = 'LOAD TEST 02 - bulk insert';
     VAR_q VARCHAR;
     VAR_sq VARCHAR;
     VAR_r RECORD;
@@ -82,6 +84,7 @@ BEGIN
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE 'Insert Duration in millisecs=%', ROUND(Delta);
+    RAISE NOTICE 'Docs/sec: %', ROUND(PAR_limit * 1000 / Delta);
 
     -- run maintenance
     StartTime := clock_timestamp();
@@ -201,7 +204,7 @@ CREATE OR REPLACE FUNCTION fetchq_test__load_03 (
     OUT docsPerSecond INTEGER
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'LOAD TEST 03';
+    VAR_testName VARCHAR = 'LOAD TEST 03 - many many many';
     VAR_r RECORD;
     VAR_r1 RECORD;
     VAR_r2 RECORD;
