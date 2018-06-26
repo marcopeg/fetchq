@@ -17,7 +17,7 @@ build:
 	cat $(CURDIR)/src/info.sql \
 		$(CURDIR)/src/init.sql \
 		$(CURDIR)/src/destroy.sql \
-		$(CURDIR)/src/create-queue-indexes.sql \
+		$(CURDIR)/src/queue-create-indexes.sql \
 		$(CURDIR)/src/metric-set.sql \
 		$(CURDIR)/src/metric-increment.sql \
 		$(CURDIR)/src/metric-log-set.sql \
