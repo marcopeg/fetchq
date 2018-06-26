@@ -4,6 +4,8 @@ const { Pool } = require('pg')
 const { createConnect } = require('./functions/connect')
 const { createInit } = require('./functions/init')
 const { createInfo } = require('./functions/info')
+const { createQueueList } = require('./functions/queue.list')
+const { createQueueGet } = require('./functions/queue.get')
 
 class Fetchq {
     constructor (config = {}) {
@@ -18,60 +20,15 @@ class Fetchq {
         this.connect = createConnect(this)
         this.init = createInit(this)
         this.info = createInfo(this)
-    }
 
-    // async info () {
-    //     try {
-    //         const q = 'SELECT * FROM fetchq_info()'
-    //         const res = await this.pool.query(q)
-    //         return res.rows[0]
-    //     } catch (err) {
-    //         this.logger.debug(err)
-    //         throw new Error(`[fetchq] info() - ${err.message}`)
-    //     }
-    // }
-
-    async queueList (settings = {}) {
-        try {
-            const q = [
-                'SELECT ',
-                settings.attributes
-                    ? `${settings.attributes.join(', ')} `
-                    : '* ',
-                'FROM fetchq_sys_queues ORDER BY ',
-                settings.sortBy
-                    ? `${settings.sortBy } `
-                    : 'name ',
-                    settings.sortOrder
-                    ? `${settings.sortOrder } `
-                    : 'ASC ',
-            ].join('')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] createQueue() - ${err.message}`)
+        this.queue = {
+            list: createQueueList(this),
+            get: createQueueGet(this),
         }
-    }
 
-    async queueGet (name, settings = {}) {
-        try {
-            const q = [
-                'SELECT ',
-                settings.attributes
-                    ? `${settings.attributes.join(', ')} `
-                    : '* ',
-                'FROM fetchq_sys_queues ',
-                `WHERE name = '${name}' `,
-            ].join('')
-            // console.log(q)
-            const res = await this.pool.query(q)
-            return res.rows[0]
-        } catch (err) {
-            this.logger.debug(err)
-            throw new Error(`[fetchq] createQueue() - ${err.message}`)
-        }
+        // backword compatibility
+        // this.queueList = createQueueList(this)
+        // this.queueGet = createQueueGet(this)
     }
 
     // @TODO: validate queue name
