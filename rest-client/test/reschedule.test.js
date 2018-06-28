@@ -6,6 +6,8 @@ const pg = require('./lib/pg')
 
 
 describe('FetchQ reschedule', function () {
+    this.timeout(10000)
+    
     let doc = null
     beforeEach(async function () {
         await pg.reset()

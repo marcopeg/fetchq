@@ -18,6 +18,7 @@ const weirdPayload = {
 }
 
 describe('FetchQ push', function () {
+    this.timeout(10000)
 
     beforeEach(async function () {
         await pg.reset()

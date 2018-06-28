@@ -4,6 +4,8 @@ const url = require('./lib/url')
 const pg = require('./lib/pg')
 
 describe('FetchQ init', function () {
+    this.timeout(10000)
+    
     beforeEach(async function () {
         await pg.reset()
     })

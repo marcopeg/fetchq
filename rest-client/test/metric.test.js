@@ -5,6 +5,8 @@ const pg = require('./lib/pg')
 
 
 describe('FetchQ Metrics', function () {
+    this.timeout(10000)
+
     beforeEach(async function () {
         await pg.reset()
 
