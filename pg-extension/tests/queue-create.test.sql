@@ -21,7 +21,7 @@ BEGIN
     PERFORM * FROM fetchq__foo__errors;
 
     -- check jobs table
-    SELECT COUNT(*) INTO VAR_numDocs FROM fetchq_sys_jobs WHERE subject = 'foo';
+    SELECT COUNT(*) INTO VAR_numDocs FROM fetchq_sys_jobs WHERE queue = 'foo';
     IF VAR_numDocs < 4 THEN
 		RAISE EXCEPTION 'it seems there are not enough maintenance jobs';
 	END IF;

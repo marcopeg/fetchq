@@ -77,8 +77,8 @@ BEGIN
     -- Maintenance Jobs
     CREATE TABLE fetchq_sys_jobs (
         id SERIAL PRIMARY KEY,
-        domain character varying(40) NOT NULL,
-        subject character varying(40) NOT NULL,
+        task character varying(40) NOT NULL,
+        queue character varying(40) NOT NULL,
         attempts integer DEFAULT 0,
         iterations integer DEFAULT 0,
         next_iteration timestamp with time zone,
@@ -97,8 +97,8 @@ BEGIN
     -- ALTER SEQUENCE fetchq_sys_jobs_id_seq OWNED BY fetchq_sys_jobs.id;
     -- ALTER TABLE ONLY fetchq_sys_jobs ALTER COLUMN id SET DEFAULT nextval('fetchq_sys_jobs_id_seq'::regclass);
     -- ALTER TABLE ONLY fetchq_sys_jobs ADD CONSTRAINT fetchq_sys_jobs_pkey PRIMARY KEY (id);
-    CREATE UNIQUE INDEX fetchq_sys_jobs_domain_subject_idx ON fetchq_sys_jobs USING btree (domain, subject);
-    CREATE INDEX fetchq_sys_jobs_domain_idx ON fetchq_sys_jobs USING btree (domain, next_iteration, iterations) WHERE (iterations < 5);
+    CREATE UNIQUE INDEX fetchq_sys_jobs_task_queue_idx ON fetchq_sys_jobs USING btree (task, queue);
+    CREATE INDEX fetchq_sys_jobs_task_idx ON fetchq_sys_jobs USING btree (task, next_iteration, iterations) WHERE (iterations < 5);
     
     -- handle output with graceful fail support
 	was_initialized = TRUE;

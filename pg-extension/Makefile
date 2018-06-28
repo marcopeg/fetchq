@@ -44,6 +44,9 @@ build:
 		$(CURDIR)/src/mnt-reschedule-orphans.sql \
 		$(CURDIR)/src/mnt-mark-dead.sql \
 		$(CURDIR)/src/mnt-run.sql \
+		$(CURDIR)/src/mnt-job-pick.sql \
+		$(CURDIR)/src/mnt-job-reschedule.sql \
+		$(CURDIR)/src/mnt-job-run.sql \
 		$(CURDIR)/src/log-error.sql \
 		$(CURDIR)/src/queue-get-id.sql \
 		$(CURDIR)/src/queue-create.sql \
@@ -98,6 +101,9 @@ build-test:
 		$(CURDIR)/tests/mnt-reschedule-orphans.test.sql \
 		$(CURDIR)/tests/mnt-mark-dead.test.sql \
 		$(CURDIR)/tests/mnt-run.test.sql \
+		$(CURDIR)/tests/mnt-job-pick.test.sql \
+		$(CURDIR)/tests/mnt-job-reschedule.test.sql \
+		$(CURDIR)/tests/mnt-job-run.test.sql \
 		$(CURDIR)/tests/log-error.test.sql \
 		$(CURDIR)/tests/load.test.sql \
 		$(CURDIR)/tests/queue-create.test.sql \
