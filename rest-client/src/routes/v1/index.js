@@ -33,12 +33,12 @@ const createV1Router = (settings) => {
     router.delete('/queue/:name', fetchqQueueDrop())
 
     // document api
-    router.post('/pick', fetchqDocPick())
-    router.post('/reschedule', fetchqDocReschedule())
-    router.post('/reject', fetchqDocReject())
-    router.post('/complete', fetchqDocComplete())
-    router.post('/kill', fetchqDocKill())
-    router.post('/drop', fetchqDocDrop())
+    router.post('/doc/pick', fetchqDocPick())
+    router.post('/doc/reschedule', fetchqDocReschedule())
+    router.post('/doc/reject', fetchqDocReject())
+    router.post('/doc/complete', fetchqDocComplete())
+    router.post('/doc/kill', fetchqDocKill())
+    router.post('/doc/drop', fetchqDocDrop())
 
     // metrics
     router.post('/metric/log/pack', fetchqMetricLogPack())

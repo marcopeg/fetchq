@@ -17,14 +17,14 @@ describe('FetchQ complete', function () {
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
     })
 
     it('should set a document as completed', async function () {
-        const r1 = await request.post(url('/v1/complete')).send({
+        const r1 = await request.post(url('/v1/doc/complete')).send({
             queue: 'foo',
             subject: doc.subject,
         })
@@ -42,7 +42,7 @@ describe('FetchQ complete', function () {
     })
 
     it('should set a document as completed - with payload', async function () {
-        const r1 = await request.post(url('/v1/complete')).send({
+        const r1 = await request.post(url('/v1/doc/complete')).send({
             queue: 'foo',
             subject: doc.subject,
             payload: {

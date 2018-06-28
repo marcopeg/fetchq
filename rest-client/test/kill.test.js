@@ -17,14 +17,14 @@ describe('FetchQ kill', function () {
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
     })
 
     it('should set a document as kill', async function () {
-        const r1 = await request.post(url('/v1/kill')).send({
+        const r1 = await request.post(url('/v1/doc/kill')).send({
             queue: 'foo',
             subject: doc.subject,
         })
@@ -42,7 +42,7 @@ describe('FetchQ kill', function () {
     })
 
     it('should set a document as kill - with payload', async function () {
-        const r1 = await request.post(url('/v1/kill')).send({
+        const r1 = await request.post(url('/v1/doc/kill')).send({
             queue: 'foo',
             subject: doc.subject,
             payload: {

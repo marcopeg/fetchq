@@ -17,7 +17,7 @@ describe('FetchQ Metrics', function () {
         // queue: faa
         await request.post(url('/v1/queue')).send({ name: 'faa' })
         await request.post(url('/v1/queue/faa')).send({ subject: 'a3' })
-        await request.post(url('/v1/pick')).send({ queue: 'faa', duration: '1s' })
+        await request.post(url('/v1/doc/pick')).send({ queue: 'faa', duration: '1s' })
 
         await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))

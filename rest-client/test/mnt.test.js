@@ -13,13 +13,13 @@ describe('FetchQ Mnt', function () {
         // queue: foo
         await request.post(url('/v1/queue')).send({ name: 'foo' })
         await request.post(url('/v1/queue/foo')).send({ subject: 'a3' })
-        await request.post(url('/v1/pick')).send({ queue: 'foo', duration: '1s' })
+        await request.post(url('/v1/doc/pick')).send({ queue: 'foo', duration: '1s' })
         await pg.query(`UPDATE fetchq__foo__documents SET next_iteration = NOW() - INTERVAL '1y'`)
         
         // queue: faa
         await request.post(url('/v1/queue')).send({ name: 'faa' })
         await request.post(url('/v1/queue/faa')).send({ subject: 'a3' })
-        await request.post(url('/v1/pick')).send({ queue: 'faa', duration: '1s' })
+        await request.post(url('/v1/doc/pick')).send({ queue: 'faa', duration: '1s' })
         await pg.query(`UPDATE fetchq__faa__documents SET next_iteration = NOW() - INTERVAL '1y'`)
     })
 

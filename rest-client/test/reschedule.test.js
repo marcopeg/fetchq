@@ -19,7 +19,7 @@ describe('FetchQ reschedule', function () {
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
@@ -27,7 +27,7 @@ describe('FetchQ reschedule', function () {
 
     it('should set a document as rescheduled', async function () {
         // console.log(doc)
-        const r1 = await request.post(url('/v1/reschedule')).send({
+        const r1 = await request.post(url('/v1/doc/reschedule')).send({
             queue: 'foo',
             subject: doc.subject,
         })
@@ -46,7 +46,7 @@ describe('FetchQ reschedule', function () {
 
     it('should reschedule in the future', async function () {
         // console.log(doc)
-        const r1 = await request.post(url('/v1/reschedule')).send({
+        const r1 = await request.post(url('/v1/doc/reschedule')).send({
             queue: 'foo',
             subject: doc.subject,
             nextIteration: moment().add(1, 'year'),
@@ -65,7 +65,7 @@ describe('FetchQ reschedule', function () {
     })
 
     it('should reschedule with payload', async function () {
-        await request.post(url('/v1/reschedule')).send({
+        await request.post(url('/v1/doc/reschedule')).send({
             queue: 'foo',
             subject: doc.subject,
             payload: {
@@ -79,7 +79,7 @@ describe('FetchQ reschedule', function () {
     })
 
     it('should reschedule in the past', async function () {
-        await request.post(url('/v1/reschedule')).send({
+        await request.post(url('/v1/doc/reschedule')).send({
             queue: 'foo',
             subject: doc.subject,
             nextIteration: moment().subtract(1, 'year'),
@@ -92,7 +92,7 @@ describe('FetchQ reschedule', function () {
         // re-pick the document that was scheduled as pending
         await request.post(url('/v1/mnt/run'))
         await request.post(url('/v1/metric/log/pack'))
-        const doc1 = (await request.post(url('/v1/pick')).send({
+        const doc1 = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()

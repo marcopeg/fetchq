@@ -38,7 +38,7 @@ describe('FetchQ pick', function () {
     })
 
     it('should pick a scheduled document', async function () {
-        const docs = (await request.post(url('/v1/pick')).send({
+        const docs = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
         })).body
         expect(docs.length).to.equal(1)
@@ -46,26 +46,26 @@ describe('FetchQ pick', function () {
     })
 
     it('should not pick the same document twice', async function () {
-        const r1 = await request.post(url('/v1/pick')).send({ queue: 'foo' })
-        const r2 = await request.post(url('/v1/pick')).send({ queue: 'foo' })
+        const r1 = await request.post(url('/v1/doc/pick')).send({ queue: 'foo' })
+        const r2 = await request.post(url('/v1/doc/pick')).send({ queue: 'foo' })
         expect(r2.body.length).to.equal(1)
         expect(r2.body[0].subject).to.equal('a2')
     })
 
     it('should establish a custom lock duration', async function () {
-        await request.post(url('/v1/pick')).send({
+        await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             duration: '1 minute',
             limit: 1,
         })
-        await request.post(url('/v1/pick')).send({
+        await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             duration: '1 millisecond',
             limit: 1,
         })
         await pause(1)
         await request.post(url('/v1/mnt/run'))
-        const docs = (await request.post(url('/v1/pick')).send({
+        const docs = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
         })).body
         expect(docs.length).to.equal(1)

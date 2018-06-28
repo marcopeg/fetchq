@@ -163,7 +163,7 @@ const processQueue = async (settings = {}) => {
         }
 
         const start = new Date()
-        const docs = (await request.post(url('/v1/pick')).send({
+        const docs = (await request.post(url('/v1/doc/pick')).send({
             queue,
             limit,
         })).body

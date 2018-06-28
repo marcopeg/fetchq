@@ -18,14 +18,14 @@ describe('FetchQ reject', function () {
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
     })
 
     it('should set a document as rejected', async function () {
-        const r1 = await request.post(url('/v1/reject')).send({
+        const r1 = await request.post(url('/v1/doc/reject')).send({
             queue: 'foo',
             subject: doc.subject,
             message: 'aaa',
@@ -45,7 +45,7 @@ describe('FetchQ reject', function () {
     })
 
     it('should set a document as rejected with refId', async function () {
-        const r1 = await request.post(url('/v1/reject')).send({
+        const r1 = await request.post(url('/v1/doc/reject')).send({
             queue: 'foo',
             subject: doc.subject,
             message: 'aaa',

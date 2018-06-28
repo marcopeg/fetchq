@@ -17,14 +17,14 @@ describe('FetchQ drop', function () {
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
     })
 
     it('should drop a document', async function () {
-        const r1 = await request.post(url('/v1/drop')).send({
+        const r1 = await request.post(url('/v1/doc/drop')).send({
             queue: 'foo',
             subject: doc.subject,
         })
