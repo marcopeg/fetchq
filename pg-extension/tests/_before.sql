@@ -1,4 +1,4 @@
-DROP SCHEMA public CASCADE;
+DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
 
 CREATE OR REPLACE FUNCTION fetchq_test_init (
@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION fetchq_test_init (
 ) AS $$
 BEGIN
     CREATE EXTENSION IF NOT EXISTS fetchq;
-    PERFORM fetchq_destroy();
+    PERFORM fetchq_destroy_with_terrible_consequences();
     DROP EXTENSION fetchq;
     CREATE EXTENSION fetchq;
     PERFORM fetchq_init();
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION fetchq_test_clean (
 ) AS $$
 BEGIN
     -- CREATE EXTENSION IF NOT EXISTS fetchq;
-    PERFORM fetchq_destroy();
+    PERFORM fetchq_destroy_with_terrible_consequences();
     DROP EXTENSION fetchq;
     done = TRUE;
 END; $$

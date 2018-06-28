@@ -52,7 +52,6 @@ BEGIN
 
     -- cleanup test
     PERFORM fetchq_test_clean();
-
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;
@@ -77,7 +76,6 @@ BEGIN
 
     -- cleanup test
     PERFORM fetchq_test_clean();
-
     passed = TRUE;
 END; $$
 LANGUAGE plpgsql;

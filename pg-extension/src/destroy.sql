@@ -1,6 +1,6 @@
 
-DROP FUNCTION IF EXISTS fetchq_destroy();
-CREATE OR REPLACE FUNCTION fetchq_destroy (
+DROP FUNCTION IF EXISTS fetchq_destroy_with_terrible_consequences();
+CREATE OR REPLACE FUNCTION fetchq_destroy_with_terrible_consequences (
     OUT was_destroyed BOOLEAN
 ) AS $$
 DECLARE
