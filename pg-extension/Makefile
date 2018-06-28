@@ -32,6 +32,7 @@ build:
 		$(CURDIR)/src/metric-compute-all.sql \
 		$(CURDIR)/src/metric-reset.sql \
 		$(CURDIR)/src/metric-reset-all.sql \
+		$(CURDIR)/src/metric-snap.sql \
 		$(CURDIR)/src/doc-push.sql \
 		$(CURDIR)/src/doc-pick.sql \
 		$(CURDIR)/src/doc-reschedule.sql \
@@ -85,6 +86,7 @@ build-test:
 		$(CURDIR)/tests/metric-compute-all.test.sql \
 		$(CURDIR)/tests/metric-reset.test.sql \
 		$(CURDIR)/tests/metric-reset-all.test.sql \
+		$(CURDIR)/tests/metric-snap.test.sql \
 		$(CURDIR)/tests/doc-push.test.sql \
 		$(CURDIR)/tests/doc-pick.test.sql \
 		$(CURDIR)/tests/doc-reschedule.test.sql \

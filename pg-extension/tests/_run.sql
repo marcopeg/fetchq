@@ -17,6 +17,10 @@ SELECT * FROM fetchq_test__mnt_make_pending_01();
 SELECT * FROM fetchq_test__mnt_reschedule_orphans_01();
 SELECT * FROM fetchq_test__mnt_mark_dead_01();
 
+SELECT * FROM fetchq_test__metric_snap_01();
+SELECT * FROM fetchq_test__metric_snap_02();
+SELECT * FROM fetchq_test__metric_snap_03();
+
 
 
 --

@@ -36,7 +36,7 @@ BEGIN
 	-- errors table
 	VAR_q = 'CREATE TABLE fetchq__%s__errors (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
-	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE,';
+	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),';
 	VAR_q = VAR_q || 'subject CHARACTER VARYING(50) NOT NULL,';
 	VAR_q = VAR_q || 'message CHARACTER VARYING(255) NOT NULL,';
 	VAR_q = VAR_q || 'details JSONB,';
@@ -48,7 +48,7 @@ BEGIN
 	-- stats history
 	VAR_q = 'CREATE TABLE fetchq__%s__metrics (';
 	VAR_q = VAR_q || 'id SERIAL PRIMARY KEY,';
-	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE,';
+	VAR_q = VAR_q || 'created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),';
 	VAR_q = VAR_q || 'metric CHARACTER VARYING(50) NOT NULL,';
 	VAR_q = VAR_q || 'value bigint';
 	VAR_q = VAR_q || ');';
