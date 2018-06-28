@@ -22,12 +22,12 @@ describe('FetchQ push', function () {
 
     beforeEach(async function () {
         await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
+        await request.post(url('/v1/queue')).send({ name: 'foo' })
     })
 
     describe('single document', function () {
         it('should schedule a future document', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 subject: 'a1',
                 version: 0,
                 priority: 0,
@@ -39,7 +39,7 @@ describe('FetchQ push', function () {
         })
 
         it('should schedule a pending document', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 subject: 'a1',
                 version: 0,
                 priority: 0,
@@ -51,7 +51,7 @@ describe('FetchQ push', function () {
         })
 
         it('should schedule a document with a complex payload', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 subject: 'a1',
                 version: 0,
                 priority: 0,
@@ -65,7 +65,7 @@ describe('FetchQ push', function () {
 
     describe('multiple documents', function () {
         it('should queue multiple documents', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
                 docs: [
@@ -78,7 +78,7 @@ describe('FetchQ push', function () {
         })
 
         it('should queue multiple documents without duplicates', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
                 docs: [
@@ -91,7 +91,7 @@ describe('FetchQ push', function () {
         })
 
         it('should queue multiple documents with weird payloads', async function () {
-            const res = await request.post(url('/v1/q/foo')).send({
+            const res = await request.post(url('/v1/queue/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
                 docs: [
@@ -104,7 +104,7 @@ describe('FetchQ push', function () {
         })
 
         it('should queue a single document with a specific date', async function () {
-            const r1 = await request.post(url('/v1/q/foo')).send({
+            const r1 = await request.post(url('/v1/queue/foo')).send({
                 subject: 'a1',
                 version: 0,
                 priority: 0,
@@ -119,7 +119,7 @@ describe('FetchQ push', function () {
         })
 
         it('should queue multiple documents with a specific date', async function () {
-            const r1 = await request.post(url('/v1/q/foo')).send({
+            const r1 = await request.post(url('/v1/queue/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
                 docs: [

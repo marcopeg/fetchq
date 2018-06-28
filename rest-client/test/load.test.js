@@ -16,7 +16,7 @@ describe.skip('Load Test', function () {
     
     before(async function () {
         await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
+        await request.post(url('/v1/queue')).send({ name: 'foo' })
     })
 
     after(function () {
@@ -130,7 +130,7 @@ const populateQueue = async (settings = {}) => {
         }
 
         const start = new Date()
-        const res = await request.post(url(`/v1/q/${queue}`)).send({
+        const res = await request.post(url(`/v1/queue/${queue}`)).send({
             version,
             nextIteration,
             docs,

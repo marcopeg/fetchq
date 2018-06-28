@@ -11,15 +11,15 @@ describe('FetchQ pick', function () {
     
     beforeEach(async function () {
         await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
-        await request.post(url('/v1/q/foo')).send({
+        await request.post(url('/v1/queue')).send({ name: 'foo' })
+        await request.post(url('/v1/queue/foo')).send({
             subject: 'a3',
             version: 0,
             priority: 0,
             nextIteration: moment().add(1, 'year'),
             payload: { a: 3 },
         })
-        await request.post(url('/v1/q/foo')).send({
+        await request.post(url('/v1/queue/foo')).send({
             subject: 'a2',
             version: 0,
             priority: 0,
@@ -27,7 +27,7 @@ describe('FetchQ pick', function () {
             nextIteration: moment().subtract(1, 'second'),
             payload: { a: 2 },
         })
-        await request.post(url('/v1/q/foo')).send({
+        await request.post(url('/v1/queue/foo')).send({
             subject: 'a1',
             version: 0,
             priority: 0,

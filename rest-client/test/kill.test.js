@@ -9,8 +9,8 @@ describe('FetchQ kill', function () {
     let doc = null
     beforeEach(async function () {
         await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
-        await request.post(url('/v1/q/foo')).send({
+        await request.post(url('/v1/queue')).send({ name: 'foo' })
+        await request.post(url('/v1/queue/foo')).send({
             subject: 'a1',
             version: 0,
             priority: 0,

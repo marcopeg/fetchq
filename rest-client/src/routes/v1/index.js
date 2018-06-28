@@ -28,9 +28,9 @@ const createV1Router = (settings) => {
     router.get('/info', fetchqInfo())
 
     // queue api
-    router.post('/q', fetchqQueueCreate())
-    router.post('/q/:name', fetchqDocPush())
-    router.delete('/q/:name', fetchqQueueDrop())
+    router.post('/queue', fetchqQueueCreate())
+    router.post('/queue/:name', fetchqDocPush())
+    router.delete('/queue/:name', fetchqQueueDrop())
 
     // document api
     router.post('/pick', fetchqDocPick())
