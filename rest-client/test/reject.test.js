@@ -5,6 +5,8 @@ const pg = require('./lib/pg')
 
 
 describe('FetchQ reject', function () {
+    this.timeout(10000)
+    
     let doc = null
     beforeEach(async function () {
         await pg.reset()

@@ -7,6 +7,8 @@ const pg = require('./lib/pg')
 
 
 describe('FetchQ pick', function () {
+    this.timeout(10000)
+    
     beforeEach(async function () {
         await pg.reset()
         await request.post(url('/v1/q')).send({ name: 'foo' })
