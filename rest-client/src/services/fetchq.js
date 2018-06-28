@@ -11,8 +11,15 @@ const start = async () => {
     try {
         await client.connect()
     } catch (err) {
-        winston.error(`[fetch1] ${err.message}`)
+        winston.error(`[fetchq] ${err.message}`)
         throw new Error('Could not connect to FetchqDB')
+    }
+
+    try {
+        await client.startMaintenance()
+    } catch (err) {
+        winston.error(`[fetchq] ${err.message}`)
+        throw new Error('Could not run the maintenance daemon')
     }
 }
 

@@ -27,6 +27,7 @@ const { createMetricReset } = require('./functions/metric.reset')
 const { createMetricResetAll } = require('./functions/metric.reset-all')
 const { createMntRun } = require('./functions/mnt.run')
 const { createMntRunAll } = require('./functions/mnt.run-all')
+const { Maintenance } = require('./maintenance.class')
 
 class Fetchq {
     constructor (config = {}) {
@@ -41,6 +42,7 @@ class Fetchq {
         this.connect = createConnect(this)
         this.init = createInit(this)
         this.info = createInfo(this)
+        this.daemons = []
 
         this.queue = {
             list: createQueueList(this),
@@ -76,6 +78,12 @@ class Fetchq {
             run: createMntRun(this),
             runAll: createMntRunAll(this),
         }
+    }
+
+    async startMaintenance (settings) {
+        const daemon = new Maintenance(this, settings)
+        this.daemons.push(daemon)
+        return await daemon.start()
     }
 }
 
