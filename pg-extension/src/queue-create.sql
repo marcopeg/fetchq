@@ -59,11 +59,11 @@ BEGIN
 	PERFORM fetchq_queue_create_indexes(PAR_queue, 0, 5);
 
 	-- add new maintenance tasks
-	INSERT INTO fetchq_sys_jobs (domain, subject, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
-	('mnt', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
-	('sts', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
-	('cmp', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}'),
-	('cln', PAR_queue, NOW(), NULL, 0, 0, '{}', '{}')
+	INSERT INTO fetchq_sys_jobs (task, queue, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
+	('mnt', PAR_queue, NOW(), NULL, 0, 0, '{"limit":500, "delay":"1m", "duration":"5m"}', '{}'),
+	('sts', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"1m"}', '{}'),
+	('cmp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"10s", "duration":"1m"}', '{}'),
+	('drp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"10m", "duration":"15m"}', '{}')
 	ON CONFLICT DO NOTHING;
 
 	EXCEPTION WHEN OTHERS THEN BEGIN

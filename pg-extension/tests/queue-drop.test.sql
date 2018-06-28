@@ -26,7 +26,7 @@ BEGIN
 	END IF;
 
     -- check jobs table
-    SELECT COUNT(*) INTO VAR_numDocs FROM fetchq_sys_jobs WHERE subject = 'foo';
+    SELECT COUNT(*) INTO VAR_numDocs FROM fetchq_sys_jobs WHERE queue = 'foo';
     IF VAR_numDocs > 0 THEN
 		RAISE EXCEPTION 'queue jobs were not dropped';
 	END IF;

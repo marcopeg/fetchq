@@ -40,7 +40,7 @@ BEGIN
 	queue_id = VAR_r.id;
 
 	-- drop maintenance tasks
-	DELETE FROM fetchq_sys_jobs WHERE subject = PAR_queue;
+	DELETE FROM fetchq_sys_jobs WHERE queue = PAR_queue;
 
 	-- drop counters
 	DELETE FROM fetchq_sys_metrics
