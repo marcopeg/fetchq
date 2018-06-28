@@ -1,9 +1,9 @@
 
-CREATE OR REPLACE FUNCTION fetchq_test__mnt_job_pick_01 (
+CREATE OR REPLACE FUNCTION fetchq_test__mnt_job_reschedule_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'IT SHOULD BE POSSIBLE TO PICK A JOB FROM THE MAINTENANCE QUEUE';
+    VAR_testName VARCHAR = 'IT SHOULD BE POSSIBLE TO RECHEDULE A JOB FOR THE MAINTENANCE QUEUE';
     VAR_r RECORD;
 BEGIN
     
@@ -14,7 +14,8 @@ BEGIN
 
     -- run the test
     SELECT * INTO VAR_r FROM fetchq_mnt_job_pick('5m');
-    IF VAR_r.id IS NULL THEN
+    SELECT * INTO VAR_r FROM fetchq_mnt_job_reschedule(VAR_r.id, '1m');
+    IF VAR_r.success IS NULL THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;
 
