@@ -9,22 +9,22 @@ describe('FetchQ complete', function () {
     let doc = null
     beforeEach(async function () {
         await pg.reset()
-        await request.post(url('/v1/q')).send({ name: 'foo' })
-        await request.post(url('/v1/q/foo')).send({
+        await request.post(url('/v1/queue')).send({ name: 'foo' })
+        await request.post(url('/v1/queue/foo')).send({
             subject: 'a1',
             version: 0,
             priority: 0,
             payload: { a: 3 },
         })
         await request.post(url('/v1/metric/log/pack')).send()
-        doc = (await request.post(url('/v1/pick')).send({
+        doc = (await request.post(url('/v1/doc/pick')).send({
             queue: 'foo',
             limit: 1,
         })).body.shift()
     })
 
     it('should set a document as completed', async function () {
-        const r1 = await request.post(url('/v1/complete')).send({
+        const r1 = await request.post(url('/v1/doc/complete')).send({
             queue: 'foo',
             subject: doc.subject,
         })
@@ -42,7 +42,7 @@ describe('FetchQ complete', function () {
     })
 
     it('should set a document as completed - with payload', async function () {
-        const r1 = await request.post(url('/v1/complete')).send({
+        const r1 = await request.post(url('/v1/doc/complete')).send({
             queue: 'foo',
             subject: doc.subject,
             payload: {
