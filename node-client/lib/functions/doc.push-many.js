@@ -5,6 +5,14 @@
 // @TODO: validate queue priority
 // @TODO: validate queue nextIteration
 // @TODO: validate queue payload
+
+/*
+data.docs = [
+    [ subject, version, payload ],
+    [ 'a1', 0, { a: 1 } ],
+    ...
+]
+*/
 const createDocPushMany = (ctx) => async (queue, data = {}) => {
     try {
         const q = [
@@ -15,9 +23,9 @@ const createDocPushMany = (ctx) => async (queue, data = {}) => {
             '\'(',
             data.docs
                 .map(doc => [
-                    `''${doc.subject}''`,
-                    `${doc.priority || 0}`,
-                    `''${JSON.stringify(doc.payload || {}).replace(/'/g, '\'\'\'\'')}''`,
+                    `''${doc[0]}''`,
+                    `${doc[1] || 0}`,
+                    `''${JSON.stringify(doc[2] || {}).replace(/'/g, '\'\'\'\'')}''`,
                     '{DATA}'
                 ].join(', '))
                 .join('), ('),

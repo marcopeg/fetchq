@@ -68,15 +68,10 @@ describe('FetchQ push', function () {
             const res = await request.post(url('/v1/q/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
-                docs: [ {
-                    subject: 'a1',
-                    priority: 0,
-                    payload: { a: 1 },
-                }, {
-                    subject: 'a2',
-                    priority: 1,
-                    payload: { a: 2 },
-                } ],
+                docs: [
+                    [ 'a1', 0, { a: 1} ],
+                    [ 'a2', 0, { a: 2} ],
+                ],
             })
             expect(res.statusCode).to.equal(200)
             expect(res.body.queued_docs).to.equal(2)
@@ -86,15 +81,10 @@ describe('FetchQ push', function () {
             const res = await request.post(url('/v1/q/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
-                docs: [ {
-                    subject: 'a1',
-                    priority: 0,
-                    payload: { a: 1 },
-                }, {
-                    subject: 'a1',
-                    priority: 1,
-                    payload: { a: 2 },
-                } ],
+                docs: [
+                    [ 'a1', 0, { a: 1} ],
+                    [ 'a1', 0, { a: 2} ],
+                ],
             })
             expect(res.statusCode).to.equal(200)
             expect(res.body.queued_docs).to.equal(1)
@@ -104,15 +94,10 @@ describe('FetchQ push', function () {
             const res = await request.post(url('/v1/q/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
-                docs: [ {
-                    subject: 'a1',
-                    priority: 0,
-                    payload: weirdPayload,
-                }, {
-                    subject: 'a2',
-                    priority: 1,
-                    payload: weirdPayload,
-                } ],
+                docs: [
+                    [ 'a1', 0, weirdPayload ],
+                    [ 'a2', 0, weirdPayload ],
+                ],
             })
             expect(res.statusCode).to.equal(200)
             expect(res.body.queued_docs).to.equal(2)
@@ -137,15 +122,10 @@ describe('FetchQ push', function () {
             const r1 = await request.post(url('/v1/q/foo')).send({
                 version: 0,
                 nextIteration: '2016-10-10 12:22',
-                docs: [ {
-                    subject: 'a1',
-                    priority: 0,
-                    payload: weirdPayload,
-                }, {
-                    subject: 'a2',
-                    priority: 1,
-                    payload: weirdPayload,
-                } ],
+                docs: [
+                    [ 'a1', 0, weirdPayload ],
+                    [ 'a2', 0, weirdPayload ],
+                ],
             })
             const r2 = await pg.query('select * from fetchq__foo__documents;')
             const inputDate = moment('2016-10-10 12:22')
