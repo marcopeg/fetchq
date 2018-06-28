@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION fetchq_test__doc_reschedule_01 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'COULD NOT RESCHEDULE';
+    VAR_testName VARCHAR = 'IT SHOULD RESCHEDULE';
     VAR_r RECORD;
 BEGIN
     
@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION fetchq_test__doc_reschedule_02 (
     OUT passed BOOLEAN
 ) AS $$
 DECLARE
-    VAR_testName VARCHAR = 'COULD NOT RESCHEDULE WITH PAYLOAD';
+    VAR_testName VARCHAR = 'IT SHOULD RESCHEDULE WITH PAYLOAD';
     VAR_r RECORD;
 BEGIN
     
