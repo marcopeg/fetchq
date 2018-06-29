@@ -29,12 +29,12 @@ const boot = async () => {
     await workers.start()
 
     // just put some stuff in the database
-    await client.init()
-    await client.queue.create('foo')
-    await client.doc.push('foo', {
-        subject: 'a1',
-        payload: { runs: 0 },
-    })
+    // await client.init()
+    // await client.queue.create('foo')
+    // await client.doc.push('foo', {
+    //     subject: 'a1',
+    //     payload: { runs: 0 },
+    // })
 
     // register a worker for the foo queue
     workers.register({

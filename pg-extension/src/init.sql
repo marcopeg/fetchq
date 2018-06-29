@@ -102,7 +102,7 @@ BEGIN
 
     -- add generic maintenance jobs
     INSERT INTO fetchq_sys_jobs (task, queue, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
-	('lgp', '*', NOW(), NULL, 0, 0, '{"delay":"15s", "duration":"5m"}', '{}')
+	('lgp', '*', NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"5m"}', '{}')
 	ON CONFLICT DO NOTHING;
     
     -- handle output with graceful fail support
