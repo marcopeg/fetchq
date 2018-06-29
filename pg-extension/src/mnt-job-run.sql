@@ -21,8 +21,8 @@ BEGIN
             settings->'duration' as execution_duration
         FROM fetchq_mnt_job_pick(PAR_lockDuration, PAR_limit)
 	LOOP
-        RAISE NOTICE '###########################';
-		RAISE NOTICE '%', VAR_r;
+        -- RAISE NOTICE '###########################';
+		-- RAISE NOTICE '%', VAR_r;
 
         -- default records limit & next execution delay
         IF VAR_r.limit_records IS NOT NULL THEN VAR_limit = VAR_r.limit_records; ELSE VAR_limit = 100; END IF;
@@ -40,6 +40,8 @@ BEGIN
 
         -- run the specific task logic
         CASE
+        WHEN VAR_r.task = 'lgp' THEN
+            PERFORM fetchq_metric_log_pack();
         WHEN VAR_r.task = 'mnt' THEN
             PERFORM fetchq_mnt_run(VAR_r.queue, VAR_limit);
         WHEN VAR_r.task = 'drp' THEN
@@ -51,6 +53,7 @@ BEGIN
             RAISE NOTICE 'DONT KNOW TASK %', VAR_r.task;
         END CASE;
 
+        -- reschedule job
         PERFORM fetchq_mnt_job_reschedule(VAR_r.id, VAR_delay);
 	END LOOP;
 

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION fetchq_init (
 BEGIN
 
     -- Queues Index
-    CREATE TABLE fetchq_sys_queues (
+    CREATE TABLE IF NOT EXISTS fetchq_sys_queues (
         id SERIAL PRIMARY KEY,
         created_at TIMESTAMP WITH TIME ZONE,
         name CHARACTER VARYING(40) NOT NULL,
@@ -31,7 +31,7 @@ BEGIN
     -- ALTER TABLE ONLY fetchq_sys_queues ADD CONSTRAINT fetchq_sys_queues_pkey PRIMARY KEY (id);
 
     -- Metrics Overview
-    CREATE TABLE fetchq_sys_metrics (
+    CREATE TABLE IF NOT EXISTS fetchq_sys_metrics (
         id SERIAL PRIMARY KEY,
         queue CHARACTER VARYING(40) NOT NULL,
         metric CHARACTER VARYING(40) NOT NULL,
@@ -49,10 +49,10 @@ BEGIN
     -- ALTER SEQUENCE fetchq_sys_metrics_id_seq OWNED BY fetchq_sys_metrics.id;
     -- ALTER TABLE ONLY fetchq_sys_metrics ALTER COLUMN id SET DEFAULT nextval('fetchq_sys_metrics_id_seq'::regclass);
     -- ALTER TABLE ONLY fetchq_sys_metrics ADD CONSTRAINT fetchq_sys_metrics_pkey PRIMARY KEY (id, queue, metric);
-    CREATE INDEX fetchq_sys_metrics_queue_idx ON fetchq_sys_metrics USING btree (queue);
+    CREATE INDEX IF NOT EXISTS fetchq_sys_metrics_queue_idx ON fetchq_sys_metrics USING btree (queue);
 
     -- Metrics Writes
-    CREATE TABLE fetchq_sys_metrics_writes (
+    CREATE TABLE IF NOT EXISTS fetchq_sys_metrics_writes (
         id SERIAL PRIMARY KEY,
         created_at TIMESTAMP WITH TIME ZONE,
         queue CHARACTER VARYING(40) NOT NULL,
@@ -71,11 +71,11 @@ BEGIN
     -- ALTER SEQUENCE fetchq_sys_metrics_writes_id_seq OWNED BY fetchq_sys_metrics_writes.id;
     -- ALTER TABLE ONLY fetchq_sys_metrics_writes ALTER COLUMN id SET DEFAULT nextval('fetchq_sys_metrics_writes_id_seq'::regclass);
     -- ALTER TABLE ONLY fetchq_sys_metrics_writes ADD CONSTRAINT fetchq_sys_metrics_writes_pkey PRIMARY KEY (id);
-    CREATE INDEX fetchq_sys_metrics_writes_reset_idx ON fetchq_sys_metrics_writes ( queue, metric ) WHERE ( reset IS NOT NULL );
-    CREATE INDEX fetchq_sys_metrics_writes_increment_idx ON fetchq_sys_metrics_writes ( queue, metric ) WHERE ( increment IS NOT NULL );
+    CREATE INDEX IF NOT EXISTS fetchq_sys_metrics_writes_reset_idx ON fetchq_sys_metrics_writes ( queue, metric ) WHERE ( reset IS NOT NULL );
+    CREATE INDEX IF NOT EXISTS fetchq_sys_metrics_writes_increment_idx ON fetchq_sys_metrics_writes ( queue, metric ) WHERE ( increment IS NOT NULL );
 
     -- Maintenance Jobs
-    CREATE TABLE fetchq_sys_jobs (
+    CREATE TABLE IF NOT EXISTS fetchq_sys_jobs (
         id SERIAL PRIMARY KEY,
         task character varying(40) NOT NULL,
         queue character varying(40) NOT NULL,
@@ -97,8 +97,13 @@ BEGIN
     -- ALTER SEQUENCE fetchq_sys_jobs_id_seq OWNED BY fetchq_sys_jobs.id;
     -- ALTER TABLE ONLY fetchq_sys_jobs ALTER COLUMN id SET DEFAULT nextval('fetchq_sys_jobs_id_seq'::regclass);
     -- ALTER TABLE ONLY fetchq_sys_jobs ADD CONSTRAINT fetchq_sys_jobs_pkey PRIMARY KEY (id);
-    CREATE UNIQUE INDEX fetchq_sys_jobs_task_queue_idx ON fetchq_sys_jobs USING btree (task, queue);
-    CREATE INDEX fetchq_sys_jobs_task_idx ON fetchq_sys_jobs USING btree (task, next_iteration, iterations) WHERE (iterations < 5);
+    CREATE UNIQUE INDEX IF NOT EXISTS fetchq_sys_jobs_task_queue_idx ON fetchq_sys_jobs USING btree (task, queue);
+    CREATE INDEX IF NOT EXISTS fetchq_sys_jobs_task_idx ON fetchq_sys_jobs USING btree (task, next_iteration, iterations) WHERE (iterations < 5);
+
+    -- add generic maintenance jobs
+    INSERT INTO fetchq_sys_jobs (task, queue, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
+	('lgp', '*', NOW(), NULL, 0, 0, '{"delay":"15s", "duration":"5m"}', '{}')
+	ON CONFLICT DO NOTHING;
     
     -- handle output with graceful fail support
 	was_initialized = TRUE;

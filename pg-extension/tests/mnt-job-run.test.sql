@@ -11,11 +11,11 @@ BEGIN
     PERFORM fetchq_test_init();
     PERFORM fetchq_queue_create('foo');
     PERFORM fetchq_doc_push('foo', 'a1', 0, 0, NOW() - INTERVAL '1s', '{}');
-    PERFORM fetchq_metric_log_pack();
+    -- PERFORM fetchq_metric_log_pack();
     UPDATE fetchq_sys_jobs SET next_iteration = NOW() - INTERVAL '1s';
 
     -- run the test
-    SELECT * INTO VAR_r FROM fetchq_mnt_job_run(4);
+    SELECT * INTO VAR_r FROM fetchq_mnt_job_run(5);
     IF VAR_r.success IS NULL THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
     END IF;

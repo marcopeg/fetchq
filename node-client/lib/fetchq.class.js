@@ -32,7 +32,7 @@ const { Maintenance } = require('./maintenance.class')
 
 class Fetchq {
     constructor (config = {}) {
-        this.pool = new Pool()
+        this.pool = new Pool(config.connect)
         this.logger = new winston.Logger({
             level: config.logLevel || 'verbose',
             transports: [
