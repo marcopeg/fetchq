@@ -29,10 +29,12 @@ const { createMetricResetAll } = require('./functions/metric.reset-all')
 const { createMntRun } = require('./functions/mnt.run')
 const { createMntRunAll } = require('./functions/mnt.run-all')
 const { Maintenance } = require('./maintenance.class')
+const { WorkersPool } = require('./workers-pool.class')
 
 class Fetchq {
     constructor (config = {}) {
-        this.pool = new Pool()
+        this.pool = new Pool(config.connect)
+
         this.logger = new winston.Logger({
             level: config.logLevel || 'verbose',
             transports: [
@@ -76,20 +78,19 @@ class Fetchq {
             resetAll: createMetricResetAll(this),
         }
 
+        // maintenance utilities
         this.mnt = {
+            start: async (settings) => {
+                const daemon = new  Maintenance(this, settings)
+                this.daemons.push(daemon)
+                return await daemon.start()
+            },
+            stop: () => Promise.all(this.daemons.map(d => d.stop())),
             run: createMntRun(this),
             runAll: createMntRunAll(this),
         }
-    }
 
-    async startMaintenance (settings) {
-        const daemon = new Maintenance(this, settings)
-        this.daemons.push(daemon)
-        return await daemon.start()
-    }
-
-    stopMaintenance() {
-        return Promise.all(this.daemons.map(d => d.stop()))
+        this.workers = new  WorkersPool(this)
     }
 }
 

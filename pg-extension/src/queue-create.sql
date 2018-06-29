@@ -60,10 +60,10 @@ BEGIN
 
 	-- add new maintenance tasks
 	INSERT INTO fetchq_sys_jobs (task, queue, next_iteration, last_iteration, attempts, iterations, settings, payload) VALUES
-	('mnt', PAR_queue, NOW(), NULL, 0, 0, '{"limit":500, "delay":"1m", "duration":"5m"}', '{}'),
-	('sts', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"1m"}', '{}'),
-	('cmp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"10s", "duration":"1m"}', '{}'),
-	('drp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"10m", "duration":"15m"}', '{}')
+	('mnt', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"5m", "limit":500}', '{}'),
+	('sts', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"5m"}', '{}'),
+	('cmp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"5m"}', '{}'),
+	('drp', PAR_queue, NOW(), NULL, 0, 0, '{"delay":"3s", "duration":"5m"}', '{}')
 	ON CONFLICT DO NOTHING;
 
 	EXCEPTION WHEN OTHERS THEN BEGIN
