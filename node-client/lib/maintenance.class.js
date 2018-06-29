@@ -1,4 +1,3 @@
-const winston = require('winston')
 
 class Maintenance {
     constructor (ctx, settings = {}) {
@@ -19,32 +18,46 @@ class Maintenance {
         this.loop()
     }
 
-    async stop () {
-        clearTimeout(this.timer)
+    stop () {
         this.isRunning = false
         this.isStopping = false
         this.hasStopped = false
 
-        // loop to check if it has stopped
-        // we will release the promise at the end
+        return new Promise((resolve) => {
+            if (this.timer === null) {
+                this.hasStopped = true
+                return resolve()
+            }
+
+            const checkStopInterval = setInterval(() => {
+                if (this.hasStopped) {
+                    clearInterval(checkStopInterval)
+                    resolve()
+                }
+            }, 500)
+        })
     }
 
     async loop () {
+        // clear out the timeout
+        clearTimeout(this.timer)
+        this.timer = null
+        
+        // check for termination signal
         if (!this.isRunning) {
+            this.hasStopped = true
             return
         }
+
+        // do the job
         try {
-            await this.job()
+            this.ctx.logger.debug(`[fetchq] run maintenance job`)
+            await this.ctx.pool.query('select * from fetchq_mnt_job_run();')
         } catch (err) {
-            winston.error(`[fetchq daemon] ${err.message}`)
+            this.ctx.logger.error(`[fetchq daemon] ${err.message}`)
         } finally {
             this.timer = setTimeout(() => this.loop(), this.delay)
         }
-    }
-
-    async job () {
-        console.log('job')
-        await this.ctx.pool.query('select * from fetchq_mnt_job_run();')
     }
 }
 

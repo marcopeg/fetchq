@@ -23,10 +23,29 @@ const start = async () => {
     }
 }
 
+const stop = async () => {
+    // stop maintenance daemon
+    try {
+        await client.stopMaintenance()
+    } catch (err) {
+        winston.error(`[fetchq] ${err.message}`)
+        throw new Error('Could not stop the maintenance daemon')
+    }
+
+    // stop db connection
+    try {
+        await client.disconnect()
+    } catch (err) {
+        winston.error(`[fetchq] ${err.message}`)
+        throw new Error('Could not terminate the connection with the database')
+    }
+}
+
 const getClient = () => client
     
 module.exports = {
     init,
     start,
+    stop,
     getClient,
 }

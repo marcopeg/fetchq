@@ -2,6 +2,7 @@ const winston = require('winston')
 const { Pool } = require('pg')
 
 const { createConnect } = require('./functions/connect')
+const { createDisconnect } = require('./functions/disconnect')
 const { createInit } = require('./functions/init')
 const { createInfo } = require('./functions/info')
 const { createQueueList } = require('./functions/queue.list')
@@ -40,6 +41,7 @@ class Fetchq {
         })
 
         this.connect = createConnect(this)
+        this.disconnect = createDisconnect(this)
         this.init = createInit(this)
         this.info = createInfo(this)
         this.daemons = []
@@ -84,6 +86,10 @@ class Fetchq {
         const daemon = new Maintenance(this, settings)
         this.daemons.push(daemon)
         return await daemon.start()
+    }
+
+    stopMaintenance() {
+        return Promise.all(this.daemons.map(d => d.stop()))
     }
 }
 
