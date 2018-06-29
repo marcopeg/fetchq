@@ -76,20 +76,17 @@ class Fetchq {
             resetAll: createMetricResetAll(this),
         }
 
+        // maintenance utilities
         this.mnt = {
+            start: async (settings) => {
+                const daemon = new  Maintenance(this, settings)
+                this.daemons.push(daemon)
+                return await daemon.start()
+            },
+            stop: () => Promise.all(this.daemons.map(d => d.stop())),
             run: createMntRun(this),
             runAll: createMntRunAll(this),
         }
-    }
-
-    async startMaintenance (settings) {
-        const daemon = new Maintenance(this, settings)
-        this.daemons.push(daemon)
-        return await daemon.start()
-    }
-
-    stopMaintenance() {
-        return Promise.all(this.daemons.map(d => d.stop()))
     }
 }
 

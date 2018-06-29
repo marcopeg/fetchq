@@ -16,7 +16,7 @@ const start = async () => {
     }
 
     try {
-        await client.startMaintenance()
+        await client.mnt.start()
     } catch (err) {
         winston.error(`[fetchq] ${err.message}`)
         throw new Error('Could not run the maintenance daemon')
@@ -26,7 +26,7 @@ const start = async () => {
 const stop = async () => {
     // stop maintenance daemon
     try {
-        await client.stopMaintenance()
+        await client.mnt.stop()
     } catch (err) {
         winston.error(`[fetchq] ${err.message}`)
         throw new Error('Could not stop the maintenance daemon')
