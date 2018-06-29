@@ -29,10 +29,12 @@ const { createMetricResetAll } = require('./functions/metric.reset-all')
 const { createMntRun } = require('./functions/mnt.run')
 const { createMntRunAll } = require('./functions/mnt.run-all')
 const { Maintenance } = require('./maintenance.class')
+const { WorkersPool } = require('./workers-pool.class')
 
 class Fetchq {
     constructor (config = {}) {
         this.pool = new Pool(config.connect)
+
         this.logger = new winston.Logger({
             level: config.logLevel || 'verbose',
             transports: [
@@ -87,6 +89,8 @@ class Fetchq {
             run: createMntRun(this),
             runAll: createMntRunAll(this),
         }
+
+        this.workers = new  WorkersPool(this)
     }
 }
 

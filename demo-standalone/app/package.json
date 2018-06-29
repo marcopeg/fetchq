@@ -1,0 +1,20 @@
+{
+  "name": "fetchq-standalone-demo",
+  "version": "1.0.0",
+  "description": "Shows how to create a standalone queue consumer",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=development nodemon --watch index.js -e js index",
+    "start:prod": "yarn && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@marcopeg/utils": "^1.9.0",
+    "fetchq": "^1.1.0",
+    "moment": "^2.22.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
+}

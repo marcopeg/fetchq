@@ -5,6 +5,6 @@ CREATE OR REPLACE FUNCTION fetchq_info (
     OUT version VARCHAR
 ) AS $$
 BEGIN
-	version='0.0.1';
+	version='1.1.0';
 END; $$
 LANGUAGE plpgsql;

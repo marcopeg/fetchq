@@ -2,8 +2,8 @@
 const { PlannedWorker } = require('./planned-worker.class')
 
 class WorkersPool {
-    constructor (settings = {}) {
-        this.client = settings.client
+    constructor (ctx, settings = {}) {
+        this.ctx = ctx
         this.workers = []
         this.isRunning = false
     }
@@ -14,7 +14,7 @@ class WorkersPool {
     }
 
     register (config) {
-        const worker = new PlannedWorker(this.client, config)
+        const worker = new PlannedWorker(this.ctx, config)
         this.workers.push(worker)
 
         if (!this.isRunning) {
