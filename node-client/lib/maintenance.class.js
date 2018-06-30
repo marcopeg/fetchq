@@ -56,10 +56,10 @@ class Maintenance {
         try {
             const res = await this.ctx.pool.query(`select * from fetchq_mnt_job_run(${this.limit});`)
             if (res.rows[0].processed < this.limit) {
-                this.ctx.logger.verbose(`[fetchq] maintenance job has completer ${res.rows[0].processed}/${this.limit} therefore is sleeping for ${this.sleep}ms`)
+                this.ctx.logger.debug(`[fetchq] maintenance job has completer ${res.rows[0].processed}/${this.limit} therefore is sleeping for ${this.sleep}ms`)
                 delay = this.sleep
             } else {
-                this.ctx.logger.verbose(`[fetchq] run maintenance job - ${res.rows[0].processed} processed`)
+                this.ctx.logger.debug(`[fetchq] run maintenance job - ${res.rows[0].processed} processed`)
             }
         } catch (err) {
             this.ctx.logger.error(`[fetchq daemon] ${err.message}`)

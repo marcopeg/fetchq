@@ -3,8 +3,9 @@ const moment = require('moment')
 module.exports = {
     queue: 'foo',
     version: 0,
-    handler: async (doc) => {
-        console.log(`RUN WORKER `, doc)
+    concurrency: 2,
+    handler: async (doc, { worker }) => {
+        console.log(`RUN WORKER ${worker.id}`, doc)
 
         if (doc.subject === 'a2') {
             return {

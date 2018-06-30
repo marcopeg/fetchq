@@ -3,7 +3,7 @@ services:
     queue:
         image: node:9.9
         volumes:
-            - ../node-client:/fetchq
+            - ../node-client:/usr/node-client
             - ./app:/usr/src/app
         environment:
             PGUSER: ${PGUSER-fetchq}

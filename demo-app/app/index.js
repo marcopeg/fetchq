@@ -3,7 +3,7 @@ const config = require('@marcopeg/utils/lib/config')
 
 // Connected as Docker volume by `docker-compose.yml`
 // (will become an npm module)
-const fetchq = require('/fetchq')
+const fetchq = require('../../node-client')
 
 // worker definition
 const worker1 = require('./worker')

@@ -1,14 +1,18 @@
+const pause = require('@marcopeg/utils/lib/pause')
 
 class PlannedWorker {
     constructor (ctx, settings) {
         this.ctx = ctx
 
         // generic worker stuff
+        this.index = settings.index
         this.name = settings.name || `${settings.queue}-default`
+        this.id = `${this.name}-${this.index}`
         this.queue = settings.queue
         this.version = settings.version || 0
         this.handler = settings.handler
-        this.delay = settings.delay ||  1000
+        this.delay = settings.delay || 500
+        this.sleep = settings.sleep || (this.delay * 10)
 
         // loop maintenance
         this.isRunning = false
@@ -66,11 +70,21 @@ class PlannedWorker {
     }
 
     async job () {
-        this.ctx.logger.verbose(`job worker ${this.name}`)
         const docs = await this.ctx.doc.pick(this.queue, this.version, 1, '5s')
+
+        if (!docs.length) {
+            this.ctx.logger.verbose(`no docs, wait ${this.sleep}`)
+            return await pause(this.sleep)
+        }
+
+        this.ctx.logger.verbose(`job worker ${this.id}`)
+        const context = {
+            worker: this,
+            ctx: this.ctx,
+        }
         const jobs = docs.map(async (doc) => {
             try {
-                const res = await this.handler(doc)
+                const res = await this.handler(doc, context)
                 await this.resolve(doc, res)
             } catch (err) {
                 try {
