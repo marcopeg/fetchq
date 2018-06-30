@@ -3,8 +3,9 @@ class Maintenance {
     constructor (ctx, settings = {}) {
         this.ctx = ctx
         this.settings = settings
+        this.limit = this.settings.limit || 1
         this.delay = this.settings.delay || 25
-        this.sleep = this.settings.sleep || 2500
+        this.sleep = this.settings.sleep || (this.delay * 10)
 
         this.isRunning = false
         this.isStopping = false
@@ -53,16 +54,17 @@ class Maintenance {
         // do the job
         let delay = this.delay
         try {
-            this.ctx.logger.verbose(`[fetchq] run maintenance job`)
-            const res = await this.ctx.pool.query('select * from fetchq_mnt_job_run();')
-            if (!res.rows[0].success) {
-                this.ctx.logger.verbose(`[fetchq] maintenance job is sleeping for ${this.sleep}ms`)
+            const res = await this.ctx.pool.query(`select * from fetchq_mnt_job_run(${this.limit});`)
+            if (res.rows[0].processed < this.limit) {
+                this.ctx.logger.verbose(`[fetchq] maintenance job has completer ${res.rows[0].processed}/${this.limit} therefore is sleeping for ${this.sleep}ms`)
                 delay = this.sleep
+            } else {
+                this.ctx.logger.verbose(`[fetchq] run maintenance job - ${res.rows[0].processed} processed`)
             }
         } catch (err) {
             this.ctx.logger.error(`[fetchq daemon] ${err.message}`)
         } finally {
-            this.timer = setTimeout(() => this.loop(), this.delay)
+            this.timer = setTimeout(() => this.loop(), delay)
         }
     }
 }

@@ -51,7 +51,7 @@ module.exports = {
 
         return {
             action: 'reschedule',
-            nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z'),
+            nextIteration: moment().format('YYYY-MM-DD HH:mm Z'),
             payload: {
                 ...doc.payload,
                 runs: (doc.payload.runs ||  0) + 1,

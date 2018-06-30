@@ -15,11 +15,33 @@ const boot = async () => {
      */
 
     const client = await fetchq({
+        // set maintenance daemon properties
+        maintenance: {
+            limit: 1,       // how many jobs to run in one single server call?
+            delay: 250,     // how long to wait in between of successfull executions?
+            sleep: 5000,    // how long to wait if there is no further maintenance planned?
+        },
+
         // register all the workers you want to run
         workers: [
             worker1,
         ],
     }).start()
+
+
+
+    /**
+     * Auto initialization test
+     * (you normally initialize Fetchq only once and you do it manually)
+     */
+    
+    try {
+        const info = await client.info()
+        console.log(`FetchQ v${info.version} is ready to start`)
+    } catch (err) {
+        console.log('FetchQ needs to be initialized')
+        await client.init()
+    }
 
 
 

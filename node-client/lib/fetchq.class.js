@@ -127,7 +127,7 @@ class Fetchq {
 
     async start () {
         await this.connect()
-        await this.mnt.start()
+        await this.mnt.start(this.settings.maintenance)
         await this.workers.start()
         return this
     }
