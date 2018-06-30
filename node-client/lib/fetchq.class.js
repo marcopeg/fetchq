@@ -32,21 +32,16 @@ const { Maintenance } = require('./maintenance.class')
 const { WorkersPool } = require('./workers-pool.class')
 
 class Fetchq {
-    constructor (config = {}) {
-        this.pool = new Pool(config.connect)
-
-        this.logger = new winston.Logger({
-            level: config.logLevel || 'verbose',
-            transports: [
-                new (winston.transports.Console)(),
-            ]
-        })
+    constructor (settings = {}) {
+        this.settings = settings
+        this.daemons = []
+        this.pool = this.createPool(settings)
+        this.logger = this.createLogger(settings)
 
         this.connect = createConnect(this)
         this.disconnect = createDisconnect(this)
         this.init = createInit(this)
         this.info = createInfo(this)
-        this.daemons = []
 
         this.queue = {
             list: createQueueList(this),
@@ -80,17 +75,61 @@ class Fetchq {
 
         // maintenance utilities
         this.mnt = {
+            run: createMntRun(this),
+            runAll: createMntRunAll(this),
             start: async (settings) => {
-                const daemon = new  Maintenance(this, settings)
+                const daemon = new Maintenance(this, settings)
                 this.daemons.push(daemon)
                 return await daemon.start()
             },
             stop: () => Promise.all(this.daemons.map(d => d.stop())),
-            run: createMntRun(this),
-            runAll: createMntRunAll(this),
         }
 
+        // register workers by configurations
         this.workers = new  WorkersPool(this)
+        if (this.settings.workers) {
+            this.settings.workers.forEach(worker => this.workers.register(worker))
+        }
+    }
+
+    createPool (settings) {
+        let config = {}
+
+        // generic pool settings
+        if (settings.pool) {
+            config = {
+                ...config,
+                ...settings.pool,
+            }
+        }
+        
+        // programmatic connection settings are mutual exclusive
+        if (settings.connect) {
+            config = {
+                ...config,
+                ...settings.connect,
+            }
+        } else if (settings.connectionString) {
+            config.connectionString = settings.connectionString
+        }
+
+        return new Pool(config)
+    }
+
+    createLogger (settings) {
+        return new winston.Logger({
+            level: settings.logLevel ||  process.env.LOG_LEVEL ||  'error',
+            transports: [
+                new(winston.transports.Console)(),
+            ]
+        })
+    }
+
+    async start () {
+        await this.connect()
+        await this.mnt.start()
+        await this.workers.start()
+        return this
     }
 }
 

@@ -1,0 +1,18 @@
+version: '2.1'
+services:
+    queue:
+        image: node:9.9
+        volumes:
+            - ../node-client:/fetchq
+            - ./app:/usr/src/app
+        environment:
+            PGUSER: ${PGUSER-fetchq}
+            PGPASSWORD: ${PGPASSWORD-fetchq}
+            PGDATABASE: ${PGDATABASE-fetchq}
+            PGHOST: ${HUMBLE_IP}
+            PGPORT: ${POSTGRES_PORT-5432}
+            LOG_LEVEL: ${LOG_LEVEL-verbose}
+        working_dir: /usr/src/app
+        entrypoint: [ "yarn", "start:dev" ]
+        restart: always
+    
