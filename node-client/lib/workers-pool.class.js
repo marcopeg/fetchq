@@ -25,12 +25,11 @@ class WorkersPool {
             workers.push(worker)
         }
         
+        // add local workers into the pool
         this.workers = [
             ...this.workers,
             ...workers,
         ]
-
-        console.log(this.workers)
 
         if (!this.isRunning) {
             return Promise.resolve()

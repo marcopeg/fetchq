@@ -11,7 +11,10 @@ class PlannedWorker {
         this.queue = settings.queue
         this.version = settings.version || 0
         this.handler = settings.handler
-        this.delay = settings.delay || 500
+        this.batch = settings.batch ||  1
+        this.delay = settings.delay || 1000
+        this.loopDelay = settings.loopDelay || this.delay
+        this.batchDelay = settings.batchDelay || this.delay
         this.sleep = settings.sleep || (this.delay * 10)
 
         // loop maintenance
@@ -65,12 +68,13 @@ class PlannedWorker {
         } catch (err) {
             this.ctx.logger.error(`[fetchq worker] ${err.message}`)
         } finally {
-            this.timer = setTimeout(() => this.loop(), this.delay)
+            this.timer = setTimeout(() => this.loop(), this.loopDelay)
         }
     }
 
     async job () {
-        const docs = await this.ctx.doc.pick(this.queue, this.version, 1, '5s')
+        this.ctx.logger.verbose(`[PICK] ${this.id} pick ${this.batch} documents`)
+        const docs = await this.ctx.doc.pick(this.queue, this.version, this.batch, '5s')
 
         if (!docs.length) {
             this.ctx.logger.verbose(`no docs, wait ${this.sleep}`)
@@ -78,11 +82,17 @@ class PlannedWorker {
         }
 
         this.ctx.logger.verbose(`job worker ${this.id}`)
+        return await this.runBatch(docs)
+    }
+
+    async runBatch (docs) {
         const context = {
             worker: this,
             ctx: this.ctx,
         }
-        const jobs = docs.map(async (doc) => {
+
+        for (let i = 0; i < docs.length; i++) {
+            const doc = docs[i]
             try {
                 const res = await this.handler(doc, context)
                 await this.resolve(doc, res)
@@ -91,8 +101,7 @@ class PlannedWorker {
                     await this.ctx.doc.reject(
                         this.queue,
                         doc.subject,
-                        'unhandled Exception',
-                        {
+                        'unhandled Exception', {
                             message: err.message,
                             err: JSON.stringify(err),
                         },
@@ -102,10 +111,12 @@ class PlannedWorker {
                     this.ctx.logger.error(`[fetchq] planned worker ${this.name}: ${err.message}`)
                     this.ctx.logger.debug(err)
                 }
+            } finally {
+                if (i < (docs.length - 1)) {
+                    await pause(this.batchDelay)
+                }
             }
-        })
-
-        return Promise.all(jobs)
+        }
     }
 
     async resolve (doc, res) {

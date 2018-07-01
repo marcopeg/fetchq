@@ -5,16 +5,12 @@ const config = require('@marcopeg/utils/lib/config')
 // (will become an npm module)
 const fetchq = require('../../node-client')
 
-// worker definition
-const worker1 = require('./worker')
-
 const boot = async () => {
     
     /**
      * Setup the client
      */
-
-    const client = await fetchq({
+    const client = fetchq({
         // set maintenance daemon properties
         maintenance: {
             limit: 1,       // how many jobs to run in one single server call?
@@ -24,9 +20,20 @@ const boot = async () => {
 
         // register all the workers you want to run
         workers: [
-            worker1,
+            // require('./worker'),
+            require('./worker1'),
         ],
-    }).start()
+    })
+
+    /**
+     * Connect to the Database
+     */
+    try {
+        await client.start()
+    } catch (err) {
+        console.log(`FetchQ could not connect to Postgres - ${err.message}`)
+        return
+    }
 
 
 
@@ -39,7 +46,7 @@ const boot = async () => {
         const info = await client.info()
         console.log(`FetchQ v${info.version} is ready to start`)
     } catch (err) {
-        console.log('FetchQ needs to be initialized')
+        console.log(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
     }
 
@@ -52,6 +59,7 @@ const boot = async () => {
 
     try {
         await client.queue.create('foo')
+        await client.queue.create('faa')
 
         // push a single document
         await client.doc.push('foo', {
@@ -77,9 +85,15 @@ const boot = async () => {
                 ['a6', 5, {}],
             ]
         })
+
+        // push a huge amount of documents
+        const docs = []
+        for (let i = 0; i < 10000; i++) {
+            docs.push([`a${i}`, 0, {}])
+        }
+        await client.doc.pushMany('faa', { docs })
     } catch (err) {
-        console.log('FetchQ example queue setup error:')
-        console.log(err.message)
+        console.log(`FetchQ example queue setup error: ${err.message}`)
     }
 
 }
