@@ -59,7 +59,6 @@ const boot = async () => {
 
     try {
         await client.queue.create('foo')
-        await client.queue.create('faa')
 
         // push a single document
         await client.doc.push('foo', {
@@ -86,7 +85,8 @@ const boot = async () => {
             ]
         })
 
-        // push a huge amount of documents
+        // push a huge amount of documents into queue "faa"
+        await client.queue.create('faa')
         const docs = []
         for (let i = 0; i < 10000; i++) {
             docs.push([`a${i}`, 0, {}])

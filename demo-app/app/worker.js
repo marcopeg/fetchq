@@ -5,7 +5,7 @@ module.exports = {
     version: 0,
     concurrency: 2,
     handler: async (doc, { worker }) => {
-        console.log(`RUN WORKER ${worker.id}`, doc)
+        console.log(`${worker.id} :: ${doc.subject}`)
 
         if (doc.subject === 'a2') {
             return {

@@ -62,13 +62,20 @@ class PlannedWorker {
             return
         }
 
+        // basic delay, might be extended if no documents were found
+        let delay = this.loopDelay
+
         // iterate
         try {
-            await this.job()
+            const res = await this.job()
+            if (res === false) {
+                this.ctx.logger.verbose(`no docs, wait ${this.sleep}`)
+                delay = this.sleep
+            }
         } catch (err) {
             this.ctx.logger.error(`[fetchq worker] ${err.message}`)
         } finally {
-            this.timer = setTimeout(() => this.loop(), this.loopDelay)
+            this.timer = setTimeout(() => this.loop(), delay)
         }
     }
 
@@ -77,8 +84,7 @@ class PlannedWorker {
         const docs = await this.ctx.doc.pick(this.queue, this.version, this.batch, '5s')
 
         if (!docs.length) {
-            this.ctx.logger.verbose(`no docs, wait ${this.sleep}`)
-            return await pause(this.sleep)
+            return false
         }
 
         this.ctx.logger.verbose(`job worker ${this.id}`)
@@ -101,7 +107,7 @@ class PlannedWorker {
                     await this.ctx.doc.reject(
                         this.queue,
                         doc.subject,
-                        'unhandled Exception', {
+                        'worker exception', {
                             message: err.message,
                             err: JSON.stringify(err),
                         },
