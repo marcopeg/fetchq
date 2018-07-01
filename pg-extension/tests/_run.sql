@@ -4,8 +4,8 @@
 --
 SELECT * FROM fetchq_test__queue_create_02();
 SELECT * FROM fetchq_test__queue_drop_01();
-
 SELECT * FROM fetchq_test__doc_push_03();
+SELECT * FROM fetchq_test__doc_append_02();
 SELECT * FROM fetchq_test__doc_pick_02();
 SELECT * FROM fetchq_test__doc_reschedule_01();
 SELECT * FROM fetchq_test__doc_reject_01();
@@ -77,6 +77,7 @@ SELECT * FROM fetchq_test__metric_snap_03();
 -- SELECT * FROM fetchq_test__queue_create_01();
 -- SELECT * FROM fetchq_test__doc_push_01();
 -- SELECT * FROM fetchq_test__doc_push_02();
+-- SELECT * FROM fetchq_test__doc_append_01();
 -- SELECT * FROM fetchq_test__queue_set_current_version_01();
 -- SELECT * FROM fetchq_test__metric_get_01();
 -- SELECT * FROM fetchq_test__queue_create_03();
