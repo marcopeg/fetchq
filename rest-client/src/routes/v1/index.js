@@ -6,6 +6,7 @@ const { fetchqQueueCreate } = require('./middlewares/fetchq-queue-create')
 const { fetchqQueueDrop } = require('./middlewares/fetchq-queue-drop')
 const { fetchqDocPush } = require('./middlewares/fetchq-doc-push')
 const { fetchqDocAppend } = require('./middlewares/fetchq-doc-append')
+const { fetchqDocUpsert } = require('./middlewares/fetchq-doc-upsert')
 const { fetchqDocPick } = require('./middlewares/fetchq-doc-pick')
 const { fetchqDocReschedule } = require('./middlewares/fetchq-doc-reschedule')
 const { fetchqDocReject } = require('./middlewares/fetchq-doc-reject')
@@ -31,6 +32,7 @@ const createV1Router = (settings) => {
     // queue api
     router.post('/queue', fetchqQueueCreate())
     router.post('/queue/:name/append', fetchqDocAppend())
+    router.post('/queue/:name/upsert', fetchqDocUpsert())
     router.post('/queue/:name', fetchqDocPush())
     router.delete('/queue/:name', fetchqQueueDrop())
 
