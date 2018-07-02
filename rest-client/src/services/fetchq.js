@@ -15,11 +15,14 @@ const start = async () => {
         throw new Error('Could not connect to FetchqDB')
     }
 
-    try {
-        await client.mnt.start()
-    } catch (err) {
-        winston.error(`[fetchq] ${err.message}`)
-        throw new Error('Could not run the maintenance daemon')
+    // no need for planned maintenance during testing
+    if (process.env.NODE_ENV !== 'test') {
+        try {
+            await client.mnt.start()
+        } catch (err) {
+            winston.error(`[fetchq] ${err.message}`)
+            throw new Error('Could not run the maintenance daemon')
+        }
     }
 }
 

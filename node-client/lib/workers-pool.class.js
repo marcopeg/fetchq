@@ -14,14 +14,28 @@ class WorkersPool {
     }
 
     register (config) {
-        const worker = new PlannedWorker(this.ctx, config)
-        this.workers.push(worker)
+        const concurrency = config.concurrency ||  1
+        const workers = []
+
+        for (let i = 0; i < concurrency; i++) {
+            const worker = new PlannedWorker(this.ctx, {
+                ...config,
+                index: i,
+            })
+            workers.push(worker)
+        }
+        
+        // add local workers into the pool
+        this.workers = [
+            ...this.workers,
+            ...workers,
+        ]
 
         if (!this.isRunning) {
             return Promise.resolve()
         }
 
-        return worker.start()
+        return Promise.all(workers.map(worker => worker.start()))
     }
 }
 

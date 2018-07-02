@@ -3,7 +3,8 @@ DROP FUNCTION IF EXISTS fetchq_mnt_job_run(CHARACTER VARYING, INTEGER);
 CREATE OR REPLACE FUNCTION fetchq_mnt_job_run (
     PAR_lockDuration VARCHAR,
 	PAR_limit INTEGER,
-    OUT success BOOLEAN
+    OUT success BOOLEAN,
+    OUT processed INTEGER
 ) AS $$
 DECLARE
     VAR_r RECORD;
@@ -12,6 +13,7 @@ DECLARE
     VAR_delay VARCHAR;
 BEGIN
     success = true;
+    processed = 0;
 
     FOR VAR_r IN
 		SELECT 
@@ -55,6 +57,7 @@ BEGIN
 
         -- reschedule job
         PERFORM fetchq_mnt_job_reschedule(VAR_r.id, VAR_delay);
+        processed = processed + 1;
 	END LOOP;
 
     EXCEPTION WHEN OTHERS THEN BEGIN
@@ -66,7 +69,8 @@ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS fetchq_mnt_job_run(INTEGER);
 CREATE OR REPLACE FUNCTION fetchq_mnt_job_run (
 	PAR_limit INTEGER,
-    OUT success BOOLEAN
+    OUT success BOOLEAN,
+    OUT processed INTEGER
 ) AS $$
 DECLARE
     VAR_r RECORD;
@@ -74,14 +78,16 @@ DECLARE
     VAR_limit INTEGER;
     VAR_delay VARCHAR;
 BEGIN
-    success = true;
-    SELECT t.success INTO success FROM fetchq_mnt_job_run('5m', PAR_limit) as t;
+    SELECT * INTO VAR_r FROM fetchq_mnt_job_run('5m', PAR_limit) as t;
+    success = VAR_r.success;
+    processed = VAR_r.processed;
 END; $$
 LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS fetchq_mnt_job_run();
 CREATE OR REPLACE FUNCTION fetchq_mnt_job_run (
-    OUT success BOOLEAN
+    OUT success BOOLEAN,
+    OUT processed INTEGER
 ) AS $$
 DECLARE
     VAR_r RECORD;
@@ -89,7 +95,8 @@ DECLARE
     VAR_limit INTEGER;
     VAR_delay VARCHAR;
 BEGIN
-    success = true;
-    SELECT t.success INTO success FROM fetchq_mnt_job_run(1) as t;
+    SELECT * INTO VAR_r FROM fetchq_mnt_job_run(1) as t;
+    success = VAR_r.success;
+    processed = VAR_r.processed;
 END; $$
 LANGUAGE plpgsql;

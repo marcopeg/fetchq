@@ -15,9 +15,12 @@ BEGIN
     UPDATE fetchq_sys_jobs SET next_iteration = NOW() - INTERVAL '1s';
 
     -- run the test
-    SELECT * INTO VAR_r FROM fetchq_mnt_job_run(5);
+    SELECT * INTO VAR_r FROM fetchq_mnt_job_run();
     IF VAR_r.success IS NULL THEN
         RAISE EXCEPTION 'failed - %', VAR_testName;
+    END IF;
+    IF VAR_r.processed != 1 THEN
+        RAISE EXCEPTION 'failed (expected 1 processed) - %', VAR_testName;
     END IF;
 
     -- cleanup

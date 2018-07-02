@@ -5,6 +5,9 @@ CREATE OR REPLACE FUNCTION fetchq_init (
 ) AS $$
 BEGIN
 
+    -- Enable unique id extension for doc.append()
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
     -- Queues Index
     CREATE TABLE IF NOT EXISTS fetchq_sys_queues (
         id SERIAL PRIMARY KEY,
