@@ -6,6 +6,8 @@ SELECT * FROM fetchq_test__queue_create_02();
 SELECT * FROM fetchq_test__queue_drop_01();
 SELECT * FROM fetchq_test__doc_push_03();
 SELECT * FROM fetchq_test__doc_append_02();
+SELECT * FROM fetchq_test__doc_upsert_01();
+SELECT * FROM fetchq_test__doc_upsert_02();
 SELECT * FROM fetchq_test__doc_pick_02();
 SELECT * FROM fetchq_test__doc_reschedule_01();
 SELECT * FROM fetchq_test__doc_reject_01();

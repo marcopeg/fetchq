@@ -40,6 +40,13 @@ BEGIN
 	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, PAR_attempts);
 	EXECUTE VAR_q;
 
+	-- index for: fetchq_doc_upsert() -- edit query
+	VAR_q = 'CREATE INDEX IF NOT EXISTS fetchq_%s_for_ups_idx ON fetchq__%s__documents ';
+	VAR_q = VAR_q || '( subject ) ';
+	VAR_q = VAR_q || 'WHERE ( lock_upgrade IS NULL AND status <> 2 ); ';
+	VAR_q = FORMAT(VAR_q, PAR_queue, PAR_queue, PAR_attempts);
+	EXECUTE VAR_q;
+
 	EXCEPTION WHEN OTHERS THEN BEGIN
 		was_created = FALSE;
 	END;
