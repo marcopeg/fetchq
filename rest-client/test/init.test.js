@@ -16,10 +16,4 @@ describe('FetchQ init', function () {
         expect(res.statusCode).to.equal(200)
         expect(res.body.was_initialized).to.equal(true)
     })
-
-    it('should not initialize an existing database', async function () {
-        const res = await request.get(url('/v1/init'))
-        expect(res.statusCode).to.equal(200)
-        expect(res.body.was_initialized).to.equal(false)
-    })
 })

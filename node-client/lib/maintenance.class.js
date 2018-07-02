@@ -63,6 +63,7 @@ class Maintenance {
             }
         } catch (err) {
             this.ctx.logger.error(`[fetchq daemon] ${err.message}`)
+            delay = this.sleep
         } finally {
             this.timer = setTimeout(() => this.loop(), delay)
         }

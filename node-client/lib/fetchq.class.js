@@ -9,6 +9,7 @@ const { createQueueList } = require('./functions/queue.list')
 const { createQueueGet } = require('./functions/queue.get')
 const { createQueueCreate } = require('./functions/queue.create')
 const { createQueueDrop } = require('./functions/queue.drop')
+const { createDocAppend } = require('./functions/doc.append')
 const { createDocPush } = require('./functions/doc.push')
 const { createDocPushMany } = require('./functions/doc.push-many')
 const { createDocPick } = require('./functions/doc.pick')
@@ -51,6 +52,7 @@ class Fetchq {
         }
 
         this.doc = {
+            append: createDocAppend(this),
             push: createDocPush(this),
             pushMany: createDocPushMany(this),
             pick: createDocPick(this),
