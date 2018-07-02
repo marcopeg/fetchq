@@ -35,6 +35,7 @@ build:
 		$(CURDIR)/src/metric-snap.sql \
 		$(CURDIR)/src/doc-push.sql \
 		$(CURDIR)/src/doc-append.sql \
+		$(CURDIR)/src/doc-upsert.sql \
 		$(CURDIR)/src/doc-pick.sql \
 		$(CURDIR)/src/doc-reschedule.sql \
 		$(CURDIR)/src/doc-reject.sql \
@@ -93,6 +94,7 @@ build-test:
 		$(CURDIR)/tests/metric-snap.test.sql \
 		$(CURDIR)/tests/doc-push.test.sql \
 		$(CURDIR)/tests/doc-append.test.sql \
+		$(CURDIR)/tests/doc-upsert.test.sql \
 		$(CURDIR)/tests/doc-pick.test.sql \
 		$(CURDIR)/tests/doc-reschedule.test.sql \
 		$(CURDIR)/tests/doc-reject.test.sql \

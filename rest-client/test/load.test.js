@@ -117,10 +117,7 @@ const populateQueue = async (settings = {}) => {
     for (let i = 0; i < il; i++) {
         const docs = []
         for (let j = 0; j < chunk; j++) {
-            docs.push({
-                subject: `i${i}-j${j}`,
-                priority: 0,
-            })
+            docs.push([ `i${i}-j${j}`, 0, {} ])
         }
 
         if (i > 0) {
@@ -168,7 +165,7 @@ const processQueue = async (settings = {}) => {
             limit,
         })).body
 
-        const pdocs = docs.map(doc => request.post(url(`/v1/${action}`)).send({
+        const pdocs = docs.map(doc => request.post(url(`/v1/doc/${action}`)).send({
             queue,
             subject: doc.subject,
             nextIteration,
