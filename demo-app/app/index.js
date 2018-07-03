@@ -20,7 +20,7 @@ const boot = async () => {
 
         // register all the workers you want to run
         workers: [
-            // require('./worker'),
+            require('./worker'),
             require('./worker1'),
         ],
     })
@@ -87,11 +87,20 @@ const boot = async () => {
 
         // push a huge amount of documents into queue "faa"
         await client.queue.create('faa')
-        const docs = []
-        for (let i = 0; i < 10000; i++) {
-            docs.push([`a${i}`, 0, {}])
+        // const docs = []
+        for (let i = 0; i < 10; i++) {
+            const ps = []
+            for (let j = 0; j < 1000; j++) {
+                const p = client.doc.append('faa', { payload: { i } })
+                ps.push(p)
+            }
+            await Promise.all(ps)
+            // const r = await client.doc.append('faa', {
+            //     payload: { i },
+            // })
+            // docs.push([`a${i}`, 0, {}])
         }
-        await client.doc.pushMany('faa', { docs })
+        // await client.doc.pushMany('faa', { docs })
     } catch (err) {
         console.log(`FetchQ example queue setup error: ${err.message}`)
     }

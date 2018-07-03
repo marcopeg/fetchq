@@ -24,6 +24,8 @@ SELECT * FROM fetchq_test__mnt_job_run_01();
 SELECT * FROM fetchq_test__metric_snap_01();
 SELECT * FROM fetchq_test__metric_snap_02();
 SELECT * FROM fetchq_test__metric_snap_03();
+SELECT * FROM fetchq_test__metric_log_pack_01();
+
 
 
 

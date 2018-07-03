@@ -92,6 +92,7 @@ build-test:
 		$(CURDIR)/tests/metric-reset.test.sql \
 		$(CURDIR)/tests/metric-reset-all.test.sql \
 		$(CURDIR)/tests/metric-snap.test.sql \
+		$(CURDIR)/tests/metric-log-pack.test.sql \
 		$(CURDIR)/tests/doc-push.test.sql \
 		$(CURDIR)/tests/doc-append.test.sql \
 		$(CURDIR)/tests/doc-upsert.test.sql \
