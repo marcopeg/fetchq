@@ -23,9 +23,13 @@ describe('FetchQ append()', function () {
 
     beforeEach(async function () {
         await pg.reset()
+        await pg.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
         await request.post(url('/v1/queue')).send({
             name: 'foo',
         })
+    })
+    afterEach(async function () {
+        await pg.query('DROP EXTENSION IF EXISTS "uuid-ossp";')
     })
 
     describe('single document', function () {

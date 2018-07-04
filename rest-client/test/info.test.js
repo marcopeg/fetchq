@@ -13,7 +13,7 @@ describe('FetchQ info', function () {
     it('should fetch info from an initialized instance', async function () {
         const res = await request.get(url('/v1/info'))
         expect(res.statusCode).to.equal(200)
-        expect(res.body.version).to.equal('1.1.0')
+        expect(res.body.version).to.equal('1.2.0')
     })
 
     it('should provide a 412 if the database is not initialized', async function () {

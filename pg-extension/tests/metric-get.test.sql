@@ -34,7 +34,7 @@ BEGIN
     PERFORM fetchq_metric_log_pack();
 
     SELECT * INTO VAR_r from fetchq_metric_get('b', 'c');
-    IF VAR_r.current_value <> 99 THEN
+    IF VAR_r.current_value <> 104 THEN
         RAISE EXCEPTION 'Wrong metric computation';
     END IF;
 
@@ -71,7 +71,7 @@ BEGIN
 
     SELECT * INTO VAR_r from fetchq_metric_get(VAR_qA, 'b');
     IF VAR_r.current_value <> 12 THEN
-        RAISE EXCEPTION 'Wrong metric computation';
+        RAISE EXCEPTION 'Wrong metric computation1';
     END IF;
 
     -- test reset on logs
@@ -81,8 +81,8 @@ BEGIN
     PERFORM fetchq_metric_log_pack();
 
     SELECT * INTO VAR_r from fetchq_metric_get(VAR_qB, 'c');
-    IF VAR_r.current_value <> 99 THEN
-        RAISE EXCEPTION 'Wrong metric computation';
+    IF VAR_r.current_value <> 104 THEN
+        RAISE EXCEPTION 'Wrong metric computation2, %', VAR_r.current_value;
     END IF;
 
     -- cleanup test
