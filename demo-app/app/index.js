@@ -48,6 +48,7 @@ const boot = async () => {
     } catch (err) {
         console.log(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
+        await client.pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     }
 
 
