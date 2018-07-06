@@ -12,8 +12,8 @@ class PlannedWorker {
         this.version = settings.version || 0
         this.handler = settings.handler
         this.batch = settings.batch ||  1
-        this.lock = settings.lock || null
-        this.delay = settings.delay || 1000
+        this.lock = settings.lock || undefined
+        this.delay = settings.delay || 0
         this.loopDelay = settings.loopDelay || this.delay
         this.batchDelay = settings.batchDelay || this.delay
         this.sleep = settings.sleep || (this.delay * 10)

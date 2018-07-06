@@ -1,6 +1,6 @@
 {
   "name": "fetchq-demo-app",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Runs a FetchQ worker app",
   "main": "index.js",
   "scripts": {

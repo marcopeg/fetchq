@@ -20,8 +20,8 @@ const boot = async () => {
 
         // register all the workers you want to run
         workers: [
-            require('./worker'),
-            require('./worker1'),
+            require('./worker.foo'),
+            require('./worker.faa'),
         ],
     })
 
@@ -31,7 +31,7 @@ const boot = async () => {
     try {
         await client.start()
     } catch (err) {
-        console.log(`FetchQ could not connect to Postgres - ${err.message}`)
+        cliet.logger.verbose(`FetchQ could not connect to Postgres - ${err.message}`)
         return
     }
 
@@ -44,9 +44,9 @@ const boot = async () => {
     
     try {
         const info = await client.info()
-        console.log(`FetchQ v${info.version} is ready to start`)
+        cliet.logger.verbose(`FetchQ v${info.version} is ready to start`)
     } catch (err) {
-        console.log(`FetchQ needs to be initialized - ${err.message}`)
+        cliet.logger.verbose(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
         await client.pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     }
@@ -91,7 +91,7 @@ const boot = async () => {
         // const docs = []
         for (let i = 0; i < 10; i++) {
             const ps = []
-            for (let j = 0; j < 1000; j++) {
+            for (let j = 0; j < 100; j++) {
                 const p = client.doc.append('faa', { payload: { i } })
                 ps.push(p)
             }
@@ -103,7 +103,7 @@ const boot = async () => {
         }
         // await client.doc.pushMany('faa', { docs })
     } catch (err) {
-        console.log(`FetchQ example queue setup error: ${err.message}`)
+        cliet.logger.verbose(`FetchQ example queue setup error: ${err.message}`)
     }
 
 }

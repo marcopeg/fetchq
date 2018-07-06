@@ -4,6 +4,7 @@ module.exports = {
     queue: 'foo',
     version: 0,
     concurrency: 2,
+    lock: '1m',
     handler: async (doc, { worker }) => {
         console.log(`${worker.id} :: ${doc.subject}`)
 

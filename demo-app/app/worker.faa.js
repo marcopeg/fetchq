@@ -4,14 +4,22 @@ module.exports = {
     queue: 'faa',
     version: 0,
 
+    // how long to reserve a document for execution
+    // (default: 5m) - see Postgres INTERVAL format
+    // http://www.postgresqltutorial.com/postgresql-interval/
+    lock: '1m',
+
     // how many parallel worker instances to run
+    // (default: 1)
     concurrency: 10,
 
     // how many documents to fetch in advance
+    // (default: 1)
     batch: 40,
 
     // delay in between of each document
-    delay: 1,
+    // (default: 0ms)
+    delay: 10,
 
     // delay to apply if there are no documents to work out
     sleep: 5000,
