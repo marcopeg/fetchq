@@ -1,71 +1,60 @@
 const moment = require('moment')
 const config = require('@marcopeg/utils/lib/config')
-const { Fetchq } = require('fetchq/lib/fetchq.class')
-
-const worker = require('./worker')
+const fetchq = require('fetchq')
 
 const boot = async () => {
-    
+
     /**
      * Setup the client
      */
+    const client = fetchq({
+        // set maintenance daemon properties
+        maintenance: {
+            limit: 1, // how many jobs to run in one single server call?
+            delay: 250, // how long to wait in between of successfull executions?
+            sleep: 1000, // how long to wait if there is no further maintenance planned?
+        },
 
-    // create the instance with the connection's info
-    const client = new Fetchq({
-        logLevel: config.get('LOG_LEVEL', 'verbose'),
-        connect: {
-            user: config.get('POSTGRES_USER', 'fetchq'),
-            password: config.get('POSTGRES_PASSWORD', 'fetchq'),
-            database: config.get('POSTGRES_DATABASE', 'fetchq'),
-            host: config.get('POSTGRES_HOST', 'localhost'),
-            post: config.get('POSTGRES_PORT', '5432'),
-        }
+        // register all the workers you want to run
+        workers: [
+            require('./worker.foo'),
+            require('./worker.faa'),
+        ],
     })
 
-    // register the workers that you plan to execute
-    // (open `./worker.js` to see what a simple worker looks like)
-    client.workers.register(worker)
-    
-
     /**
-     * Connect to Postgres
+     * Connect to the Database
      */
     try {
-        await client.connect()
+        await client.start()
     } catch (err) {
-        throw new Error('FetchQ can not connect to the database')
+        client.logger.verbose(`FetchQ could not connect to Postgres - ${err.message}`)
+        return
     }
-    
+
+
 
     /**
      * Auto initialization test
      * (you normally initialize Fetchq only once and you do it manually)
      */
+
     try {
         const info = await client.info()
-        console.log(`FetchQ v${info.version} is ready to start`)
+        client.logger.verbose(`FetchQ v${info.version} is ready to start`)
     } catch (err) {
-        console.log('FetchQ needs to be initialized')
+        client.logger.verbose(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
+        await client.pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     }
 
-
-    /**
-     * Start the daemons that will take care of the queue
-     * 
-     */
-    try {
-        await client.mnt.start()
-        await client.workers.start()
-    } catch (err) {
-        console.log('FetchQ Startup Error:')
-        console.log(err.message)
-    }
 
 
     /**
      * Upsert a queue and push some demo documents
+     * (optional step, just to make the demo running)
      */
+
     try {
         await client.queue.create('foo')
 
@@ -76,12 +65,15 @@ const boot = async () => {
                 runs: 0,
                 myData: true,
             },
-            nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z')
+            // version: 0,
+            // nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z')
         })
 
         // push multiple documents
         await client.doc.pushMany('foo', {
-            nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z'),
+            // version: 0,
+            // nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z'),
+            // each doc has: 0=subjec, 1=priority, 2=payload
             docs: [
                 ['a2', 1, {}],
                 ['a3', 2, {}],
@@ -90,10 +82,25 @@ const boot = async () => {
                 ['a6', 5, {}],
             ]
         })
+
+        // push a huge amount of documents into queue "faa"
+        await client.queue.create('faa')
+        for (let i = 0; i < 100; i++) {
+            const ps = []
+            for (let j = 0; j < 100; j++) {
+                const p = client.doc.append('faa', {
+                    payload: {
+                        i
+                    }
+                })
+                ps.push(p)
+            }
+            await Promise.all(ps)
+        }
     } catch (err) {
-        console.log('FetchQ example queue setup error:')
-        console.log(err.message)
+        client.logger.verbose(`FetchQ example queue setup error: ${err.message}`)
     }
+
 }
 
 boot()

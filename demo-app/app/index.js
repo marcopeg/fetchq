@@ -15,7 +15,7 @@ const boot = async () => {
         maintenance: {
             limit: 1,       // how many jobs to run in one single server call?
             delay: 250,     // how long to wait in between of successfull executions?
-            sleep: 5000,    // how long to wait if there is no further maintenance planned?
+            sleep: 1000,    // how long to wait if there is no further maintenance planned?
         },
 
         // register all the workers you want to run

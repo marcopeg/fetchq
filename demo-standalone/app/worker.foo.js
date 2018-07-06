@@ -2,9 +2,8 @@ const moment = require('moment')
 
 module.exports = {
     queue: 'foo',
-    version: 0,
-    handler: async (doc) => {
-        console.log(`RUN WORKER `, doc)
+    handler: async (doc, { worker }) => {
+        console.log(`${worker.id} :: ${doc.subject}`)
 
         if (doc.subject === 'a2') {
             return {
@@ -51,7 +50,7 @@ module.exports = {
 
         return {
             action: 'reschedule',
-            nextIteration: moment().add(1, 'second').format('YYYY-MM-DD HH:mm Z'),
+            nextIteration: moment().format('YYYY-MM-DD HH:mm Z'),
             payload: {
                 ...doc.payload,
                 runs: (doc.payload.runs ||  0) + 1,

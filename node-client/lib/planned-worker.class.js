@@ -13,7 +13,7 @@ class PlannedWorker {
         this.handler = settings.handler
         this.batch = settings.batch ||  1
         this.lock = settings.lock || undefined
-        this.delay = settings.delay || 0
+        this.delay = settings.delay || 250
         this.loopDelay = settings.loopDelay || this.delay
         this.batchDelay = settings.batchDelay || this.delay
         this.sleep = settings.sleep || (this.delay * 10)

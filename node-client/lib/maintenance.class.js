@@ -4,7 +4,7 @@ class Maintenance {
         this.ctx = ctx
         this.settings = settings
         this.limit = this.settings.limit || 1
-        this.delay = this.settings.delay || 25
+        this.delay = this.settings.delay || 250
         this.sleep = this.settings.sleep || (this.delay * 10)
 
         this.isRunning = false
