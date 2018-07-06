@@ -15,13 +15,13 @@ const boot = async () => {
         maintenance: {
             limit: 1,       // how many jobs to run in one single server call?
             delay: 250,     // how long to wait in between of successfull executions?
-            sleep: 5000,    // how long to wait if there is no further maintenance planned?
+            sleep: 1000,    // how long to wait if there is no further maintenance planned?
         },
 
         // register all the workers you want to run
         workers: [
-            require('./worker'),
-            require('./worker1'),
+            require('./worker.foo'),
+            require('./worker.faa'),
         ],
     })
 
@@ -31,7 +31,7 @@ const boot = async () => {
     try {
         await client.start()
     } catch (err) {
-        console.log(`FetchQ could not connect to Postgres - ${err.message}`)
+        client.logger.verbose(`FetchQ could not connect to Postgres - ${err.message}`)
         return
     }
 
@@ -44,10 +44,11 @@ const boot = async () => {
     
     try {
         const info = await client.info()
-        console.log(`FetchQ v${info.version} is ready to start`)
+        client.logger.verbose(`FetchQ v${info.version} is ready to start`)
     } catch (err) {
-        console.log(`FetchQ needs to be initialized - ${err.message}`)
+        client.logger.verbose(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
+        await client.pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     }
 
 
@@ -87,22 +88,16 @@ const boot = async () => {
 
         // push a huge amount of documents into queue "faa"
         await client.queue.create('faa')
-        // const docs = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             const ps = []
-            for (let j = 0; j < 1000; j++) {
+            for (let j = 0; j < 100; j++) {
                 const p = client.doc.append('faa', { payload: { i } })
                 ps.push(p)
             }
             await Promise.all(ps)
-            // const r = await client.doc.append('faa', {
-            //     payload: { i },
-            // })
-            // docs.push([`a${i}`, 0, {}])
         }
-        // await client.doc.pushMany('faa', { docs })
     } catch (err) {
-        console.log(`FetchQ example queue setup error: ${err.message}`)
+        client.logger.verbose(`FetchQ example queue setup error: ${err.message}`)
     }
 
 }

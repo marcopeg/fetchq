@@ -12,7 +12,8 @@ class PlannedWorker {
         this.version = settings.version || 0
         this.handler = settings.handler
         this.batch = settings.batch ||  1
-        this.delay = settings.delay || 1000
+        this.lock = settings.lock || undefined
+        this.delay = settings.delay || 250
         this.loopDelay = settings.loopDelay || this.delay
         this.batchDelay = settings.batchDelay || this.delay
         this.sleep = settings.sleep || (this.delay * 10)
@@ -81,7 +82,7 @@ class PlannedWorker {
 
     async job () {
         this.ctx.logger.verbose(`[PICK] ${this.id} pick ${this.batch} documents`)
-        const docs = await this.ctx.doc.pick(this.queue, this.version, this.batch, '5s')
+        const docs = await this.ctx.doc.pick(this.queue, this.version, this.batch, this.lock)
 
         if (!docs.length) {
             return false

@@ -1,11 +1,11 @@
 {
   "name": "fetchq-demo-app",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Runs a FetchQ worker app",
   "main": "index.js",
   "scripts": {
-    "start": "yarn && yarn start:dev",
-    "start:dev": "NODE_ENV=development nodemon --watch index.js --watch worker.js --watch /node-client -e js index",
+    "start": "NODE_ENV=development nodemon --watch index.js --watch worker.js --watch /node-client -e js index",
+    "start:dev": "yarn && yarn start",
     "start:node": "LOG_LEVEL=verbose PGUSER=fetchq PGPASSWORD=fetchq PGDATABASE=fetchq PGHOST=localhost yarn start:dev",
     "test": "./node_modules/mocha/bin/mocha --watch",
     "lint": "./node_modules/.bin/eslint index.js"
