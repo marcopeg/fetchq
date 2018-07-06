@@ -31,7 +31,7 @@ const boot = async () => {
     try {
         await client.start()
     } catch (err) {
-        cliet.logger.verbose(`FetchQ could not connect to Postgres - ${err.message}`)
+        client.logger.verbose(`FetchQ could not connect to Postgres - ${err.message}`)
         return
     }
 
@@ -44,9 +44,9 @@ const boot = async () => {
     
     try {
         const info = await client.info()
-        cliet.logger.verbose(`FetchQ v${info.version} is ready to start`)
+        client.logger.verbose(`FetchQ v${info.version} is ready to start`)
     } catch (err) {
-        cliet.logger.verbose(`FetchQ needs to be initialized - ${err.message}`)
+        client.logger.verbose(`FetchQ needs to be initialized - ${err.message}`)
         await client.init()
         await client.pool.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     }
@@ -88,22 +88,16 @@ const boot = async () => {
 
         // push a huge amount of documents into queue "faa"
         await client.queue.create('faa')
-        // const docs = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             const ps = []
             for (let j = 0; j < 100; j++) {
                 const p = client.doc.append('faa', { payload: { i } })
                 ps.push(p)
             }
             await Promise.all(ps)
-            // const r = await client.doc.append('faa', {
-            //     payload: { i },
-            // })
-            // docs.push([`a${i}`, 0, {}])
         }
-        // await client.doc.pushMany('faa', { docs })
     } catch (err) {
-        cliet.logger.verbose(`FetchQ example queue setup error: ${err.message}`)
+        client.logger.verbose(`FetchQ example queue setup error: ${err.message}`)
     }
 
 }
